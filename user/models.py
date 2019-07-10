@@ -54,7 +54,7 @@ class User(AbstractBaseUser):
 
     # Personal information
     sex = models.PositiveSmallIntegerField(
-        choices=((t.value, t.name) for t in SexType)
+        choices=((t.value, t.name) for t in SexType), default=SexType.NONE
     )
     age = models.IntegerField(default=18)
     phone = PhoneNumberField

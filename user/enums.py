@@ -21,6 +21,7 @@ class DepartmentType(enum.IntEnum):
     STAFF = 9
     WEBDEV = 10
 
+
 class SexType(enum.IntEnum):
     NONE = 0
     FEMALE = 1
