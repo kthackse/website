@@ -1,7 +1,7 @@
 import enum
 
 
-class StatusType(enum.IntEnum):
+class ApplicationStatus(enum.IntEnum):
     PENDING = 0
     CANCELLED = 1
     INVITED = 2
@@ -10,6 +10,7 @@ class StatusType(enum.IntEnum):
     REMINDED = 5
     EXPIRED = 6
     DUBIOUS = 7
+    ATTENDED = 8
 
 
 class DietType(enum.IntEnum):
@@ -32,3 +33,20 @@ class TshirtSize(enum.IntEnum):
     XL = 60
     XXL = 70
     XXXL = 80
+
+
+class ReimbursementType(enum.IntEnum):
+    PAYPAL = 0
+    BANK_TRANSFER = 1
+    SWISH = 2
+
+
+class ReimbursementStatus(enum.IntEnum):
+    DRAFT = 0
+    PENDING_DRAFT = 1
+    PENDING_TICKET = 2
+    PENDING_APPROVAL = 3
+    APPROVED = 4
+    DENIED = 5
+    EXPIRED = 6
+    WAILISTED = 7

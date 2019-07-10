@@ -38,7 +38,7 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
-    email = models.EmailField(verbose_name="Email", max_length=255, unique=True)
+    email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(verbose_name="First name", max_length=255)
     surname = models.CharField(verbose_name="Last name", max_length=255)
     email_verified = models.BooleanField(default=False)
@@ -85,6 +85,9 @@ class User(AbstractBaseUser):
     def is_director(self):
         return DepartmentType.DIRECTOR.value in [d.type for d in self.departments.all()]
 
+    def is_underage(self):
+        return self.age < 18
+
     @property
     def is_staff(self):
         return self.is_organiser()
@@ -108,14 +111,16 @@ class User(AbstractBaseUser):
             messages[
                 "company"
             ] = "A user must be a sponsor in order to belong to a company"
+        if self.age < 14:
+            messages["age"] = "The minimum age is 14"
         if messages:
             raise ValidationError(messages)
 
 
 class Department(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(verbose_name="Name", max_length=255)
-    code = models.CharField(verbose_name="Code", max_length=31, unique=True)
+    name = models.CharField(max_length=255)
+    code = models.CharField(max_length=31, unique=True)
     type = models.PositiveSmallIntegerField(
         choices=((t.value, t.name) for t in DepartmentType)
     )
@@ -140,8 +145,8 @@ class Department(models.Model):
 
 class Company(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(verbose_name="Name", max_length=255)
-    code = models.CharField(verbose_name="Code", max_length=31, unique=True)
+    name = models.CharField(max_length=255)
+    code = models.CharField(max_length=31, unique=True)
 
     class Meta:
         verbose_name_plural = "Companies"
