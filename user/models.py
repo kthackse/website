@@ -2,10 +2,39 @@ import uuid
 
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.contrib.auth.base_user import AbstractBaseUser
+from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.utils import timezone
+from phonenumber_field.formfields import PhoneNumberField
 
-from user.enums import GroupType, DepartmentType
+from user.enums import UserType, DepartmentType, SexType
+
+
+class UserManager(BaseUserManager):
+    def create_user(
+        self, email, name, surname, type=UserType.PARTICIPANT.value, password=None
+    ):
+        if not email:
+            raise ValueError("A user must have an email")
+
+        user = self.model(email=email, name=name, surname=surname, type=type)
+
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, name, surname, password):
+        user = self.create_user(
+            email, name, surname, UserType.ORGANISER.value, password
+        )
+        department = Department.objects.filter(type=DepartmentType.ADMIN.value).first()
+        if not department:
+            department = Department(
+                name="Admin", code="admin", type=DepartmentType.ADMIN.value
+            )
+            department.save(using=self._db)
+        user.departments.add(department)
+        user.save(using=self._db)
+        return user
 
 
 class User(AbstractBaseUser):
@@ -14,25 +43,41 @@ class User(AbstractBaseUser):
     surname = models.CharField(verbose_name="Last name", max_length=255)
     email_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now)
-    group = models.ForeignKey("Group", on_delete=models.PROTECT, null=True)
-    departments = models.ManyToManyField("Department", null=True)
-    company = models.ForeignKey("Company", on_delete=models.PROTECT, null=True)
+    type = models.PositiveSmallIntegerField(
+        choices=((u.value, u.name) for u in UserType),
+        default=UserType.PARTICIPANT.value,
+    )
+    departments = models.ManyToManyField("Department")
+    company = models.ForeignKey(
+        "Company", on_delete=models.PROTECT, null=True, blank=True
+    )
+
+    # Personal information
+    sex = models.PositiveSmallIntegerField(
+        choices=((t.value, t.name) for t in SexType)
+    )
+    age = models.IntegerField(default=18)
+    phone = PhoneNumberField
+    city = models.CharField(max_length=255)
+    country = models.CharField(max_length=255)
+
+    objects = UserManager()
 
     USERNAME_FIELD = "email"
     EMAIL_FIELD = "email"
     REQUIRED_FIELDS = ["name", "surname"]
 
     def is_organiser(self):
-        return self.group.type == GroupType.ORGANISER.value
+        return self.type == UserType.ORGANISER.value
 
     def is_participant(self):
-        return self.group.type == GroupType.PARTICIPANT.value
+        return self.type == UserType.PARTICIPANT.value
 
     def is_sponsor(self):
-        return self.group.type == GroupType.SPONSOR.value
+        return self.type == UserType.SPONSOR.value
 
     def is_media(self):
-        return self.group.type == GroupType.MEDIA.value
+        return self.type == UserType.MEDIA.value
 
     def is_admin(self):
         return DepartmentType.ADMIN.value in [d.type for d in self.departments.all()]
@@ -40,25 +85,31 @@ class User(AbstractBaseUser):
     def is_director(self):
         return DepartmentType.DIRECTOR.value in [d.type for d in self.departments.all()]
 
+    @property
+    def is_staff(self):
+        return self.is_organiser()
+
+    def has_perm(self, perm, obj=None):
+        return True
+
+    def has_module_perms(self, app_label):
+        return True
+
+    def __str__(self):
+        return self.name + " " + self.surname
+
     def clean(self):
         messages = dict()
-        if not self.group:
-            messages["group"] = "An user must belong to a group"
         if not self.is_organiser() and self.departments.count() > 0:
-            messages["departments"] = "An user must be an organiser in order to belong to a department"
+            messages[
+                "departments"
+            ] = "A user must be an organiser in order to belong to a department"
         if not self.is_sponsor() and self.company:
-            messages["company"] = "An user must be a sponsor in order to belong to a company"
+            messages[
+                "company"
+            ] = "A user must be a sponsor in order to belong to a company"
         if messages:
             raise ValidationError(messages)
-
-
-class Group(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(verbose_name="Name", max_length=255)
-    type = models.PositiveSmallIntegerField(
-        choices=((t.value, t.name) for t in GroupType),
-        default=GroupType.PARTICIPANT.value,
-    )
 
 
 class Department(models.Model):
@@ -66,16 +117,23 @@ class Department(models.Model):
     name = models.CharField(verbose_name="Name", max_length=255)
     code = models.CharField(verbose_name="Code", max_length=31, unique=True)
     type = models.PositiveSmallIntegerField(
-        choices=((t.value, t.name) for t in GroupType),
-        default=GroupType.PARTICIPANT.value,
+        choices=((t.value, t.name) for t in DepartmentType)
     )
+
+    def __str__(self):
+        return self.name
 
     def clean(self):
         messages = dict()
-        if self.code in [d.code for d in Department.objects.all()]:
+        if self.code in [d.code for d in Department.objects.all().exclude(id=self.id)]:
             messages["code"] = "The code for this department is already being used"
-        if self.type in [d.type for d in Department.objects.all()]:
+        if self.type in [d.type for d in Department.objects.all().exclude(id=self.id)]:
             messages["type"] = "There can be at most one department per type"
+        if (
+            self.type is not DepartmentType.ADMIN.value
+            and Department.objects.filter(type=DepartmentType.ADMIN.value).count() == 1
+        ):
+            messages["type"] = "The admin department has to exist"
         if messages:
             raise ValidationError(messages)
 
@@ -85,9 +143,15 @@ class Company(models.Model):
     name = models.CharField(verbose_name="Name", max_length=255)
     code = models.CharField(verbose_name="Code", max_length=31, unique=True)
 
+    class Meta:
+        verbose_name_plural = "Companies"
+
+    def __str__(self):
+        return self.name
+
     def clean(self):
         messages = dict()
-        if self.code in [c.code for c in Company.objects.all()]:
+        if self.code in [c.code for c in Company.objects.all().exclude(id=self.id)]:
             messages["code"] = "The code for this company is already being used"
         if messages:
             raise ValidationError(messages)

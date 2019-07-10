@@ -1,7 +1,7 @@
 import enum
 
 
-class GroupType(enum.IntEnum):
+class UserType(enum.IntEnum):
     PARTICIPANT = 0
     ORGANISER = 1
     SPONSOR = 2
@@ -20,3 +20,8 @@ class DepartmentType(enum.IntEnum):
     PHOTOGRAPHY = 8
     STAFF = 9
     WEBDEV = 10
+
+class SexType(enum.IntEnum):
+    NONE = 0
+    FEMALE = 1
+    MALE = 2

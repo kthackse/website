@@ -27,7 +27,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'phonenumber_field',
+    'djmoney',
     'user',
+    'event',
 ]
 
 MIDDLEWARE = [
@@ -157,3 +160,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Maximum file upload size for forms
 
 MAX_UPLOAD_SIZE = 5242880
+
+# Phone number format
+
+PHONENUMBER_DB_FORMAT = 'INTERNATIONAL'

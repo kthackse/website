@@ -1,5 +1,7 @@
 # KTHack management system
 
+*Heavily inspired by [HackUPC registration](https://github.com/hackupc/registration).*
+
 ## Environmental variables
 - **SECRET_KEY**: Application secret (to generate one, run `os.urandom(24)`).
 - **PROD_MODE**: Disable Django debug mode, should be `True` on production site.
