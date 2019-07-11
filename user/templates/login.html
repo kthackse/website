@@ -1,1 +1,20 @@
 {% extends "base.html" %}
+{% load bootstrap4 %}
+{% load i18n %}
+
+{% block head_title %}{% trans "Login" %}{% endblock %}
+
+{% block content %}
+    <h1>Login</h1>
+
+    <form action="" method="post" class="form ">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+
+        <!-- Afegir forgot password -->
+
+        <button class="btn btn-primary btn-block" type="submit">{% trans "Login" %}</button>
+
+        <!-- Afegir signup -->
+    </form>
+{% endblock %}

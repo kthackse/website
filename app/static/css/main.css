@@ -1,0 +1,15 @@
+.navbar-brand img{
+    height: 100%;
+}
+
+.footer .container{
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+body .content{
+    padding-top: 50px;
+    padding-bottom: 80px;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}

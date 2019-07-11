@@ -6,6 +6,7 @@ from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.utils import timezone
 from phonenumber_field.formfields import PhoneNumberField
 
+from app.utils import is_email_organizer
 from user.enums import UserType, DepartmentType, SexType
 
 
@@ -56,10 +57,10 @@ class User(AbstractBaseUser):
     sex = models.PositiveSmallIntegerField(
         choices=((t.value, t.name) for t in SexType), default=SexType.NONE
     )
-    age = models.IntegerField(default=18)
-    phone = PhoneNumberField
-    city = models.CharField(max_length=255)
-    country = models.CharField(max_length=255)
+    age = models.IntegerField(default=18, blank=True, null=True)
+    phone = PhoneNumberField()
+    city = models.CharField(max_length=255, blank=True, null=True)
+    country = models.CharField(max_length=255, blank=True, null=True)
 
     objects = UserManager()
 
@@ -115,6 +116,12 @@ class User(AbstractBaseUser):
             messages["age"] = "The minimum age is 14"
         if messages:
             raise ValidationError(messages)
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        if is_email_organizer(self.email):
+            self.type = UserType.ORGANISER.value
+        return super().save(*args, **kwargs)
 
 
 class Department(models.Model):

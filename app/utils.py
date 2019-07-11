@@ -1,4 +1,8 @@
+import re
+
 from django.conf import settings
+
+from app.variables import HACKATHON_ORGANIZER_EMAIL_REGEX
 
 
 def get_substitutions_templates():
@@ -16,3 +20,7 @@ def get_substitutions_templates():
 def variables_processor(request):
     c = get_substitutions_templates()
     return c
+
+
+def is_email_organizer(email):
+    return re.match(email, HACKATHON_ORGANIZER_EMAIL_REGEX)
