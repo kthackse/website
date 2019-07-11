@@ -31,8 +31,11 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "phonenumber_field",
     "djmoney",
+    "bootstrap4",
     "user",
     "event",
+    "application",
+    "app",
 ]
 
 MIDDLEWARE = [
@@ -58,6 +61,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                'app.utils.variables_processor',
             ]
         },
     }
@@ -141,7 +145,7 @@ EMAIL_BACKEND = "sgbackend.SendGridBackend"
 # Set up custom authenthication
 
 AUTH_USER_MODEL = "user.User"
-LOGIN_URL = "account_login"
+LOGIN_URL = "user_login"
 PASSWORD_RESET_TIMEOUT_DAYS = 1
 
 # Add domain to allowed hosts

@@ -21,10 +21,10 @@ class Application(models.Model):
     event = models.ForeignKey("event.Event", on_delete=models.PROTECT)
     user = models.ForeignKey("user.User", on_delete=models.PROTECT)
     invited_by = models.ForeignKey(
-        "user.User", on_delete=models.PROTECT, blank=True, null=True
+        "user.User", on_delete=models.PROTECT, blank=True, null=True, related_name="invited_by"
     )
     contacted_by = models.ForeignKey(
-        "user.User", on_delete=models.PROTECT, blank=True, null=True
+        "user.User", on_delete=models.PROTECT, blank=True, null=True, related_name="contacted_by"
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -107,11 +107,13 @@ class Team(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     event = models.ForeignKey("event.Event", on_delete=models.PROTECT)
     creator = models.ForeignKey("user.User", on_delete=models.PROTECT)
+    name = models.CharField(max_length=255)
     code = models.CharField(max_length=31)
     lemma = models.CharField(max_length=127, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = (("event", "user"), ("event", "code"))
+        unique_together = (("event", "creator"), ("event", "code"))
 
 
 def valid_vote(vote):
@@ -121,7 +123,7 @@ def valid_vote(vote):
 class Vote(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     application = models.ForeignKey("Application", on_delete=models.PROTECT)
-    user = models.ForeignKey("user.User", on_delete=models.PROTECT)
+    voted_by = models.ForeignKey("user.User", on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True)
 
     # Vote result
@@ -130,11 +132,11 @@ class Vote(models.Model):
     vote_total = models.FloatField()
 
     class Meta:
-        unique_together = ("application", "user")
+        unique_together = ("application", "voted_by")
 
     def clean(self):
         messages = dict()
-        if not self.user.is_organiser():
+        if not self.voted_by.is_organiser():
             messages["user"] = "A user must be an organiser in order to vote"
         if messages:
             raise ValidationError(messages)
@@ -143,13 +145,13 @@ class Vote(models.Model):
 class Comment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     application = models.ForeignKey("Application", on_delete=models.PROTECT)
-    user = models.ForeignKey("user.User", on_delete=models.PROTECT)
+    commented_by = models.ForeignKey("user.User", on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True)
     content = models.TextField(max_length=1000)
 
     def clean(self):
         messages = dict()
-        if not self.user.is_organiser():
+        if not self.commented_by.is_organiser():
             messages["user"] = "A user must be an organiser in order to make a comment"
         if messages:
             raise ValidationError(messages)

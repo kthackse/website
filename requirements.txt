@@ -1,5 +1,6 @@
 Babel==2.7.0
 Django==2.2.3
+django-bootstrap4~=0.0.8
 django-money==0.15
 django-phonenumber-field==3.0.1
 phonenumbers==8.10.14
