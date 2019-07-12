@@ -23,4 +23,4 @@ def variables_processor(request):
 
 
 def is_email_organizer(email):
-    return re.match(email, HACKATHON_ORGANIZER_EMAIL_REGEX)
+    return re.match(HACKATHON_ORGANIZER_EMAIL_REGEX, email)

@@ -46,7 +46,6 @@ class Application(models.Model):
     country = models.CharField(max_length=255)
 
     # Resume
-    resume = models.FileField(upload_to="resumes", null=True, blank=True)
     resume_available = models.BooleanField(default=False)
 
     # University

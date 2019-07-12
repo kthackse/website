@@ -74,8 +74,14 @@ class User(AbstractBaseUser):
     def is_participant(self):
         return self.type == UserType.PARTICIPANT.value
 
+    def is_mentor(self):
+        return self.type == UserType.MENTOR.value
+
     def is_sponsor(self):
         return self.type == UserType.SPONSOR.value
+
+    def is_recruiter(self):
+        return self.type == UserType.RECRUITER.value
 
     def is_media(self):
         return self.type == UserType.MEDIA.value
@@ -108,10 +114,10 @@ class User(AbstractBaseUser):
             messages[
                 "departments"
             ] = "A user must be an organiser in order to belong to a department"
-        if not self.is_sponsor() and self.company:
+        if (not self.is_sponsor() or not self.is_recruiter()) and self.company:
             messages[
                 "company"
-            ] = "A user must be a sponsor in order to belong to a company"
+            ] = "A user must be a sponsor or a recruiter in order to belong to a company"
         if self.age < 14:
             messages["age"] = "The minimum age is 14"
         if messages:
