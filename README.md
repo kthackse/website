@@ -4,7 +4,7 @@
 
 ## Project setup
 
-Requirements: Python 3 and virtualenv.
+Requirements: Python 3, virtualenv and pip.
 
 - `git clone https://github.com/kthackais/mykthack && cd mykthack`.
 - `virtualenv env --python=python3`.
@@ -26,7 +26,7 @@ Requirements: PostgreSQL, nginx and certbot.
 #### PostgreSQL database
 
 - `sudo -u postgres psql`.
-- `CREATE DATABASE [DATABASE_NAME]`.
+- `CREATE DATABASE [DATABASE_NAME];`.
 - `CREATE USER [DATABASE_USER] WITH PASSWORD '[DATABASE_PASSWORD]';`.
 - Alter the created username for Django use.
 ```
@@ -76,7 +76,7 @@ server {
     listen 80;
     listen [::]:80;
 
-    server_name kthack.com;
+    server_name kthack.com www.kthack.com;
 
     location = /favicon.ico {
         access_log off;
@@ -84,17 +84,17 @@ server {
     }
     
     location /static/ {
-        alias /home/user/project_folder/staticfiles/;
+        alias [PROJECT_FOLDER]/staticfiles/;
     }
     
     location /files/ {
-        alias /home/user/project_folder/files/;
+        alias [PROJECT_FOLDER]/files/;
     }
     
     location / {
         include proxy_params;
         proxy_pass http://unix:[PROJECT_FOLDER]/mykthack.sock;
-        client_max_body_size 5MB;
+        client_max_body_size 5M;
     }
 }
 ```
