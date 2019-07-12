@@ -140,7 +140,7 @@ MEDIA_ROOT = BASE_DIR + "/files"
 
 # Sendgrid API key
 
-SG_KEY = os.environ.get("SG_KEY", None)
+SENDGRID_API_KEY = os.environ.get("SG_KEY", None)
 EMAIL_BACKEND = "sgbackend.SendGridBackend"
 
 # Set up custom authenthication
