@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "user",
     "event",
     "application",
+    "job",
     "app",
 ]
 

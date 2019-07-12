@@ -19,12 +19,22 @@ from user.enums import UserType
 class Application(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     event = models.ForeignKey("event.Event", on_delete=models.PROTECT)
-    user = models.ForeignKey("user.User", on_delete=models.PROTECT)
+    user = models.ForeignKey(
+        "user.User", on_delete=models.PROTECT, related_name="event_user"
+    )
     invited_by = models.ForeignKey(
-        "user.User", on_delete=models.PROTECT, blank=True, null=True, related_name="invited_by"
+        "user.User",
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+        related_name="invited_by",
     )
     contacted_by = models.ForeignKey(
-        "user.User", on_delete=models.PROTECT, blank=True, null=True, related_name="contacted_by"
+        "user.User",
+        on_delete=models.PROTECT,
+        blank=True,
+        null=True,
+        related_name="contacted_by",
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -158,7 +168,7 @@ class Comment(models.Model):
 
 class Reimbursement(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    applications = models.ManyToManyField("Application", blank=True, null=True)
+    applications = models.ManyToManyField("Application")
     reimbursed_by = models.ForeignKey("user.User", on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True)
 

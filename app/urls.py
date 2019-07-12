@@ -8,4 +8,5 @@ urlpatterns = [
     url("admin/", admin.site.urls),
     url(r"^user/", include("user.urls")),
     url(r"^$", views.root, name="app_root"),
+    url(r'^files/(?P<file_>.*)$', views.files, name="app_files"),
 ]

@@ -1,6 +1,11 @@
 import enum
 
 
+class OfferType(enum.IntEnum):
+    INTERNAL = 0
+    EXTERNAL = 1
+
+
 class OfferStatus(enum.IntEnum):
     DRAFT = 0
     PENDING_DRAFT = 1

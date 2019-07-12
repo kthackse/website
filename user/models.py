@@ -1,3 +1,4 @@
+import os
 import uuid
 
 from django.core.exceptions import ValidationError
@@ -5,6 +6,7 @@ from django.db import models
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.utils import timezone
 from phonenumber_field.formfields import PhoneNumberField
+from versatileimagefield.fields import VersatileImageField
 
 from app.utils import is_email_organizer
 from user.enums import UserType, DepartmentType, SexType
@@ -38,7 +40,25 @@ class UserManager(BaseUserManager):
         return user
 
 
+def path_and_rename(instance, filename):
+    """
+    Stack Overflow
+    Django ImageField change file name on upload
+    https://stackoverflow.com/questions/15140942/django-imagefield-change-file-name-on-upload
+    """
+    ext = filename.split(".")[-1]
+    # get filename
+    if instance.pk:
+        filename = "{}.{}".format(instance.pk, ext)
+    else:
+        # set filename as random string
+        filename = "{}.{}".format(uuid.uuid4().hex, ext)
+    # return the whole path to the file
+    return os.path.join("user/picture/", filename)
+
+
 class User(AbstractBaseUser):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(verbose_name="First name", max_length=255)
     surname = models.CharField(verbose_name="Last name", max_length=255)
@@ -54,6 +74,11 @@ class User(AbstractBaseUser):
     )
 
     # Personal information
+    picture = VersatileImageField(
+        "Image", upload_to=path_and_rename, default="user/picture/profile.png"
+    )
+    picture_public_participants = models.BooleanField(default=True)
+    picture_public_sponsors_and_recruiters = models.BooleanField(default=True)
     sex = models.PositiveSmallIntegerField(
         choices=((t.value, t.name) for t in SexType), default=SexType.NONE
     )
