@@ -21,7 +21,7 @@ Continue with only one of the following sections depending on the purpose of the
 
 ### Production server
 
-Requirements: PostgreSQL and nginx.
+Requirements: PostgreSQL, nginx and certbot.
 
 #### PostgreSQL database
 
@@ -106,7 +106,9 @@ server {
 
 #### HTTPS certificates
 
-- ...
+- `sudo certbot --nginx -d kthack.com -d www.kthack.com`.
+- Enter `2` if requested to redirect all HTTP traffic to HTTPS (rediction of all traffic to port `80` to `443`), this will also modify the previous nginx server configuration.
+- `sudo nginx -s reload`.
 
 ## Project update
 
