@@ -108,3 +108,7 @@ venv.bak/
 
 # Django
 files/
+
+# Server
+server.sh
+restart.sh

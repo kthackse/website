@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Django secret key and production mode
+export SECRET_KEY="[VARIABLE]"
+export PROD_MODE="True"
+
+# PostgreSQL connection
+export PG_NAME="[VARIABLE]"
+export PG_USER="[VARIABLE]"
+export PG_PWD="[VARIABLE]"
+
+# SendGrid configuration
+export SG_KEY="[VARIABLE]"
+
+# Hackathon information
+export HK_DOMAIN="kthack.com"
+
+./env/bin/gunicorn --workers 2 --log-file=gunicorn.log --bind unix:backend.sock app.wsgi:application
