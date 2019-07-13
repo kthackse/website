@@ -7,6 +7,7 @@
 ### Users
 
 - User signup and login management, profile page including picture and basic information.
+- Email verification and automatic emails.
 - Organisational departments for organiser permissions management.
 - Companies for sponsors and recruitment identification.
 - Different user types, participant, organiser, volunteer, mentor, sponsor, recruiter and media. Organisers and volunteers can be assigned to departments, sponsors and recruiters can be linked with a company.
