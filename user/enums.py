@@ -4,10 +4,11 @@ import enum
 class UserType(enum.IntEnum):
     PARTICIPANT = 0
     ORGANISER = 1
-    MENTOR = 2
-    SPONSOR = 3
-    RECRUITER = 4
-    MEDIA = 5
+    VOLUNTERR = 2
+    MENTOR = 3
+    SPONSOR = 4
+    RECRUITER = 5
+    MEDIA = 6
 
 
 class DepartmentType(enum.IntEnum):

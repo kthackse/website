@@ -51,10 +51,6 @@ class Application(models.Model):
         max_digits=7, decimal_places=2, default_currency="SEK", blank=True, null=True
     )
 
-    # Location
-    city = models.CharField(max_length=255)
-    country = models.CharField(max_length=255)
-
     # Resume
     resume_available = models.BooleanField(default=False)
 
@@ -80,7 +76,7 @@ class Application(models.Model):
     hardware = models.CharField(max_length=255, null=True, blank=True)
 
     # Team
-    team = models.ForeignKey("Team", on_delete=models.PROTECT)
+    team = models.ForeignKey("Team", on_delete=models.PROTECT, null=True, blank=True)
 
     class Meta:
         unique_together = ("event", "user")

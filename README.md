@@ -2,6 +2,31 @@
 
 *Heavily inspired by [HackUPC registration](https://github.com/hackupc/registration).*
 
+## Features
+
+### Users
+
+- User signup and login management, profile page including picture and basic information.
+- Organisational departments for organiser permissions management.
+- Companies for sponsors and recruitment identification.
+- Different user types, participant, organiser, volunteer, mentor, sponsor, recruiter and media. Organisers and volunteers can be assigned to departments, sponsors and recruiters can be linked with a company.
+- All users can update their information via the profile page, a history of the changes is kept.
+
+### Events
+
+- Support for multievent management, however, only one event can be active at the same time.
+- Schedule can be added and related to an event creating a live page with added information. Important events are also sent as a summary on the corresponding emails. Automatic schedule PDF creation.
+- Event application created by registered users on the system.
+- Team management among users, creation, joining and removal along with name setting.
+- Application voting and comment for organisers.
+- Dubious event application management.
+- Reimbursement management.
+
+### Jobs
+
+- Job offers management related to companies which can be both internal or external linking it to the company's own recruitment tool.
+- Job applications created by registered users on the system.
+
 ## Project setup
 
 Requirements: Python 3, virtualenv and pip.
