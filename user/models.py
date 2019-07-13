@@ -64,6 +64,7 @@ class User(AbstractBaseUser):
     surname = models.CharField(verbose_name="Last name", max_length=255)
     email_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
     type = models.PositiveSmallIntegerField(
         choices=((u.value, u.name) for u in UserType),
         default=UserType.PARTICIPANT.value,
@@ -82,8 +83,9 @@ class User(AbstractBaseUser):
     sex = models.PositiveSmallIntegerField(
         choices=((t.value, t.name) for t in SexType), default=SexType.NONE
     )
-    age = models.IntegerField(default=18, blank=True, null=True)
-    phone = PhoneNumberField()
+    birthday = models.DateField(blank=True, null=True)
+    # TODO: Validate phone
+    phone = models.CharField(max_length=255, blank=True, null=True)
     city = models.CharField(max_length=255, blank=True, null=True)
     country = models.CharField(max_length=255, blank=True, null=True)
 
@@ -133,6 +135,21 @@ class User(AbstractBaseUser):
     def __str__(self):
         return self.name + " " + self.surname
 
+    def get_dict(self):
+        return {
+            "name": self.name,
+            "surname": self.surname,
+            "email": self.email,
+            "picture": self.picture,
+            "picture_public_participants": self.picture_public_participants,
+            "picture_public_sponsors_and_recruiters": self.picture_public_sponsors_and_recruiters,
+            "sex": self.sex,
+            "birthday": self.birthday,
+            "phone": self.phone,
+            "city": self.city,
+            "country": self.country,
+        }
+
     def clean(self):
         messages = dict()
         if not self.is_organiser() and self.departments.count() > 0:
@@ -143,7 +160,8 @@ class User(AbstractBaseUser):
             messages[
                 "company"
             ] = "A user must be a sponsor or a recruiter in order to belong to a company"
-        if self.age < 14:
+        # Check properly if 14 already or not
+        if self.birthday and (timezone.now().today() - self.birthday) < timezone.timedelta(days=14*365):
             messages["age"] = "The minimum age is 14"
         if messages:
             raise ValidationError(messages)
@@ -198,3 +216,16 @@ class Company(models.Model):
             messages["code"] = "The code for this company is already being used"
         if messages:
             raise ValidationError(messages)
+
+
+class UserChange(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey("User", on_delete=models.PROTECT)
+    changed_by = models.ForeignKey("User", on_delete=models.PROTECT, related_name="changed_by")
+    field = models.CharField(max_length=255)
+    value_previous = models.CharField(max_length=255, blank=True, null=True)
+    value_current = models.CharField(max_length=255)
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def is_changedbyuser(self):
+        return self.user == self.changed_by

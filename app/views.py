@@ -5,16 +5,11 @@ from django.http import (
     StreamingHttpResponse,
     HttpResponseNotFound,
 )
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 
 from user.enums import UserType
 from user.models import User
-
-
-def root(request):
-    # TODO: Check if organiser, participant, sponsor or media
-    return HttpResponseRedirect(reverse("user_profile"))
 
 
 def files(request, file_):
@@ -44,3 +39,14 @@ def files(request, file_):
         else:
             HttpResponseNotFound()
     return HttpResponseRedirect(reverse("user_login"))
+
+
+def home(request):
+    return render(request, "home.html")
+
+
+def redirect_to(request):
+    try:
+        return request.headers["Referer"]
+    except KeyError:
+        return reverse("app_home")

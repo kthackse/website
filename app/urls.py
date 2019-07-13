@@ -7,6 +7,6 @@ from app import views
 urlpatterns = [
     url("admin/", admin.site.urls),
     url(r"^user/", include("user.urls")),
-    url(r"^$", views.root, name="app_root"),
+    url(r"^$", views.home, name="app_home"),
     url(r'^files/(?P<file_>.*)$', views.files, name="app_files"),
 ]
