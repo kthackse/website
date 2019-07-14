@@ -47,6 +47,8 @@ def home(request):
     event = get_next_or_past_event()
     if event:
         current_data["event"] = event
+        if event.custom_home:
+            return render(request, "custom/" + event.code + "/index.html", current_data)
     return render(request, "home.html", current_data)
 
 

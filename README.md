@@ -1,5 +1,7 @@
 # KTHack management system
 
+Current maintainer: [@oriolclosa](https://github.com/oriolclosa).
+
 *Heavily inspired by [HackUPC registration](https://github.com/hackupc/registration).*
 
 ## Features
@@ -167,6 +169,18 @@ You can add multiple events with different ranges of dates as only one can be ac
 
 The **homepage will automatically update** depending on the events you have on the system. This will take into account both temporal and application status factors. In case no event has already been added, a stock page will be displayed. If there are no more future events, the last event homepage will be displayed with some information about it. This will also reflect application status, from announcing the opening date to displaying a button indicating applications are open, to inform that they have already been closed.
 
-If you want to **set your own homepage** for the current active event, you can do so by enabling the "custom home" option. The system will display the `index.html` located in `event/custom/[EVENT_CODE]/` in case it's found. This will enable to display custom homepages if desired made with other tools such as a JavaScript framework.
+If you want to **set your own homepage** for the current active event, you can do so by enabling the "custom home" option. The system will display the `index.html` located in `app/templates/custom/[EVENT_CODE]/` in case it's found. This will enable to display custom homepages if desired made with other tools such as a JavaScript framework.
 
 A live page with all the schedule will also be automatically created with the data provided as schedule events. These can also be marked as important (which will make them appear on the email summary) and don't necessarily need to have a end time.
+
+### Contribution
+
+Please, report any incidents or questions to webdev@kthack.com.
+
+#### Style guidelines
+
+A specific coding style is desired to keep consistency, please use [Black](https://github.com/python/black) in all your commited files. Pull Requests are required to pass all tests including the Travis CI pipeline on the repository.
+
+#### Commit message
+
+Write it as you want, you did the work, not me. However, "Fix wrong event application status due to a missing if" will always be better than "Applications fixed" (doesn't apply to first commits of the repository).
