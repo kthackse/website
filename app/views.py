@@ -8,6 +8,7 @@ from django.http import (
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 
+from event.utils import get_next_or_past_event
 from user.enums import UserType
 from user.models import User
 
@@ -42,7 +43,11 @@ def files(request, file_):
 
 
 def home(request):
-    return render(request, "home.html")
+    current_data = dict()
+    event = get_next_or_past_event()
+    if event:
+        current_data["event"] = event
+    return render(request, "home.html", current_data)
 
 
 def redirect_to(request):

@@ -6,9 +6,9 @@ from event.models import Event, ScheduleEvent
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
     search_fields = ("id", "name", "code", "type",)
-    list_display = ("name", "code", "type",)
-    list_filter = ("type",)
-    ordering = ("name", "code", "type",)
+    list_display = ("name", "code", "type", "starts_at", "ends_at",)
+    list_filter = ("type", "starts_at", "ends_at",)
+    ordering = ("starts_at", "ends_at", "name", "code", "type",)
 
 
 @admin.register(ScheduleEvent)

@@ -1,5 +1,6 @@
 {% load static %}
 {% load bootstrap4 %}
+{% load i18n %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -11,8 +12,8 @@
         <!-- Add favicon <link rel="icon" href="{% static 'favicon.png' %}" type="image/png"> -->
         <!-- Add social network URLs and information -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+        <link rel="stylesheet" href="{% static 'css/fontawesome.css' %}">
         <link rel="stylesheet" href="{% static 'css/main.css' %}">
 
         {% block head %}
@@ -21,7 +22,6 @@
         <title>{% block title %}{% block head_title %}{% endblock %} | {% endblock %}{{ hk_app_name }}</title>
     </head>
     <body>
-        <!-- Add error/info messages display -->
         {% block navbar %}
             <nav class="navbar navbar-default navbar-fixed-top">
                 <div class="container">
@@ -55,6 +55,7 @@
                 </div>
             </nav>
         {% endblock %}
+        <!-- Add error/info messages display -->
         {% block body_plain %}
             <div class="content container">
                 <div class="content-inside">
@@ -88,7 +89,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12 text-center">
-                            <small>Made with <i class="fa fa-laptop" aria-hidden="true"></i> and <i class="fa fa-heart" aria-hidden="true"></i> by {{ hk_name }}</small>
+                            <small> Made with 💛 by students in KTH 🇸🇪</small>
                         </div>
                     </div>
                 </div>

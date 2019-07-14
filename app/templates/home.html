@@ -1,9 +1,85 @@
 {% extends "base.html" %}
+{% load static %}
 {% load bootstrap4 %}
 {% load i18n %}
+{% load app_tags %}
 
 {% block head_title %}{% trans "Home" %}{% endblock %}
 
-{% block content %}
-    <h1>Home</h1>
+{% block navbar %}
+    <header class="header-area">
+        <div class="main-menu">
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <div class="container box_1620">
+                    <!-- TODO: Change logo when PNG is ready -->
+                    <!-- <a class="navbar-brand logo_h" href="index.html"><img src="{% static 'img/logo.png' %}" alt=""></a> -->
+                    <!-- TODO: Fix mobile menu -->
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav menu_nav justify-content-end">
+                            <li class="nav-item active"><a class="nav-link" href="{% url 'app_home' %}">Home</a></li>
+                            {% if request.user.is_authenticated %}
+                                <!-- TODO: Set this as dashboard -->
+                                <li class="nav-item"><a class="nav-link" href="{% url 'user_profile' %}">Dashboard</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{% url 'user_logout' %}">Logout</a></li>
+                            {% else %}
+                                <li class="nav-item"><a class="nav-link" href="{% url 'user_login' %}">Login</a></li>
+                                <li class="nav-item"><a class="nav-link" href="{% url 'user_signup' %}">Signup</a></li>
+                            {% endif %}
+                        </ul>
+                        <!-- TODO: Set the sponsor behaviour -->
+                        <div class="nav-right text-center text-lg-right py-4 py-lg-0">
+                            <a class="button" href="#">Interested in sponsoring?</a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+{% endblock %}
+
+{% block body_plain %}
+    {% if event %}
+        {% if event.custom_home %}
+            CUSTOM WEBPAGE
+        {% else %}
+            <section class="hero-banner">
+                <div class="container">
+                    <div class="row align-items-center text-center text-md-left">
+                        <div class="col-md-6 col-lg-5 mb-5 mb-md-0">
+                            <h1>{{ event.name }}</h1>
+                            <p>{{ event.city }}</p>
+                            <p>{{ event.starts_at | date:"F j" }} - {{ event.ends_at | date:"j" }}</p>
+                            <p>{{ event.description }}</p>
+                            {% if event.application_status == 0 %}
+                                Applications will open {{ event.starts_at | date:"l j" }}, only {{ event.starts_at | time_left | days_left }} days left!
+                            {% elif event.application_status == 1 %}
+                                <a class="button button-hero mt-4" href="#">Apply to {{ event.name }} {{ event.starts_at | date:"Y" }} <i style="padding-left: 10px;" class="fas fa-long-arrow-alt-right"></i></a>
+                            {% else %}
+                                Applications have already been closed!
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </section>
+        {% endif %}
+    {% else %}
+        NOTHING!
+    {% endif %}
+{% endblock %}
+
+{% block footer %}
+    <footer class="footer navbar-fixed-bottom">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <small> Made with 💛 by students in KTH 🇸🇪</small>
+                </div>
+            </div>
+        </div>
+    </footer>
 {% endblock %}
