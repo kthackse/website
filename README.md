@@ -173,14 +173,14 @@ If you want to **set your own homepage** for the current active event, you can d
 
 A live page with all the schedule will also be automatically created with the data provided as schedule events. These can also be marked as important (which will make them appear on the email summary) and don't necessarily need to have a end time.
 
-### Contribution
+## Contribution
 
 Please, report any incidents or questions to webdev@kthack.com.
 
-#### Style guidelines
+### Style guidelines
 
 A specific coding style is desired to keep consistency, please use [Black](https://github.com/python/black) in all your commited files. Pull Requests are required to pass all tests including the Travis CI pipeline on the repository.
 
-#### Commit message
+### Commit message
 
 Write it as you want, you did the work, not me. However, "Fix wrong event application status due to a missing if" will always be better than "Applications fixed" (doesn't apply to first commits of the repository).
