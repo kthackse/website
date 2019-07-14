@@ -14,8 +14,8 @@ class Event(models.Model):
         choices=((t.value, t.name) for t in EventType)
     )
     # TODO: Divide sponsors into categories
-    sponsors = models.ManyToManyField("Company")
-    partners = models.ManyToManyField("Company")
+    sponsors = models.ManyToManyField("user.Company", related_name="sponsors")
+    partners = models.ManyToManyField("user.Company", related_name="partners")
     starts_at = models.DateTimeField()
     ends_at = models.DateTimeField()
 
