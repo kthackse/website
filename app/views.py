@@ -6,14 +6,11 @@ from django.http import (
     StreamingHttpResponse,
     HttpResponseNotFound,
 )
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import render
 from django.urls import reverse
 
 from app import settings
-from event.models import Event
 from event.utils import get_next_or_past_event, get_next_events
-from user.enums import UserType
-from user.models import User
 
 
 def files(request, file_):

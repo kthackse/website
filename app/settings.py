@@ -36,7 +36,6 @@ INSTALLED_APPS = [
     "versatileimagefield",
     "user",
     "event",
-    "application",
     "job",
     "app",
     "page",

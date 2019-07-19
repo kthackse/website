@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+{% load i18n %}
+
+{% block head_title %}{{ event.name }}{% trans " application" %}{% endblock %}
+
+{% block content %}
+    <div class="container">
+      <div class="section-intro text-center">
+        <h2>{{ event.name }} application</h2>
+      </div>
+      <div class="row">
+        <form action="" method="post" class="form ">
+            {% csrf_token %}
+            <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                <div class="section-intro subsection-intro text-center">
+                    <h3>Your education</h3>
+                </div>
+                <div class="form-group">
+                    <label for="id_university">What university do you study at?</label>
+                    <input type="text" name="university" value="{{ form.university.value }}" maxlength="225" class="form-control" placeholder="Kungliga Tekniska Högskolan" id="id_university">
+                </div>
+                <div class="row">
+                    <div class="col-md-8 col-lg-8 mb-8 mb-lg-0">
+                        <div class="form-group">
+                            <label for="id_degree">What's your major/degree?</label>
+                            <input type="text" name="degree" value="{{ form.degree.value }}" maxlength="225" class="form-control" placeholder="Computer Science" id="id_degree">
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-4 mb-4 mb-lg-0">
+                        <div class="form-group">
+                            <label for="id_graduation_year">What year do you graduate?</label>
+                             <select name="graduation_year" class="form-control" id="id_graduation_year">
+                                 {% for year, current in years %}
+                                    <option value="{{ year }}" {% if current %}selected{% endif %}>{{ year }}</option>
+                                 {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="section-intro subsection-intro subsection-intro-mid text-center">
+                    <h3>Hackathons</h3>
+                </div>
+                <div class="form-group">
+                    <label for="id_description">Why do you want to come to {{ event.name }}?</label>
+                    <textarea type="text" name="description" maxlength="1000" class="form-control" placeholder="" id="id_description"></textarea>
+                </div>
+                <div class="section-intro subsection-intro subsection-intro-mid text-center">
+                    <h3>Your projects</h3>
+                </div>
+                <div class="form-group">
+                    <label for="id_projects">Tell us about something you've built!</label>
+                    <textarea type="text" name="projects" maxlength="1000" class="form-control" placeholder="" id="id_projects"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="id_github"><i aria-hidden="true" class="fab fa-github fa-lg" style="margin-right: 5px;"></i> GitHub?</label>
+                    <input type="text" name="github" value="{{ form.github.value }}" maxlength="225" class="form-control" placeholder="https://github.com/kthackais" id="id_github">
+                </div>
+                <div class="form-group">
+                    <label for="id_devpost"><i aria-hidden="true" class="fas fa-lightbulb fa-lg" style="margin-right: 5px;"></i> DevPost?</label>
+                    <input type="text" name="devpost" value="{{ form.devpost.value }}" maxlength="225" class="form-control" placeholder="https://devpost.com/kthackais" id="id_devpost">
+                </div>
+                <div class="form-group">
+                    <label for="id_linkedin"><i aria-hidden="true" class="fab fa-linkedin fa-lg" style="margin-right: 5px;"></i> LinkedIn?</label>
+                    <input type="text" name="linkedin" value="{{ form.linkedin.value }}" maxlength="225" class="form-control" placeholder="https://linkedin.com/kthackais" id="id_linkedin">
+                </div>
+                <div class="form-group">
+                    <label for="id_website"><i aria-hidden="true" class="fas fa-globe-europe fa-lg" style="margin-right: 5px;"></i> Website?</label>
+                    <input type="text" name="website" value="{{ form.website.value }}" maxlength="225" class="form-control" placeholder="https://elliot.me" id="id_website">
+                </div>
+                <div class="section-intro subsection-intro subsection-intro-mid text-center">
+                    <h3>Some more information</h3>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                        <div class="form-group">
+                            <label for="id_diet">Do you have any dietary requirements?</label>
+                             <select name="diet" class="form-control" id="id_diet">
+                                 {% for diet, diet_value in diets %}
+                                    <option value="{{ diet_value }}">{{ diet }}</option>
+                                 {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                        <div class="form-group">
+                            <label for="id_tshirt">What's your T-shirt size?</label>
+                             <select name="tshirt" class="form-control" id="id_tshirt">
+                                 {% for tshirt, tshirt_value in tshirts %}
+                                    <option value="{{ tshirt_value }}" {% if tshirt == "L" %}selected{% endif %}>{{ tshirt }}</option>
+                                 {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group-button">
+                    <button class="btn btn-primary btn-block" type="submit">{% trans "Apply" %}</button>
+                </div>
+            </div>
+         </form>
+      </div>
+    </div>
+{% endblock %}

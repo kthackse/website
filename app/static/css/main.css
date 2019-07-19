@@ -106,13 +106,13 @@ form {
   display: flex;
 }
 
-form input {
+form input,select,textarea {
   color: #eeeeee !important;
   border: none !important;
 }
 
 
-form input[type=text],input[type=email],input[type=password] {
+form input[type=text],input[type=email],input[type=password],select,textarea {
   background-color: rgba(255, 255, 255, 0.1) !important;
 }
 
@@ -1072,6 +1072,14 @@ h3, .h3 {
 
 .section-intro-img {
   margin-bottom: 10px;
+}
+
+.subsection-intro {
+  margin-bottom: 15px !important;
+}
+
+.subsection-intro-mid {
+  margin-top: 25px;
 }
 
 /* section intro end
