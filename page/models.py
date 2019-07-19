@@ -1,6 +1,5 @@
 import uuid
 
-from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.db import models
 import urllib.request
@@ -17,6 +16,7 @@ class Page(models.Model):
     content_html = models.TextField(blank=True, null=True)
     content_markdown = models.TextField(blank=True, null=True)
     content_markdown_url = models.CharField(max_length=255, blank=True, null=True)
+    public = models.BooleanField(default=True)
     published = models.BooleanField(default=False)
 
     @property

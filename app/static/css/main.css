@@ -51,6 +51,12 @@ footer {
 
 .panel-body img {
   width: 100%;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+a:focus {
+  outline: 0;
 }
 
 .social-icons a {
@@ -73,7 +79,20 @@ footer {
 
 .dashboard-event {
   margin-bottom: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.header-profile {
+  border-radius: 50%;
+  height: 51px;
+  margin: 20px 0;
+  transition: border .15s ease-in-out, opacity .15s ease-in-out;
+}
+
+.header-profile:hover {
+  border: 2px solid #5284c8;
+  opacity: 0.9;
 }
 
 .dashboard-event div {

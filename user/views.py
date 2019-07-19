@@ -10,9 +10,8 @@ from user.models import User, UserChange
 
 
 def login(request):
-    page_redirect = redirect_to(request)
     if request.user.is_authenticated:
-        return HttpResponseRedirect(page_redirect)
+        return HttpResponseRedirect(reverse("app_dashboard"))
 
     if request.method == "POST":
         form = forms.LoginForm(request.POST)
@@ -35,9 +34,8 @@ def login(request):
 
 
 def signup(request):
-    page_redirect = redirect_to(request)
     if request.user.is_authenticated:
-        return HttpResponseRedirect(page_redirect)
+        return HttpResponseRedirect(reverse("app_dashboard"))
 
     if request.method == "POST":
         form = forms.RegisterForm(request.POST)
@@ -66,7 +64,7 @@ def signup(request):
 def logout(request):
     auth.logout(request)
     # messages.success(request, 'Successfully logged out!')
-    return HttpResponseRedirect(reverse("app_home"))
+    return HttpResponseRedirect(reverse("user_login"))
 
 
 @login_required

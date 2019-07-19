@@ -1,5 +1,6 @@
 import os
 
+from django.contrib.auth.decorators import login_required
 from django.http import (
     HttpResponseRedirect,
     StreamingHttpResponse,
@@ -47,6 +48,7 @@ def home(request):
     return render(request, "home.html", current_data)
 
 
+@login_required
 def dashboard(request):
     events = get_next_events()
     return render(request, "dashboard.html", {"events": events})

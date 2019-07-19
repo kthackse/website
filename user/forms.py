@@ -23,8 +23,11 @@ class RegisterForm(LoginForm):
             'Privacy and Cookies Policy</a>'
         )
     )
+    phone = forms.CharField(label="Phone", max_length=225)
+    city = forms.CharField(label="City", max_length=225)
+    country = forms.CharField(label="Country", max_length=225)
 
-    field_order = ["name", "surname", "email", "password", "password2", "terms"]
+    field_order = ["name", "surname", "email", "password", "password2", "phone", "city", "country", "terms"]
 
     def clean_password2(self):
         # Check that the two password entries match

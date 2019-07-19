@@ -9,6 +9,7 @@
     category: 00ebd99c-26e9-42a0-a1f4-f1f9a0a9cb47
     code: terms-and-conditions
     content_markdown: '## TODO'
+    public: true
     published: true
 - model: page.page
   fields:
@@ -16,6 +17,7 @@
     category: 00ebd99c-26e9-42a0-a1f4-f1f9a0a9cb47
     code: privacy-and-cookies
     content_markdown: '## TODO'
+    public: true
     published: true
 - model: page.page
   fields:
@@ -23,4 +25,5 @@
     category: 00ebd99c-26e9-42a0-a1f4-f1f9a0a9cb47
     code: legal-notice
     content_markdown: '## TODO'
+    public: true
     published: true
