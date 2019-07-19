@@ -1,9 +1,28 @@
+import os
 import uuid
 
 from django.core.exceptions import ValidationError
 from django.db import models
+from versatileimagefield.fields import VersatileImageField
 
 from event.enums import EventType, EventApplicationStatus
+
+
+def path_and_rename(instance, filename):
+    """
+    Stack Overflow
+    Django ImageField change file name on upload
+    https://stackoverflow.com/questions/15140942/django-imagefield-change-file-name-on-upload
+    """
+    ext = filename.split(".")[-1]
+    # get filename
+    if instance.pk:
+        filename = "{}.{}".format(instance.pk, ext)
+    else:
+        # set filename as random string
+        filename = "{}.{}".format(uuid.uuid4().hex, ext)
+    # return the whole path to the file
+    return os.path.join("event/picture/", filename)
 
 
 class Event(models.Model):
@@ -13,6 +32,9 @@ class Event(models.Model):
     description = models.TextField(max_length=1000, blank=True, null=True)
     type = models.PositiveSmallIntegerField(
         choices=((t.value, t.name) for t in EventType)
+    )
+    picture = VersatileImageField(
+        "Image", upload_to=path_and_rename
     )
     # TODO: Divide sponsors into categories
     city = models.CharField(max_length=255, default="Stockholm")

@@ -8,6 +8,7 @@ from django.http import (
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 
+from event.models import Event
 from event.utils import get_next_or_past_event
 from user.enums import UserType
 from user.models import User
@@ -33,6 +34,17 @@ def files(request, file_):
                 ):
                     HttpResponseNotFound()
                 downloadable_path = user.picture.path
+            if downloadable_path:
+                response = StreamingHttpResponse(open(downloadable_path, "rb"))
+                response["Content-Type"] = ""
+                return response
+            else:
+                HttpResponseNotFound()
+    else:
+        if len(path_splitted) > 0 and path_splitted[0] == "event":
+            if len(path_splitted) > 1 and path_splitted[1] == "picture":
+                event = get_object_or_404(Event, picture=file_)
+                downloadable_path = event.picture.path
         if downloadable_path:
             response = StreamingHttpResponse(open(downloadable_path, "rb"))
             response["Content-Type"] = ""

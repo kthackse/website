@@ -1,9 +1,6 @@
 from django import forms
-from django.contrib.auth.password_validation import (
-    password_validators_help_texts,
-    validate_password,
-)
-from versatileimagefield.fields import VersatileImageField
+from django.contrib.auth.password_validation import validate_password
+from django.utils.safestring import mark_safe
 
 
 class LoginForm(forms.Form):
@@ -20,7 +17,11 @@ class RegisterForm(LoginForm):
         widget=forms.PasswordInput, label="Repeat password", max_length=100
     )
     terms = forms.BooleanField(
-        label="I've read, understand and accept the Terms & Conditions and the Privacy and Cookies Policy"
+        label=mark_safe(
+            'I\'ve read, understand and accept the <a href="../../page/legal/terms-and-conditions" target="_blank">'
+            'Terms & Conditions</a> and the <a href="../../page/legal/privacy-policy" target="_blank">Privacy</a>'
+            ' and <a href="../../page/legal/cookies-policy" target="_blank">Cookies Policy</a>'
+        )
     )
 
     field_order = ["name", "surname", "email", "password", "password2", "terms"]
@@ -38,7 +39,10 @@ class RegisterForm(LoginForm):
         cc = self.cleaned_data.get("terms", False)
         if not cc:
             raise forms.ValidationError(
-                "In order to signup you have to accept our Terms & Conditions and our Privacy and Cookies Policy."
+                'In order to signup you have to accept our <a href="../../page/legal/terms-and-conditions"'
+                ' target="_blank">Terms & Conditions</a> and the <a href="../../page/legal/privacy-policy"'
+                ' target="_blank">Privacy</a> and <a href="../../page/legal/cookies-policy" target="_blank">'
+                "Cookies Policy</a>."
             )
         return cc
 

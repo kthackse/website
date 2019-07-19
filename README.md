@@ -30,6 +30,10 @@ Current maintainer: [@oriolclosa](https://github.com/oriolclosa).
 - Job offers management related to companies which can be both internal or external linking it to the company's own recruitment tool.
 - Job applications created by registered users on the system.
 
+### Pages
+
+- Page management, add static pages to the website setting the title and content.
+
 ## Project setup
 
 Requirements: Python 3, virtualenv and pip.
@@ -44,6 +48,7 @@ Continue with only one of the following sections depending on the purpose of the
 ### Local server
 
 - `python manage.py migrate`.
+- `python manage.py loaddata initial`.
 - `python manage.py createsuperuser`.
 - `python manage.py runserver`.
 
@@ -172,6 +177,10 @@ The **homepage will automatically update** depending on the events you have on t
 If you want to **set your own homepage** for the current active event, you can do so by enabling the "custom home" option. The system will display the `index.html` located in `app/templates/custom/[EVENT_CODE]/` in case it's found. This will enable to display custom homepages if desired made with other tools such as a JavaScript framework.
 
 A live page with all the schedule will also be automatically created with the data provided as schedule events. These can also be marked as important (which will make them appear on the email summary) and don't necessarily need to have a end time.
+
+### Pages
+
+You can also add pages to the site, by default, `Terms & Conditions`, `Privacy Policy` and `Cookies Policy` pages are created with their own content. However, you can add as many as you want. The content can either be plain text, HTML code, markdown or a markdown URL. This last one will retrieve the content of the link and render it as if you had written the text in markdown on the admin page itself. You can use this to display on the website a HTML rendered page of a public markdown file hosted on GitHub for exemple, such as a readme.
 
 ## Contribution
 

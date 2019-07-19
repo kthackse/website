@@ -1,0 +1,26 @@
+- model: page.category
+  pk: 00ebd99c-26e9-42a0-a1f4-f1f9a0a9cb47
+  fields:
+    title: Legal
+    code: legal
+- model: page.page
+  fields:
+    title: Terms and Conditions
+    category: 00ebd99c-26e9-42a0-a1f4-f1f9a0a9cb47
+    code: terms-and-conditions
+    content_markdown: '## TODO'
+    published: true
+- model: page.page
+  fields:
+    title: Privacy Policy
+    category: 00ebd99c-26e9-42a0-a1f4-f1f9a0a9cb47
+    code: privacy-policy
+    content_markdown: '## TODO'
+    published: true
+- model: page.page
+  fields:
+    title: Cookies Policy
+    category: 00ebd99c-26e9-42a0-a1f4-f1f9a0a9cb47
+    code: cookies-policy
+    content_markdown: '## TODO'
+    published: true

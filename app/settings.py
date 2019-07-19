@@ -32,11 +32,13 @@ INSTALLED_APPS = [
     "phonenumber_field",
     "djmoney",
     "bootstrap4",
+    "django_markup",
     "user",
     "event",
     "application",
     "job",
     "app",
+    "page",
 ]
 
 MIDDLEWARE = [
