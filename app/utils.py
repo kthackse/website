@@ -14,6 +14,13 @@ def get_substitutions_templates():
         "hk_domain": getattr(settings, "HACKATHON_DOMAIN", None),
         "hk_email_contact": getattr(settings, "HACKATHON_EMAIL_CONTACT", None),
         "hk_email_webdev": getattr(settings, "HACKATHON_EMAIL_WEBDEV", None),
+        "hk_sn_facebook": getattr(settings, "HACKATHON_SN_FACEBOOK", None),
+        "hk_sn_twitter": getattr(settings, "HACKATHON_SN_TWITTER", None),
+        "hk_sn_instagram": getattr(settings, "HACKATHON_SN_INSTAGRAM", None),
+        "hk_sn_youtube": getattr(settings, "HACKATHON_SN_YOUTUBE", None),
+        "hk_sn_linkedin": getattr(settings, "HACKATHON_SN_LINKEDIN", None),
+        "hk_sn_medium": getattr(settings, "HACKATHON_SN_MEDIUM", None),
+        "hk_sn_github": getattr(settings, "HACKATHON_SN_GITHUB", None),
     }
 
 

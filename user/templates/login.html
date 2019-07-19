@@ -5,16 +5,21 @@
 {% block head_title %}{% trans "Login" %}{% endblock %}
 
 {% block content %}
-    <h1>Login</h1>
+    <div class="container">
+      <div class="section-intro text-center">
+        <h2>Login</h2>
+      </div>
+      <div class="row">
+        <form action="" method="post" class="form ">
+            {% csrf_token %}
+            {% bootstrap_form form %}
 
-    <form action="" method="post" class="form ">
-        {% csrf_token %}
-        {% bootstrap_form form %}
+            <!-- Afegir forgot password -->
 
-        <!-- Afegir forgot password -->
+            <button class="btn btn-primary btn-block" type="submit">{% trans "Login" %}</button>
 
-        <button class="btn btn-primary btn-block" type="submit">{% trans "Login" %}</button>
-
-        <p>Don't have an account? Signup <a href="{% url 'user_signup' %}">here</a>!</p>
-    </form>
+            <p>Don't have an account? Signup <a href="{% url 'user_signup' %}">here</a>!</p>
+        </form>
+      </div>
+    </div>
 {% endblock %}

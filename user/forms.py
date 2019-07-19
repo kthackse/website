@@ -19,8 +19,8 @@ class RegisterForm(LoginForm):
     terms = forms.BooleanField(
         label=mark_safe(
             'I\'ve read, understand and accept the <a href="../../page/legal/terms-and-conditions" target="_blank">'
-            'Terms & Conditions</a> and the <a href="../../page/legal/privacy-policy" target="_blank">Privacy</a>'
-            ' and <a href="../../page/legal/cookies-policy" target="_blank">Cookies Policy</a>'
+            'Terms & Conditions</a> and the <a href="../../page/legal/privacy-and-cookies" target="_blank">'
+            'Privacy and Cookies Policy</a>'
         )
     )
 
@@ -40,9 +40,8 @@ class RegisterForm(LoginForm):
         if not cc:
             raise forms.ValidationError(
                 'In order to signup you have to accept our <a href="../../page/legal/terms-and-conditions"'
-                ' target="_blank">Terms & Conditions</a> and the <a href="../../page/legal/privacy-policy"'
-                ' target="_blank">Privacy</a> and <a href="../../page/legal/cookies-policy" target="_blank">'
-                "Cookies Policy</a>."
+                ' target="_blank">Terms & Conditions</a> and the <a href="../../page/legal/privacy-and-cookies"'
+                ' target="_blank">Privacy and Cookies Policy</a>.'
             )
         return cc
 

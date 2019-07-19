@@ -66,7 +66,7 @@ def signup(request):
 def logout(request):
     auth.logout(request)
     # messages.success(request, 'Successfully logged out!')
-    return HttpResponseRedirect(reverse("user_login"))
+    return HttpResponseRedirect(reverse("app_home"))
 
 
 @login_required
@@ -107,6 +107,7 @@ def profile(request):
                 request.user.email = email
                 # TODO: Send confirmation email and set message of that on webpage
             # TODO: Fix picture update
+            # TODO: Remove old pictures with .delete_all_created_images()
             picture = form.cleaned_data["picture"]
             if picture:
                 UserChange(
@@ -172,5 +173,5 @@ def profile(request):
     user_data = request.user.get_dict()
     form = forms.ProfileForm(user_data)
     return render(
-        request, "profile.html", {"form": form, "picture": request.user.picture}
+        request, "profile.html", {"form": form, "picture": request.user.picture.crop['500x500']}
     )

@@ -5,17 +5,22 @@
 {% block head_title %}{% trans "Signup" %}{% endblock %}
 
 {% block content %}
-    <h1>Signup</h1>
+    <div class="container">
+      <div class="section-intro text-center">
+        <h2>Signup</h2>
+      </div>
+      <div class="row">
+        <form action="" method="post" class="form ">
+            {% csrf_token %}
+            {% bootstrap_form form %}
 
-    <form action="" method="post" class="form ">
-        {% csrf_token %}
-        {% bootstrap_form form %}
+            <!-- TODO: Add this warning on the application -->
+            <!--<p class="team-info team-info-margin"><i class="fa fa-exclamation-triangle"></i> <strong>Remember!</strong> If you apply to any event as a team, your team members also need to register themselves.</p>-->
 
-        <!-- TODO: Add this warning on the application -->
-        <!--<p class="team-info team-info-margin"><i class="fa fa-exclamation-triangle"></i> <strong>Remember!</strong> If you apply to any event as a team, your team members also need to register themselves.</p>-->
+            <button class="btn btn-primary btn-block" type="submit">{% trans "Signup" %}</button>
 
-        <button class="btn btn-primary btn-block" type="submit">{% trans "Signup" %}</button>
-
-        <p>Already have an account? Login <a href="{% url 'user_login' %}">here</a>!</p>
-    </form>
+            <p>Already have an account? Login <a href="{% url 'user_login' %}">here</a>!</p>
+        </form>
+      </div>
+    </div>
 {% endblock %}

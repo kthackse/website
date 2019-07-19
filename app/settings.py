@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     "djmoney",
     "bootstrap4",
     "django_markup",
+    "versatileimagefield",
     "user",
     "event",
     "application",

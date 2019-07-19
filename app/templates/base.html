@@ -22,38 +22,42 @@
         <title>{% block title %}{% block head_title %}{% endblock %} | {% endblock %}{{ hk_app_name }}</title>
     </head>
     <body>
+        <div class="background"></div>
         {% block navbar %}
-            <nav class="navbar navbar-default navbar-fixed-top">
-                <div class="container">
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                                data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <a class="navbar-brand white-text" href="/"><img src="{% static 'img/logo.png' %}" /></a>
-                    </div>
-                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                        <ul class="nav navbar-nav navbar-right ">
-                            <li><a href="{% url 'app_home' %}">Home</a></li>
-                            {% if request.user.is_authenticated %}
-                                {% if request.user.is_admin %}
-                                    <li class="{% if request.resolver_match.url_name == "admin:index" %}active{% endif %}">
-                                        <a href="{% url 'admin:index' %}">Admin</a>
-                                    </li>
-                                {% endif %}
-                                <li><a href="{% url 'user_profile' %}">Profile</a></li>
-                                <li><a href="{% url 'user_logout' %}">Logout</a></li>
-                            {% else %}
-                                <li><a href="{% url 'user_login' %}">Login</a></li>
-                                <li><a href="{% url 'user_signup' %}">Signup</a></li>
-                            {% endif %}
-                        </ul>
-                    </div>
+            <header class="header-area">
+                <div class="main-menu">
+                    <nav class="navbar navbar-expand-lg navbar-light">
+                        <div class="container box_1620">
+                            <!-- TODO: Change logo when PNG is ready -->
+                            <a class="navbar-brand white-text" style="color: #eeeeee;" href="/">{{ hk_app_name }}</a>
+                            <!--<a class="navbar-brand white-text" href="/"><img src="{% static 'img/logo.png' %}" /></a>-->
+                            <!-- TODO: Fix mobile menu -->
+                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                                <span class="icon-bar"></span>
+                            </button>
+                            <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+                                <ul class="nav navbar-nav menu_nav justify-content-end">
+                                    <li class="nav-item"><a class="nav-link" href="{% url 'app_home' %}">Home</a></li>
+                                    {% if request.user.is_authenticated %}
+                                        {% if request.user.is_admin %}
+                                            <li class="nav-item{% if request.resolver_match.url_name == "admin:index" %} active{% endif %}">
+                                                <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
+                                            </li>
+                                        {% endif %}
+                                        <li class="nav-item"><a class="nav-link" href="{% url 'user_profile' %}">Profile</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="{% url 'user_logout' %}">Logout</a></li>
+                                    {% else %}
+                                        <li class="nav-item"><a class="nav-link" href="{% url 'user_login' %}">Login</a></li>
+                                        <li class="nav-item"><a class="nav-link" href="{% url 'user_signup' %}">Signup</a></li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                    </nav>
                 </div>
-            </nav>
+            </header>
         {% endblock %}
         <!-- Add error/info messages display -->
         {% block body_plain %}
@@ -61,12 +65,10 @@
                 <div class="content-inside">
                     {% block body %}
                         <div class="margin-top">
-                            <div class="col-md-6 col-md-offset-3">
-                                <div class="panel panel-default">
-                                    <div class="panel-body">
-                                        {% block content %}
-                                        {% endblock %}
-                                    </div>
+                            <div class="panel panel-default">
+                                <div class="panel-body">
+                                    {% block content %}
+                                    {% endblock %}
                                 </div>
                             </div>
                         </div>
@@ -84,12 +86,46 @@
                             <p>Need help? Ping us at {{ hk_email_contact | urlize }}!</p>
                         </div>
                         <div class="social-icons col-sm-6 text-right text-center-xs">
-                            <!-- Add social networks -->
+                            {% if hk_sn_facebook %}
+                                <a class="btns" target="_blank" href="https://facebook.com/{{ hk_sn_facebook }}">
+                                    <i aria-hidden="true" class="fab fa-facebook fa-lg"></i>
+                                </a>
+                            {% endif %}
+                            {% if hk_sn_twitter %}
+                                <a class="btns" target="_blank" href="https://twitter.com/{{ hk_sn_twitter }}">
+                                    <i aria-hidden="true" class="fab fa-twitter fa-lg"></i>
+                                </a>
+                            {% endif %}
+                            {% if hk_sn_instagram %}
+                                <a class="btns" target="_blank" href="https://instagram.com/{{ hk_sn_instagram }}">
+                                    <i aria-hidden="true" class="fab fa-instagram fa-lg"></i>
+                                </a>
+                            {% endif %}
+                            {% if hk_sn_youtube %}
+                                <a class="btns" target="_blank" href="https://youtube.com/channel/{{ hk_sn_youtube }}">
+                                    <i aria-hidden="true" class="fab fa-youtube fa-lg"></i>
+                                </a>
+                            {% endif %}
+                            {% if hk_sn_medium %}
+                                <a class="btns" target="_blank" href="https://medium.com/@{{ hk_sn_medium }}">
+                                    <i aria-hidden="true" class="fab fa-medium fa-lg"></i>
+                                </a>
+                            {% endif %}
+                            {% if hk_sn_github %}
+                                <a class="btns" target="_blank" href="https://github.com/{{ hk_sn_github }}">
+                                    <i aria-hidden="true" class="fab fa-github fa-lg"></i>
+                                </a>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-12 text-center">
+                        <div class="col-md-12 text-center" style="margin-bottom: 15px;">
                             <small> Made with 💛 by students in KTH 🇸🇪</small>
+                        </div>
+                        <div class="col-md-12 text-center">
+                            <a href="/page/legal/legal-notice">Legal notice</a>
+                            <a href="/page/legal/terms-and-conditions" style="margin-left: 15px;">Terms and conditions</a>
+                            <a href="/page/legal/privacy-and-cookies" style="margin-left: 15px;">Privacy and cookies</a>
                         </div>
                     </div>
                 </div>

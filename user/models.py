@@ -170,6 +170,8 @@ class User(AbstractBaseUser):
         self.clean()
         if is_email_organizer(self.email):
             self.type = UserType.ORGANISER.value
+        #if self.picture:
+        #    self.picture = self.picture.thumbnail["500x500"]
         return super().save(*args, **kwargs)
 
 
