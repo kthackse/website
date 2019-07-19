@@ -56,7 +56,7 @@ def signup(request):
                 )
                 user = auth.authenticate(email=email, password=password)
                 auth.login(request, user)
-                return HttpResponseRedirect(page_redirect)
+                return HttpResponseRedirect(reverse("app_home"))
     else:
         form = forms.RegisterForm()
 
@@ -173,5 +173,5 @@ def profile(request):
     user_data = request.user.get_dict()
     form = forms.ProfileForm(user_data)
     return render(
-        request, "profile.html", {"form": form, "picture": request.user.picture.crop['500x500']}
+        request, "profile.html", {"form": form, "user": user_data, "picture": request.user.picture.crop['500x500']}
     )

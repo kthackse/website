@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+{% load i18n %}
+
+{% block head_title %}{% trans "Dashboard" %}{% endblock %}
+
+{% block content %}
+    <div class="container">
+      <div class="section-intro text-center">
+        <h2>Dashboard</h2>
+      </div>
+      {% if events %}
+          <div class="row">
+            <div class="col-md-12 col-lg-12 mb-12 mb-lg-0 text-center pb-25px">
+                <h3>Future events</h3>
+            </div>
+          </div>
+        {% for event in events %}
+            <div class="row dashboard-event">
+                <div class="col-md-2 col-lg-2 mb-2 mb-lg-0">
+                    <img src="/files/{{ event.picture }}" />
+                </div>
+                <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                    <h4>{{ event.name }}</h4>
+                    <h5>{{ event.city }}, {{ event.country }}</h5>
+                    <p>{{ event.description }}</p>
+                </div>
+                <div class="col-md-4 col-lg-4 mb-4 mb-lg-0 text-right">
+                    <h2>{{ event.starts_at | date:"Y" }}</h2>
+                    <h3>{{ event.starts_at | date:"F d" }}</h3>
+                </div>
+            </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+{% endblock %}

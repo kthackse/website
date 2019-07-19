@@ -51,23 +51,23 @@
                     </div>
                     <div class="form-group">
                         <label for="id_phoneemail">Phone</label>
-                        <input type="text" name="phone" value="{{ form.phone.value }}" maxlength="225" class="form-control" placeholder="hacker@kthack.com" id="id_phone">
+                        <input type="text" name="phone" value="{% if form.phone.value %}{{ form.phone.value }}{% endif %}" maxlength="225" class="form-control" placeholder="+12125550179" id="id_phone">
                     </div>
-                    <div class="row form-group">
+                    <div class="row">
                         <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
                             <div class="form-group">
                                 <label for="id_city">City</label>
-                                <input type="text" name="city" value="{{ form.city.value }}" maxlength="225" class="form-control" placeholder="hacker@kthack.com" id="id_city">
+                                <input type="text" name="city" value="{% if form.city.value %}{{ form.city.value }}{% endif %}" maxlength="225" class="form-control" placeholder="New York" id="id_city">
                             </div>
                         </div>
                         <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
                             <div class="form-group">
                                 <label for="id_country">Country</label>
-                                <input type="text" name="country" value="{{ form.country.value }}" maxlength="225" class="form-control" placeholder="hacker@kthack.com" id="id_country">
+                                <input type="text" name="country" value="{% if form.country.value %}{{ form.country.value }}{% endif %}" maxlength="225" class="form-control" placeholder="United States of America" id="id_country">
                             </div>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group-button">
                         <button class="btn btn-primary btn-block" type="submit">{% trans "Update" %}</button>
                     </div>
                 </div>
@@ -75,4 +75,37 @@
          </form>
       </div>
     </div>
+    {% if user.type == 1 %}
+        <div class="container container-bottom">
+          <div class="section-intro text-center">
+            <h2>Organiser information</h2>
+          </div>
+          <div class="row">
+            <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                <h3>Departments</h3>
+                  <ul>
+                      {% for department in user.departments %}
+                        <li>{{ department }}</li>
+                      {% endfor %}
+                  </ul>
+            </div>
+          </div>
+        </div>
+    {% elif user.type == 2 %}
+        <div class="container container-bottom">
+          <div class="section-intro text-center">
+            <h2>Volunteer information</h2>
+          </div>
+          <div class="row">
+            <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                <h3>Departments</h3>
+                  <ul>
+                      {% for department in user.departments %}
+                        <li>{{ department }}</li>
+                      {% endfor %}
+                  </ul>
+            </div>
+          </div>
+        </div>
+    {% endif %}
 {% endblock %}

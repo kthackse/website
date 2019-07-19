@@ -17,6 +17,11 @@ body .content{
   padding-bottom: 230px;
 }
 
+.col-centered {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 footer {
   background-color: rgba(0, 57, 132, 0.75);
   padding-top: 15px;
@@ -52,6 +57,29 @@ footer {
   margin-left: 5px;
 }
 
+.form-group-button {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-group-button-2 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.container-bottom {
+  margin-top: 50px;
+}
+
+.dashboard-event {
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.dashboard-event div {
+  padding: 1rem;
+}
+
 form {
   width: 100%;
   margin: 0;
@@ -65,7 +93,7 @@ form input {
 }
 
 
-form input[type=text],input[type=email] {
+form input[type=text],input[type=email],input[type=password] {
   background-color: rgba(255, 255, 255, 0.1) !important;
 }
 
@@ -155,6 +183,16 @@ h3, .h3 {
 @media (min-width: 992px) {
   .pb-90px {
     padding-bottom: 90px;
+  }
+}
+
+.pb-25px {
+  padding-bottom: 15px;
+}
+
+@media (min-width: 992px) {
+  .pb-25px {
+    padding-bottom: 25px;
   }
 }
 
@@ -1006,7 +1044,7 @@ h3, .h3 {
   max-width: 640px;
   margin-right: auto;
   margin-left: auto;
-  margin-bottom: 50px;
+  margin-bottom: 35px;
 }
 
 .section-intro p {

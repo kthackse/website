@@ -10,7 +10,7 @@ from django.urls import reverse
 
 from app import settings
 from event.models import Event
-from event.utils import get_next_or_past_event
+from event.utils import get_next_or_past_event, get_next_events
 from user.enums import UserType
 from user.models import User
 
@@ -18,19 +18,22 @@ from user.models import User
 def files(request, file_):
     path, file_name = os.path.split(file_)
     if request.user.is_authenticated:
-        if path in ["/files/user/picture", "/files/__sized__/user/picture"]:
+        if path in ["/files/user/picture", "/files/__sized__/user/picture", "user/picture"]:
+            if file_[:7] != "/files/":
+                file_ = "/files/" + file_
             response = StreamingHttpResponse(open(settings.BASE_DIR + file_, "rb"))
             response["Content-Type"] = ""
             return response
         else:
             HttpResponseNotFound()
+    if path in ["/files/event/picture", "/files/__sized__/event/picture", "event/picture"]:
+        if file_[:7] != "/files/":
+            file_ = "/files/" + file_
+        response = StreamingHttpResponse(open(settings.BASE_DIR + file_, "rb"))
+        response["Content-Type"] = ""
+        return response
     else:
-        if path in ["/files/event/picture", "/files/__sized__/event/picture"]:
-            response = StreamingHttpResponse(open(settings.BASE_DIR + file_, "rb"))
-            response["Content-Type"] = ""
-            return response
-        else:
-            HttpResponseNotFound()
+        HttpResponseNotFound()
     return HttpResponseRedirect(reverse("user_login"))
 
 
@@ -42,6 +45,11 @@ def home(request):
         if event.custom_home:
             return render(request, "custom/" + event.code + "/index.html", current_data)
     return render(request, "home.html", current_data)
+
+
+def dashboard(request):
+    events = get_next_events()
+    return render(request, "dashboard.html", {"events": events})
 
 
 def redirect_to(request):

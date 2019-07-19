@@ -69,7 +69,7 @@ class User(AbstractBaseUser):
         choices=((u.value, u.name) for u in UserType),
         default=UserType.PARTICIPANT.value,
     )
-    departments = models.ManyToManyField("Department")
+    departments = models.ManyToManyField("Department", blank=True)
     company = models.ForeignKey(
         "Company", on_delete=models.PROTECT, null=True, blank=True
     )
@@ -95,36 +95,46 @@ class User(AbstractBaseUser):
     EMAIL_FIELD = "email"
     REQUIRED_FIELDS = ["name", "surname"]
 
+    @property
     def is_organiser(self):
         return self.type == UserType.ORGANISER.value
 
+    @property
     def is_participant(self):
         return self.type == UserType.PARTICIPANT.value
 
+    @property
     def is_mentor(self):
         return self.type == UserType.MENTOR.value
 
+    @property
     def is_sponsor(self):
         return self.type == UserType.SPONSOR.value
 
+    @property
     def is_recruiter(self):
         return self.type == UserType.RECRUITER.value
 
+    @property
     def is_media(self):
         return self.type == UserType.MEDIA.value
 
+    @property
     def is_admin(self):
         return DepartmentType.ADMIN.value in [d.type for d in self.departments.all()]
 
+    @property
     def is_director(self):
         return DepartmentType.DIRECTOR.value in [d.type for d in self.departments.all()]
 
+    @property
     def is_underage(self):
-        return self.age < 18
+        # TODO: Check if underage correctly
+        return (timezone.now() - self.birthday) < timezone.timedelta(days=365*18)
 
     @property
     def is_staff(self):
-        return self.is_organiser()
+        return self.is_organiser
 
     def has_perm(self, perm, obj=None):
         return True
@@ -148,15 +158,17 @@ class User(AbstractBaseUser):
             "phone": self.phone,
             "city": self.city,
             "country": self.country,
+            "type": self.type,
+            "departments": list(self.departments.all()),
         }
 
     def clean(self):
         messages = dict()
-        if not self.is_organiser() and self.departments.count() > 0:
+        if not self.is_organiser and self.departments.count() > 0:
             messages[
                 "departments"
             ] = "A user must be an organiser in order to belong to a department"
-        if (not self.is_sponsor() or not self.is_recruiter()) and self.company:
+        if (not self.is_sponsor or not self.is_recruiter) and self.company:
             messages[
                 "company"
             ] = "A user must be a sponsor or a recruiter in order to belong to a company"
@@ -194,7 +206,7 @@ class Department(models.Model):
             messages["type"] = "There can be at most one department per type"
         if (
             self.type is not DepartmentType.ADMIN.value
-            and Department.objects.filter(type=DepartmentType.ADMIN.value).count() == 1
+            and Department.objects.filter(type=DepartmentType.ADMIN.value).count() < 1
         ):
             messages["type"] = "The admin department has to exist"
         if messages:
