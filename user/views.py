@@ -4,8 +4,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from app.views import redirect_to
 from user import forms
+from user.enums import SexType
 from user.models import User, UserChange
 
 
@@ -34,6 +34,7 @@ def login(request):
 
 
 def signup(request):
+    current_data = dict()
     if request.user.is_authenticated:
         return HttpResponseRedirect(reverse("app_dashboard"))
 
@@ -44,13 +45,26 @@ def signup(request):
             password = form.cleaned_data["password"]
             name = form.cleaned_data["name"]
             surname = form.cleaned_data["surname"]
+            phone = form.cleaned_data["phone"]
+            birthday = form.cleaned_data["birthday"]
+            sex = form.cleaned_data["sex"]
+            city = form.cleaned_data["city"]
+            country = form.cleaned_data["country"]
 
             if User.objects.filter(email=email).first() is not None:
                 # messages.error(request, 'An account with this email already exists')
                 pass
             else:
-                user = User.objects.create_user(
-                    email=email, password=password, name=name, surname=surname
+                user = User.objects.create_participant(
+                    email=email,
+                    password=password,
+                    name=name,
+                    surname=surname,
+                    phone=phone,
+                    birthday=birthday,
+                    sex=sex,
+                    city=city,
+                    country=country,
                 )
                 user = auth.authenticate(email=email, password=password)
                 auth.login(request, user)
@@ -58,7 +72,19 @@ def signup(request):
     else:
         form = forms.RegisterForm()
 
-    return render(request, "signup.html", {"form": form})
+    current_data["form"] = form
+    current_data["sexes"] = [
+        (
+            (
+                sex.name.capitalize()
+                if sex.name.lower() != "none"
+                else "Prefer not to say"
+            ),
+            sex.value,
+        )
+        for sex in SexType
+    ]
+    return render(request, "signup.html", current_data)
 
 
 def logout(request):
@@ -116,7 +142,9 @@ def profile(request):
                     value_current=picture,
                 ).save()
                 request.user.picture = picture
-            picture_public_participants = form.cleaned_data["picture_public_participants"]
+            picture_public_participants = form.cleaned_data[
+                "picture_public_participants"
+            ]
             if request.user.picture_public_participants != picture_public_participants:
                 UserChange(
                     user=request.user,
@@ -126,8 +154,13 @@ def profile(request):
                     value_current=picture_public_participants,
                 ).save()
                 request.user.picture_public_participants = picture_public_participants
-            picture_public_sponsors_and_recruiters = form.cleaned_data["picture_public_sponsors_and_recruiters"]
-            if request.user.picture_public_sponsors_and_recruiters != picture_public_sponsors_and_recruiters:
+            picture_public_sponsors_and_recruiters = form.cleaned_data[
+                "picture_public_sponsors_and_recruiters"
+            ]
+            if (
+                request.user.picture_public_sponsors_and_recruiters
+                != picture_public_sponsors_and_recruiters
+            ):
                 UserChange(
                     user=request.user,
                     changed_by=request.user,
@@ -135,7 +168,9 @@ def profile(request):
                     value_previous=request.user.picture_public_sponsors_and_recruiters,
                     value_current=picture_public_sponsors_and_recruiters,
                 ).save()
-                request.user.picture_public_sponsors_and_recruiters = picture_public_sponsors_and_recruiters
+                request.user.picture_public_sponsors_and_recruiters = (
+                    picture_public_sponsors_and_recruiters
+                )
             phone = form.cleaned_data["phone"]
             if request.user.phone != phone:
                 UserChange(
@@ -146,6 +181,16 @@ def profile(request):
                     value_current=phone,
                 ).save()
                 request.user.phone = phone
+                city = form.cleaned_data["city"]
+                if request.user.city != city:
+                    UserChange(
+                        user=request.user,
+                        changed_by=request.user,
+                        field="city",
+                        value_previous=request.user.city,
+                        value_current=city,
+                    ).save()
+                    request.user.city = city
             city = form.cleaned_data["city"]
             if request.user.city != city:
                 UserChange(
@@ -171,5 +216,11 @@ def profile(request):
     user_data = request.user.get_dict()
     form = forms.ProfileForm(user_data)
     return render(
-        request, "profile.html", {"form": form, "user": user_data, "picture": request.user.picture.crop['500x500']}
+        request,
+        "profile.html",
+        {
+            "form": form,
+            "user": user_data,
+            "picture": request.user.picture.crop["500x500"],
+        },
     )

@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth.password_validation import validate_password
 from django.utils.safestring import mark_safe
 
+from user.enums import SexType
+
 
 class LoginForm(forms.Form):
     email = forms.EmailField(label="Email", max_length=255)
@@ -24,10 +26,12 @@ class RegisterForm(LoginForm):
         )
     )
     phone = forms.CharField(label="Phone", max_length=225)
+    birthday = forms.DateField(label="Birthday")
+    sex = forms.ChoiceField(label="Sex", choices=((t.value, t.name) for t in SexType))
     city = forms.CharField(label="City", max_length=225)
     country = forms.CharField(label="Country", max_length=225)
 
-    field_order = ["name", "surname", "email", "password", "password2", "phone", "city", "country", "terms"]
+    field_order = ["name", "surname", "email", "password", "password2", "phone", "birthday", "sex", "city", "country", "terms"]
 
     def clean_password2(self):
         # Check that the two password entries match

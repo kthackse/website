@@ -41,6 +41,24 @@
                 <div class="row">
                     <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
                         <div class="form-group">
+                            <label for="id_birthday">Birthday</label>
+                            <input type="date" name="birthday" value="{% if form.birthday.value %}{{ form.birthday.value }}{% endif %}" maxlength="225" class="form-control" id="id_birthday">
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                        <div class="form-group">
+                            <label for="id_sex">Sex</label>
+                             <select name="sex" class="form-control" id="id_sex">
+                                 {% for sex, sex_value in sexes %}
+                                    <option value="{{ sex_value }}" {% if sex == "Female" %}selected{% endif %}>{{ sex }}</option>
+                                 {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                        <div class="form-group">
                             <label for="id_city">City</label>
                             <input type="text" name="city" value="{% if form.city.value %}{{ form.city.value }}{% endif %}" maxlength="225" class="form-control" placeholder="New York" id="id_city">
                         </div>

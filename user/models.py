@@ -13,6 +13,37 @@ from user.enums import UserType, DepartmentType, SexType
 
 
 class UserManager(BaseUserManager):
+    def create_participant(
+        self,
+        email,
+        name,
+        surname,
+        password,
+        phone,
+        birthday,
+        sex,
+        city,
+        country,
+    ):
+        if not email:
+            raise ValueError("A user must have an email")
+
+        user = self.model(
+            email=email,
+            name=name,
+            surname=surname,
+            type=UserType.PARTICIPANT.value,
+            phone=phone,
+            birthday=birthday,
+            sex=sex,
+            city=city,
+            country=country,
+        )
+
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
     def create_user(
         self, email, name, surname, type=UserType.PARTICIPANT.value, password=None
     ):
@@ -130,7 +161,7 @@ class User(AbstractBaseUser):
     @property
     def is_underage(self):
         # TODO: Check if underage correctly
-        return (timezone.now() - self.birthday) < timezone.timedelta(days=365*18)
+        return (timezone.now().date() - self.birthday) < timezone.timedelta(days=365 * 18)
 
     @property
     def is_staff(self):
@@ -173,7 +204,9 @@ class User(AbstractBaseUser):
                 "company"
             ] = "A user must be a sponsor or a recruiter in order to belong to a company"
         # Check properly if 14 already or not
-        if self.birthday and (timezone.now().today() - self.birthday) < timezone.timedelta(days=14*365):
+        if self.birthday and (
+            timezone.now().date() - self.birthday
+        ) < timezone.timedelta(days=14 * 365):
             messages["age"] = "The minimum age is 14"
         if messages:
             raise ValidationError(messages)
@@ -182,7 +215,7 @@ class User(AbstractBaseUser):
         self.clean()
         if is_email_organizer(self.email):
             self.type = UserType.ORGANISER.value
-        #if self.picture:
+        # if self.picture:
         #    self.picture = self.picture.thumbnail["500x500"]
         return super().save(*args, **kwargs)
 
@@ -235,7 +268,9 @@ class Company(models.Model):
 class UserChange(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey("User", on_delete=models.PROTECT)
-    changed_by = models.ForeignKey("User", on_delete=models.PROTECT, related_name="changed_by")
+    changed_by = models.ForeignKey(
+        "User", on_delete=models.PROTECT, related_name="changed_by"
+    )
     field = models.CharField(max_length=255)
     value_previous = models.CharField(max_length=255, blank=True, null=True)
     value_current = models.CharField(max_length=255)

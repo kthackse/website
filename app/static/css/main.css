@@ -112,7 +112,7 @@ form input,select,textarea {
 }
 
 
-form input[type=text],input[type=email],input[type=password],select,textarea {
+form input[type=text],input[type=email],input[type=password],input[type=date],select,textarea {
   background-color: rgba(255, 255, 255, 0.1) !important;
 }
 
