@@ -1,7 +1,7 @@
 from django.utils import timezone
 
 from event.enums import EventApplicationStatus
-from event.models import Event
+from event.models import Event, Application
 
 
 def get_next_or_past_event(published=True):
@@ -29,4 +29,17 @@ def get_event(code, published=True):
         code=code,
         published=published,
         application_status=EventApplicationStatus.OPEN.value,
+    ).first()
+
+
+def get_application(event_id, user_id):
+    return Application.objects.filter(
+        event_id=event_id,
+        user_id=user_id,
+    ).first()
+
+
+def get_application_by_resume(resume):
+    return Application.objects.filter(
+        resume=resume,
     ).first()

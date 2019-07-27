@@ -1,3 +1,5 @@
+import os
+
 from django import template
 from django.utils import timezone
 
@@ -17,3 +19,8 @@ def days_left(timedelta: timezone.timedelta):
 @register.filter
 def days_left(timedelta: timezone.timedelta):
     return int(timedelta.total_seconds() // (60*60*24))
+
+
+@register.filter
+def file_name(value):
+    return os.path.basename(value.file.name)

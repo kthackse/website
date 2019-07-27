@@ -100,7 +100,7 @@ def path_and_rename_resume(instance, filename):
     """
     ext = filename.split(".")[-1]
     filename = "{}.{}".format(instance.user.id, ext)
-    return os.path.join("event/", instance.event.code, "/resume/", filename)
+    return os.path.join("event/resume/" + instance.event.code + "/", filename)
 
 
 class Application(models.Model):
@@ -126,7 +126,8 @@ class Application(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     status = models.PositiveSmallIntegerField(
-        choices=((s.value, s.name) for s in ApplicationStatus)
+        choices=((s.value, s.name) for s in ApplicationStatus),
+        default=ApplicationStatus.SAVED.value,
     )
 
     # Application details
@@ -155,11 +156,13 @@ class Application(models.Model):
 
     # Swag
     diet = models.PositiveSmallIntegerField(
-        choices=((t.value, t.name) for t in DietType)
+        choices=((t.value, t.name) for t in DietType),
+        default=DietType.REGULAR.value,
     )
     diet_other = models.CharField(max_length=255, blank=True, null=True)
     tshirt = models.PositiveSmallIntegerField(
-        choices=((t.value, t.name) for t in TshirtSize)
+        choices=((t.value, t.name) for t in TshirtSize),
+        default=TshirtSize.L.value,
     )
     hardware = models.TextField(max_length=1000, null=True, blank=True)
 

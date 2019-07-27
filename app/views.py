@@ -10,7 +10,8 @@ from django.shortcuts import render
 from django.urls import reverse
 
 from app import settings
-from event.utils import get_next_or_past_event, get_next_events
+from event.utils import get_next_or_past_event, get_next_events, get_application_by_resume
+from user.enums import UserType
 
 
 def files(request, file_):
@@ -22,6 +23,14 @@ def files(request, file_):
             response = StreamingHttpResponse(open(settings.BASE_DIR + file_, "rb"))
             response["Content-Type"] = ""
             return response
+        elif path[:path.rfind("/")] in ["/files/event/resume", "event/resume"]:
+            application = get_application_by_resume(resume=file_)
+            if request.user.type in [UserType.ORGANISER.value, UserType.VOLUNTERR.value] or application.resume_available and request.user.type in [UserType.SPONSOR.value, UserType.RECRUITER.value] or application.user == request.user:
+                if file_[:7] != "/files/":
+                    file_ = "/files/" + file_
+                response = StreamingHttpResponse(open(settings.BASE_DIR + file_, "rb"))
+                response["Content-Type"] = ""
+                return response
         else:
             HttpResponseNotFound()
     if path in ["/files/event/picture", "/files/__sized__/event/picture", "event/picture"]:
