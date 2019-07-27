@@ -180,7 +180,7 @@ A live page with all the schedule will also be automatically created with the da
 
 ### Pages
 
-You can also add pages to the site, by default, `Terms & Conditions`, `Privacy Policy` and `Cookies Policy` pages are created with their own content. However, you can add as many as you want. The content can either be plain text, HTML code, markdown or a markdown URL. This last one will retrieve the content of the link and render it as if you had written the text in markdown on the admin page itself. You can use this to display on the website a HTML rendered page of a public markdown file hosted on GitHub for exemple, such as a readme.
+You can also add pages to the site, by default, `Terms & Conditions`, `Privacy and Cookies Policy` and `Legal Notice` pages are created with their own content. However, you can add as many as you want. The content can either be plain text, HTML code, markdown or a markdown URL. This last one will retrieve the content of the link and render it as if you had written the text in markdown on the admin page itself. You can use this to display on the website a HTML rendered page of a public markdown file hosted on GitHub for exemple, such as a readme.
 
 ## Contribution
 
