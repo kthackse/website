@@ -96,7 +96,7 @@ def logout(request):
 @login_required
 def profile(request):
     if request.method == "POST":
-        form = forms.ProfileForm(request.POST)
+        form = forms.ProfileForm(request.POST, request.FILES)
         if form.is_valid():
             name = form.cleaned_data["name"]
             if request.user.name != name:
@@ -130,10 +130,8 @@ def profile(request):
                 request.user.email_verified = False
                 request.user.email = email
                 # TODO: Send confirmation email and set message of that on webpage
-            # TODO: Fix picture update
-            # TODO: Remove old pictures with .delete_all_created_images()
-            picture = form.cleaned_data["picture"]
-            if picture:
+            if "picture" in request.FILES:
+                picture = request.FILES["picture"]
                 UserChange(
                     user=request.user,
                     changed_by=request.user,
@@ -141,6 +139,7 @@ def profile(request):
                     value_previous=request.user.picture,
                     value_current=picture,
                 ).save()
+                request.user.picture.delete_sized_images()
                 request.user.picture = picture
             picture_public_participants = form.cleaned_data[
                 "picture_public_participants"

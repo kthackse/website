@@ -12,15 +12,16 @@ class EventApplicationStatus(enum.IntEnum):
 
 
 class ApplicationStatus(enum.IntEnum):
-    PENDING = 0
-    CANCELLED = 1
-    INVITED = 2
-    CONFIRMED = 3
-    REJECTED = 4
-    REMINDED = 5
-    EXPIRED = 6
-    DUBIOUS = 7
-    ATTENDED = 8
+    SAVED = 0
+    PENDING = 1
+    CANCELLED = 2
+    INVITED = 3
+    CONFIRMED = 4
+    REJECTED = 5
+    REMINDED = 6
+    EXPIRED = 7
+    DUBIOUS = 8
+    ATTENDED = 9
 
 
 class DietType(enum.IntEnum):

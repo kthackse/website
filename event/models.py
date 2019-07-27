@@ -92,6 +92,17 @@ class ScheduleEvent(models.Model):
             raise ValidationError(messages)
 
 
+def path_and_rename_resume(instance, filename):
+    """
+    Stack Overflow
+    Django ImageField change file name on upload
+    https://stackoverflow.com/questions/15140942/django-imagefield-change-file-name-on-upload
+    """
+    ext = filename.split(".")[-1]
+    filename = "{}.{}".format(instance.user.id, ext)
+    return os.path.join("event/", instance.event.code, "/resume/", filename)
+
+
 class Application(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     event = models.ForeignKey("event.Event", on_delete=models.PROTECT)
@@ -121,7 +132,6 @@ class Application(models.Model):
     # Application details
     description = models.TextField(max_length=1000)
     projects = models.TextField(max_length=1000)
-    newbie = models.BooleanField(default=False)
 
     # Reimbursement
     money_needed = MoneyField(
@@ -129,6 +139,7 @@ class Application(models.Model):
     )
 
     # Resume
+    resume = models.FileField(upload_to=path_and_rename_resume)
     resume_available = models.BooleanField(default=False)
 
     # University
@@ -150,7 +161,7 @@ class Application(models.Model):
     tshirt = models.PositiveSmallIntegerField(
         choices=((t.value, t.name) for t in TshirtSize)
     )
-    hardware = models.CharField(max_length=255, null=True, blank=True)
+    hardware = models.TextField(max_length=1000, null=True, blank=True)
 
     # Team
     team = models.ForeignKey("Team", on_delete=models.PROTECT, null=True, blank=True)

@@ -19,7 +19,25 @@ def apply(request, code):
         current_data["diets"] = [(diet.name.capitalize().replace("_", " "), diet.value) for diet in DietType]
         current_data["tshirts"] = [(tshirt.name.upper(), tshirt.value) for tshirt in TshirtSize]
         if request.method == "POST":
-            # TODO: Handle form
-            print("FORM SENT")
+            # TODO: Fill required fields
+            required_fields = ["university", "degree", "graduation_year", "description", "projects", "diet", "tshirt"]
+            all_filled = True
+            for required_field in required_fields:
+                if required_field not in request.POST:
+                    all_filled = False
+            all_filled &= "resume" in request.FILES
+            if all_filled:
+                university = request.POST["university"]
+                degree = request.POST["degree"]
+                graduation_year = request.POST["graduation_year"]
+                description = request.POST["description"]
+                projects = request.POST["projects"]
+                resume = request.FILES["resume"]
+                resume_available = request.POST["resume_available"]
+                diet = request.POST["diet"]
+                diet_other = (request.POST["diet_other"] if "diet_other" in request.POST else "")
+                tshirt = request.POST["tshirt"]
+                hardware = (request.POST["hardware"] if "hardware" in request.POST else "")
+                print("FORM SENT")
         return render(request, "apply.html", current_data)
     return HttpResponseNotFound()

@@ -10,11 +10,17 @@
         <h2>{{ event.name }} application</h2>
       </div>
       <div class="row">
-        <form action="" method="post" class="form ">
+          <div class="col-md-12 col-lg-12 mb-12 mb-lg-0 box-info">
+            Remember to <a class="button button-inline" href="{% url "user_profile" %}">update your profile</a> if your information has changed.
+          </div>
+          <form action="" method="post" enctype="multipart/form-data" class="form">
             {% csrf_token %}
             <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
                 <div class="section-intro subsection-intro text-center">
                     <h3>Your education</h3>
+                </div>
+                <div class="form-extra">
+                    <span>We would like to know a little about you, remember we can only accept students up to one year of graduation (either bachelor or master, PhD researchers are also welcome).</span>
                 </div>
                 <div class="form-group">
                     <label for="id_university">What university do you study at?</label>
@@ -41,6 +47,9 @@
                 <div class="section-intro subsection-intro subsection-intro-mid text-center">
                     <h3>Hackathons</h3>
                 </div>
+                <div class="form-extra">
+                    <span>Tell us about why you are excited, past experiences, things you want to accomplish...</span>
+                </div>
                 <div class="form-group">
                     <label for="id_description">Why do you want to come to {{ event.name }}?</label>
                     <textarea type="text" name="description" maxlength="1000" class="form-control" placeholder="" id="id_description"></textarea>
@@ -48,28 +57,50 @@
                 <div class="section-intro subsection-intro subsection-intro-mid text-center">
                     <h3>Your projects</h3>
                 </div>
+                <div class="form-extra">
+                    <span>Some of our sponsors could use this information for recruitment purposes if you desire so, please include as much as possible, not only for them but also for ourselves so we can review your application fairly.</span>
+                </div>
                 <div class="form-group">
                     <label for="id_projects">Tell us about something you've built!</label>
                     <textarea type="text" name="projects" maxlength="1000" class="form-control" placeholder="" id="id_projects"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="id_github"><i aria-hidden="true" class="fab fa-github fa-lg" style="margin-right: 5px;"></i> GitHub?</label>
-                    <input type="text" name="github" value="{{ form.github.value }}" maxlength="225" class="form-control" placeholder="https://github.com/kthackais" id="id_github">
+                    <input type="text" name="github" value="{{ form.github.value }}" maxlength="225" class="form-control" placeholder="https://github.com/fsociety" id="id_github">
                 </div>
                 <div class="form-group">
                     <label for="id_devpost"><i aria-hidden="true" class="fas fa-lightbulb fa-lg" style="margin-right: 5px;"></i> DevPost?</label>
-                    <input type="text" name="devpost" value="{{ form.devpost.value }}" maxlength="225" class="form-control" placeholder="https://devpost.com/kthackais" id="id_devpost">
+                    <input type="text" name="devpost" value="{{ form.devpost.value }}" maxlength="225" class="form-control" placeholder="https://devpost.com/elliotalderson" id="id_devpost">
                 </div>
                 <div class="form-group">
                     <label for="id_linkedin"><i aria-hidden="true" class="fab fa-linkedin fa-lg" style="margin-right: 5px;"></i> LinkedIn?</label>
-                    <input type="text" name="linkedin" value="{{ form.linkedin.value }}" maxlength="225" class="form-control" placeholder="https://linkedin.com/kthackais" id="id_linkedin">
+                    <input type="text" name="linkedin" value="{{ form.linkedin.value }}" maxlength="225" class="form-control" placeholder="https://linkedin.com/elliotalderson" id="id_linkedin">
                 </div>
                 <div class="form-group">
                     <label for="id_website"><i aria-hidden="true" class="fas fa-globe-europe fa-lg" style="margin-right: 5px;"></i> Website?</label>
                     <input type="text" name="website" value="{{ form.website.value }}" maxlength="225" class="form-control" placeholder="https://elliot.me" id="id_website">
                 </div>
+                <div class="form-extra">
+                    <span>You need to provide us with your resume in order to be able to review your application, only PDF files are allowed.</span>
+                </div>
+                <div class="form-group">
+                    <label for="id_resume">Upload your resume!</label>
+                     <div class="bootstrap4-multi-input">
+                        <input type="file" name="resume" id="id_resume" accept=".pdf">
+                     </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-check">
+                        <input type="checkbox" name="resume_available" class="form-check-input" id="id_resume_available">
+                        <label class="form-check-label" for="id_resume_available">I authorise {{ hk_name }} to share my resume and projects with this event sponsors.</a>
+                        </label>
+                    </div>
+                </div>
                 <div class="section-intro subsection-intro subsection-intro-mid text-center">
                     <h3>Some more information</h3>
+                </div>
+                <div class="form-extra">
+                    <span>This will help us with the logistics of the event. Take into account we can't ensure you will have other options than the ones you choose below.</span>
                 </div>
                 <div class="row">
                     <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
@@ -93,6 +124,17 @@
                         </div>
                     </div>
                 </div>
+                <div class="form-group" id="diet-other" style="display: none;">
+                    <label for="id_diet_other">Other dietary requirements?</label>
+                    <input type="text" name="diet_other" maxlength="225" class="form-control" id="id_diet_other">
+                </div>
+                <div class="form-group">
+                    <label for="id_hardware">Is there any hardware you would like us to have?</label>
+                    <textarea type="text" name="hardware" maxlength="1000" class="form-control" placeholder="" id="id_hardware"></textarea>
+                </div>
+                <div class="box-warning box-top">
+                    Remember if you have any teammates, they still have to apply by their own, this is an individual application.
+                </div>
                 <div class="form-group-button">
                     <button class="btn btn-primary btn-block" type="submit">{% trans "Apply" %}</button>
                 </div>
@@ -100,4 +142,16 @@
          </form>
       </div>
     </div>
+
+    <script>
+        function updateDietOther(){
+            if(this.value === "7"){
+                document.getElementById("diet-other").style.display = "block";
+            }
+            else{
+                document.getElementById("diet-other").style.display = "none";
+            }
+        }
+        document.getElementById("id_diet").onchange = updateDietOther;
+    </script>
 {% endblock %}

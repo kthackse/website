@@ -124,6 +124,62 @@ form .is-valid:focus {
   box-shadow: 0 0 0 2px rgba(40,167,69,.25) !important;
 }
 
+.form-extra span {
+  color: #aaa;
+}
+
+.box-top {
+  margin-top: 15px;
+}
+
+.box-info {
+  margin-bottom: 35px !important;
+  text-align: center;
+}
+
+.box-info::before {
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  content: "\f05a";
+  margin-right: 10px;
+  font-size: 25px;
+  top: 3.25px;
+  display: inline-block;
+  position: relative;
+}
+
+.box-warning {
+  margin-bottom: 35px !important;
+  text-align: center;
+}
+
+.box-warning::before {
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  content: "\f071";
+  margin-right: 10px;
+  font-size: 25px;
+  top: 3.25px;
+  display: inline-block;
+  position: relative;
+}
+
+.box-question {
+  margin-bottom: 35px !important;
+  text-align: center;
+}
+
+.box-question::before {
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  content: "\f059";
+  margin-right: 10px;
+  font-size: 25px;
+  top: 3.25px;
+  display: inline-block;
+  position: relative;
+}
+
 /* HOME */
 
 /* global style start
@@ -1456,6 +1512,10 @@ h3, .h3 {
   margin-bottom: 20px;
 }
 
+.form-extra {
+  margin-bottom: 10px;
+}
+
 .search-form .nice-select {
   width: 100%;
   height: 50px;
@@ -2650,6 +2710,13 @@ h3, .h3 {
 
 .button-hero {
   font-weight: 500;
+}
+
+.button-inline {
+  font-weight: 500;
+  margin-left: 0.25rem;
+  margin-right: 0.25rem;
+  padding: 3px 12px;
 }
 
 .button-contactForm {
