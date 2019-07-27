@@ -129,11 +129,22 @@ form .is-valid:focus {
 }
 
 .box-top {
-  margin-top: 15px;
+  margin-top: 25px !important;
+}
+
+.box-bottom {
+  margin-bottom: 25px !important;
+}
+
+.box-top2 {
+  margin-top: 40px !important;
+}
+
+.box-bottom2 {
+  margin-bottom: 40px !important;
 }
 
 .box-info {
-  margin-bottom: 35px !important;
   text-align: center;
 }
 
@@ -149,7 +160,6 @@ form .is-valid:focus {
 }
 
 .box-warning {
-  margin-bottom: 35px !important;
   text-align: center;
 }
 
@@ -165,7 +175,6 @@ form .is-valid:focus {
 }
 
 .box-question {
-  margin-bottom: 35px !important;
   text-align: center;
 }
 

@@ -3,16 +3,17 @@
 {% load i18n %}
 {% load app_tags %}
 
-{% block head_title %}{{ event.name }}{% trans " application" %}{% endblock %}
+{% block head_title %}{{ event.name }} {{ event.starts_at | date:"Y" }} {% trans " application" %}{% endblock %}
 
 {% block content %}
     <div class="container">
       <div class="section-intro text-center">
-        <h2>{{ event.name }} application</h2>
+          <h2>{{ event.name }} {{ event.starts_at | date:"Y" }} application</h2>
+          <h3>Current status: {{ status }}</h3>
       </div>
       <div class="row">
-          <div class="col-md-12 col-lg-12 mb-12 mb-lg-0 box-info">
-            Remember to <a class="button button-inline" href="{% url "user_profile" %}">update your profile</a> if your information has changed.
+          <div class="col-md-12 col-lg-12 mb-12 mb-lg-0 box-info box-bottom2">
+            Remember to <a class="button button-inline" href="{% url "user_profile" %}" target="_blank">update your profile</a> if your information has changed.
           </div>
           <form action="" method="post" enctype="multipart/form-data" class="form">
             {% csrf_token %}
@@ -25,19 +26,19 @@
                 </div>
                 <div class="form-group">
                     <label for="id_university">What university do you study at?</label>
-                    <input type="text" name="university" value="{{ application.university | default:"" }}" {% if application.status != 0 %}disabled{% endif %} maxlength="225" class="form-control" placeholder="Kungliga Tekniska Högskolan" id="id_university">
+                    <input type="text" name="university" value="{{ application.university | default:"" }}" {% if application and application.status != 0 %}disabled{% endif %} maxlength="225" class="form-control" placeholder="Kungliga Tekniska Högskolan" id="id_university">
                 </div>
                 <div class="row">
                     <div class="col-md-8 col-lg-8 mb-8 mb-lg-0">
                         <div class="form-group">
                             <label for="id_degree">What's your major/degree?</label>
-                            <input type="text" name="degree" value="{{ application.degree | default:"" }}" {% if application.status != 0 %}disabled{% endif %} maxlength="225" class="form-control" placeholder="Computer Science" id="id_degree">
+                            <input type="text" name="degree" value="{{ application.degree | default:"" }}" {% if application and application.status != 0 %}disabled{% endif %} maxlength="225" class="form-control" placeholder="Computer Science" id="id_degree">
                         </div>
                     </div>
                     <div class="col-md-4 col-lg-4 mb-4 mb-lg-0">
                         <div class="form-group">
                             <label for="id_graduation_year">What year do you graduate?</label>
-                             <select name="graduation_year" class="form-control" id="id_graduation_year" {% if application.status != 0 %}disabled{% endif %}>
+                             <select name="graduation_year" class="form-control" id="id_graduation_year" {% if application and application.status != 0 %}disabled{% endif %}>
                                  {% for year, current in years %}
                                     <option value="{{ year }}" {% if application %}{% if year == application.graduation_year %}selected{% endif %}{% else %}{% if current %}selected{% endif %}{% endif %}>{{ year }}</option>
                                  {% endfor %}
@@ -53,7 +54,7 @@
                 </div>
                 <div class="form-group">
                     <label for="id_description">Why do you want to come to {{ event.name }}?</label>
-                    <textarea type="text" name="description" {% if application.status != 0 %}disabled{% endif %} maxlength="1000" class="form-control" placeholder="" id="id_description">{{ application.description | default:"" }}</textarea>
+                    <textarea type="text" name="description" {% if application and application.status != 0 %}disabled{% endif %} maxlength="1000" class="form-control" placeholder="" id="id_description">{{ application.description | default:"" }}</textarea>
                 </div>
                 <div class="section-intro subsection-intro subsection-intro-mid text-center">
                     <h3>Your projects</h3>
@@ -63,23 +64,23 @@
                 </div>
                 <div class="form-group">
                     <label for="id_projects">Tell us about something you've built!</label>
-                    <textarea type="text" name="projects" {% if application.status != 0 %}disabled{% endif %} maxlength="1000" class="form-control" placeholder="" id="id_projects">{{ application.projects | default:"" }}</textarea>
+                    <textarea type="text" name="projects" {% if application and application.status != 0 %}disabled{% endif %} maxlength="1000" class="form-control" placeholder="" id="id_projects">{{ application.projects | default:"" }}</textarea>
                 </div>
                 <div class="form-group">
                     <label for="id_github"><i aria-hidden="true" class="fab fa-github fa-lg" style="margin-right: 5px;"></i> GitHub?</label>
-                    <input type="text" name="github" value="{{ application.github | default:"" }}" {% if application.status != 0 %}disabled{% endif %} maxlength="225" class="form-control" placeholder="https://github.com/fsociety" id="id_github">
+                    <input type="text" name="github" value="{{ application.github | default:"" }}" {% if application and application.status != 0 %}disabled{% endif %} maxlength="225" class="form-control" placeholder="https://github.com/fsociety" id="id_github">
                 </div>
                 <div class="form-group">
                     <label for="id_devpost"><i aria-hidden="true" class="fas fa-lightbulb fa-lg" style="margin-right: 5px;"></i> DevPost?</label>
-                    <input type="text" name="devpost" value="{{ application.devpost | default:"" }}" {% if application.status != 0 %}disabled{% endif %} maxlength="225" class="form-control" placeholder="https://devpost.com/elliotalderson" id="id_devpost">
+                    <input type="text" name="devpost" value="{{ application.devpost | default:"" }}" {% if application and application.status != 0 %}disabled{% endif %} maxlength="225" class="form-control" placeholder="https://devpost.com/elliotalderson" id="id_devpost">
                 </div>
                 <div class="form-group">
                     <label for="id_linkedin"><i aria-hidden="true" class="fab fa-linkedin fa-lg" style="margin-right: 5px;"></i> LinkedIn?</label>
-                    <input type="text" name="linkedin" value="{{ application.linkedin | default:"" }}" {% if application.status != 0 %}disabled{% endif %} maxlength="225" class="form-control" placeholder="https://linkedin.com/elliotalderson" id="id_linkedin">
+                    <input type="text" name="linkedin" value="{{ application.linkedin | default:"" }}" {% if application and application.status != 0 %}disabled{% endif %} maxlength="225" class="form-control" placeholder="https://linkedin.com/elliotalderson" id="id_linkedin">
                 </div>
                 <div class="form-group">
                     <label for="id_website"><i aria-hidden="true" class="fas fa-globe-europe fa-lg" style="margin-right: 5px;"></i> Website?</label>
-                    <input type="text" name="website" value="{{ application.website | default:"" }}" {% if application.status != 0 %}disabled{% endif %} maxlength="225" class="form-control" placeholder="https://elliot.me" id="id_website">
+                    <input type="text" name="website" value="{{ application.website | default:"" }}" {% if application and application.status != 0 %}disabled{% endif %} maxlength="225" class="form-control" placeholder="https://elliot.me" id="id_website">
                 </div>
                 <div class="form-extra">
                     <span>You need to provide us with your resume in order to be able to review your application, only PDF files are allowed.</span>
@@ -87,7 +88,7 @@
                 <div class="form-group">
                     <label for="id_resume">Upload your resume!</label>
                      <div class="bootstrap4-multi-input">
-                        <input type="file" name="resume" {% if application.status != 0 %}disabled{% endif %} id="id_resume" accept=".pdf">
+                        <input type="file" name="resume" {% if application and application.status != 0 %}disabled{% endif %} id="id_resume" accept=".pdf">
                      </div>
                     {% if application.resume %}
                         <p style="margin-top: 10px;">Current uploaded resume: <a href="/files/{{ application.resume }}">{{ application.resume | file_name }}</a></p>
@@ -95,7 +96,7 @@
                 </div>
                 <div class="form-group">
                     <div class="form-check">
-                        <input type="checkbox" name="resume_available" {% if application.resume_available %}checked{% endif %} {% if application.status != 0 %}disabled{% endif %} class="form-check-input" id="id_resume_available">
+                        <input type="checkbox" name="resume_available" {% if application.resume_available %}checked{% endif %} {% if application and application.status != 0 %}disabled{% endif %} class="form-check-input" id="id_resume_available">
                         <label class="form-check-label" for="id_resume_available">I authorise {{ hk_name }} to share my resume and projects with this event sponsors.</label>
                     </div>
                 </div>
@@ -109,7 +110,7 @@
                     <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
                         <div class="form-group">
                             <label for="id_diet">Do you have any dietary requirements?</label>
-                             <select name="diet" {% if application.status != 0 %}disabled{% endif %} class="form-control" id="id_diet">
+                             <select name="diet" {% if application and application.status != 0 %}disabled{% endif %} class="form-control" id="id_diet">
                                  {% for diet, diet_value in diets %}
                                     <option value="{{ diet_value }}" {% if application.diet == diet_value %}selected{% endif %}>{{ diet }}</option>
                                  {% endfor %}
@@ -119,9 +120,9 @@
                     <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
                         <div class="form-group">
                             <label for="id_tshirt">What's your T-shirt size?</label>
-                             <select name="tshirt" {% if application.status != 0 %}disabled{% endif %} class="form-control" id="id_tshirt">
+                             <select name="tshirt" {% if application and application.status != 0 %}disabled{% endif %} class="form-control" id="id_tshirt">
                                  {% for tshirt, tshirt_value in tshirts %}
-                                    <option value="{{ tshirt_value }}" {% if application %}{% if application.tshirt == tshirt_value %}selected{% endif %}{% else %}{% if tshirt == "L" %}selected{% endif %}{% endif %}>{{ tshirt }}</option>
+                                    <option value="{{ tshirt_value }}" {% if application %}{% if tshirt_int == tshirt_value %}selected{% endif %}{% else %}{% if tshirt == "L" %}selected{% endif %}{% endif %}>{{ tshirt }}</option>
                                  {% endfor %}
                             </select>
                         </div>
@@ -129,17 +130,25 @@
                 </div>
                 <div class="form-group" id="diet-other" style="display: none;">
                     <label for="id_diet_other">Other dietary requirements?</label>
-                    <input type="text" name="diet_other" value="{{ application.diet_other | default:"" }}" {% if application.status != 0 %}disabled{% endif %} maxlength="225" class="form-control" id="id_diet_other">
+                    <input type="text" name="diet_other" value="{{ application.diet_other | default:"" }}" {% if application and application.status != 0 %}disabled{% endif %} maxlength="225" class="form-control" id="id_diet_other">
                 </div>
                 <div class="form-group">
                     <label for="id_hardware">Is there any hardware you would like us to have?</label>
-                    <textarea type="text" name="hardware" {% if application.status != 0 %}disabled{% endif %} maxlength="1000" class="form-control" placeholder="" id="id_hardware">{{ application.hardware | default:"" }}</textarea>
+                    <textarea type="text" name="hardware" {% if application and application.status != 0 %}disabled{% endif %} maxlength="1000" class="form-control" placeholder="" id="id_hardware">{{ application.hardware | default:"" }}</textarea>
                 </div>
-                <div class="box-warning box-top">
-                    Remember if you have any teammates, they still have to apply by their own, this is an individual application.
+                <div class="box-warning box-top box-bottom">
+                    Remember that if you have any teammates, they still have to apply by their own, this is an individual application.
+                </div>
+                <div class="form-extra">
+                    <span>You can save your application if you want to modify things later. However, <b>it won't be reviewed unless you click the apply button</b>. Be aware that once this is done, you won't be able to edit anything else.</span>
+                </div>
+                <!-- TODO: Add required field marks -->
+                <!-- TODO: Disable buttons if some required fields not filled -->
+                <div class="form-group-button">
+                    <button class="btn btn-primary btn-block" type="submit" name="submit" value="save">{% trans "Save" %}</button>
                 </div>
                 <div class="form-group-button">
-                    <button class="btn btn-primary btn-block" type="submit">{% trans "Apply" %}</button>
+                    <button class="btn btn-primary btn-block" type="submit" name="submit" value="apply">{% trans "Apply" %}</button>
                 </div>
             </div>
          </form>

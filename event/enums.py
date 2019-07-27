@@ -12,7 +12,7 @@ class EventApplicationStatus(enum.IntEnum):
 
 
 class ApplicationStatus(enum.IntEnum):
-    SAVED = 0
+    DRAFT = 0
     PENDING = 1
     CANCELLED = 2
     INVITED = 3

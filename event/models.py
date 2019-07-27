@@ -127,7 +127,7 @@ class Application(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     status = models.PositiveSmallIntegerField(
         choices=((s.value, s.name) for s in ApplicationStatus),
-        default=ApplicationStatus.SAVED.value,
+        default=ApplicationStatus.DRAFT.value,
     )
 
     # Application details
