@@ -1,111 +1,173 @@
 {% extends "base.html" %}
 {% load bootstrap4 %}
 {% load i18n %}
+{% load user_tags %}
 
-{% block head_title %}{% trans "Profile" %}{% endblock %}
+{% block head_title %}{% if other %}{{ form.name.value }} {{ form.surname.value | ownership }} profile{% else %}{% trans "Your profile" %}{% endif %}{% endblock %}
 
 {% block content %}
     <div class="container">
-      <div class="section-intro text-center">
-        <h2>Edit your profile</h2>
-      </div>
-      <div class="row">
-        <form action="" method="post" enctype="multipart/form-data" class="form">
-            {% csrf_token %}
-            <div class="col-md-4 col-lg-4 mb-4 mb-lg-0">
-              <div class="service-card">
-                  <img src="/files/{{ picture }}" />
-                  <div class="form-group">
-                      <label for="id_picture">Update picture</label>
-                      <div class="bootstrap4-multi-input">
-                          <input type="file" name="picture" id="id_picture">
-                      </div>
-                  </div>
-                  <div class="form-group">
-                      <div class="form-check">
-                          <input type="checkbox" name="picture_public_participants" class="form-check-input" id="id_picture_public_participants" {% if form.picture_public_participants.value %}checked{% endif %}>
-                          <label class="form-check-label" for="id_picture_public_participants">Display picture to other participants</label>
-                      </div>
-                  </div>
-                  <div class="form-group">
-                      <div class="form-check">
-                          <input type="checkbox" name="picture_public_sponsors_and_recruiters" class="form-check-input" id="id_picture_public_sponsors_and_recruiters" {% if form.picture_public_sponsors_and_recruiters.value %}checked{% endif %}>
-                          <label class="form-check-label" for="id_picture_public_sponsors_and_recruiters">Display picture to sponsors and recruiters</label>
-                      </div>
-                  </div>
-              </div>
-            </div>
-            <div class="col-md-8 col-lg-8 mb-8 mb-lg-0">
-                <div class="service-card">
-                    <div class="form-group">
-                        <label for="id_name">First name</label>
-                        <input type="text" name="name" value="{{ form.name.value }}" maxlength="225" class="form-control" placeholder="Elliot" id="id_name">
+        <div class="section-intro text-center">
+          {% if other %}
+            <h2>{{ form.name.value }} {{ form.surname.value | ownership }} profile</h2>
+          {% else %}
+            <h2>Your profile</h2>
+          {% endif %}
+        </div>
+        {% if other %}
+            {% if extra_info %}
+                <div class="row">
+                    <div class="col-md-4 col-lg-4 mb-4 mb-lg-0">
+                        <img src="/files/{{ picture }}" />
                     </div>
-                    <div class="form-group">
-                        <label for="id_surname">Last name</label>
-                        <input type="text" name="surname" value="{{ form.surname.value }}" maxlength="225" class="form-control" placeholder="Alderson" id="id_surname">
-                    </div>
-                    <div class="form-group">
-                        <label for="id_email">Email</label>
-                        <input type="email" name="email" value="{{ form.email.value }}" maxlength="225" class="form-control" placeholder="elliot@kthack.com" id="id_email">
-                    </div>
-                    <div class="form-group">
-                        <label for="id_phoneemail">Phone</label>
-                        <input type="text" name="phone" value="{% if form.phone.value %}{{ form.phone.value }}{% endif %}" maxlength="225" class="form-control" placeholder="+12125550179" id="id_phone">
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                    <div class="col-md-8 col-lg-8 mb-8 mb-lg-0">
+                        <div class="service-card">
                             <div class="form-group">
-                                <label for="id_city">City</label>
-                                <input type="text" name="city" value="{% if form.city.value %}{{ form.city.value }}{% endif %}" maxlength="225" class="form-control" placeholder="New York" id="id_city">
+                                <h6>Full name</h6>
+                                <p>{{ form.name.value }} {{ form.surname.value }}</p>
+                            </div>
+                            <div class="form-group">
+                                <h6>Type</h6>
+                                <p>{{ type_str }}{% if type_str == "Participant" %}{% if underage %} (UNDERAGE){% else %} (+18){% endif %}{% endif %}</p>
+                            </div>
+                            <div class="form-group">
+                                <h6>Email</h6>
+                                <p>{{ form.email.value | urlize }}</p>
+                            </div>
+                            <div class="form-group">
+                                <h6>Phone</h6>
+                                <p>{{ form.phone.value }}</p>
+                            </div>
+                            <div class="form-group">
+                                <h6>Location</h6>
+                                <p>{{ form.city.value }}, {{ form.country.value }}</p>
                             </div>
                         </div>
-                        <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
-                            <div class="form-group">
-                                <label for="id_country">Country</label>
-                                <input type="text" name="country" value="{% if form.country.value %}{{ form.country.value }}{% endif %}" maxlength="225" class="form-control" placeholder="United States of America" id="id_country">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group-button">
-                        <button class="btn btn-primary btn-block" type="submit">{% trans "Update" %}</button>
                     </div>
                 </div>
+            {% else %}
+                <div class="row">
+                    <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                        <div class="service-card">
+                            <div class="form-group">
+                                <h6>Full name</h6>
+                                <p>{{ form.name.value }} {{ form.surname.value }}</p>
+                            </div>
+                            <div class="form-group">
+                                <h6>Type</h6>
+                                <p>{{ type_str }}</p>
+                            </div>
+                            <div class="form-group">
+                                <h6>Email</h6>
+                                <p>{{ form.email.value | urlize }}</p>
+                            </div>
+                            <div class="form-group">
+                                <h6>Location</h6>
+                                <p>{{ form.city.value }}, {{ form.country.value }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="row">
+                <form action="" method="post" enctype="multipart/form-data" class="form">
+                    {% csrf_token %}
+                    <div class="col-md-4 col-lg-4 mb-4 mb-lg-0">
+                        <div class="service-card">
+                            <img src="/files/{{ picture }}" />
+                            <div class="form-group">
+                                <label for="id_picture">Update picture</label>
+                                <div class="bootstrap4-multi-input">
+                                    <input type="file" name="picture" id="id_picture">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-check">
+                                    <input type="checkbox" name="picture_public_participants" class="form-check-input" id="id_picture_public_participants" {% if form.picture_public_participants.value %}checked{% endif %}>
+                                    <label class="form-check-label" for="id_picture_public_participants">Display picture to other participants</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-check">
+                                    <input type="checkbox" name="picture_public_sponsors_and_recruiters" class="form-check-input" id="id_picture_public_sponsors_and_recruiters" {% if form.picture_public_sponsors_and_recruiters.value %}checked{% endif %}>
+                                    <label class="form-check-label" for="id_picture_public_sponsors_and_recruiters">Display picture to sponsors and recruiters</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8 col-lg-8 mb-8 mb-lg-0">
+                        <div class="service-card">
+                            <div class="form-group">
+                                <label for="id_name">First name</label>
+                                <input type="text" name="name" value="{{ form.name.value }}" maxlength="225" class="form-control" placeholder="Elliot" id="id_name">
+                            </div>
+                            <div class="form-group">
+                                <label for="id_surname">Last name</label>
+                                <input type="text" name="surname" value="{{ form.surname.value }}" maxlength="225" class="form-control" placeholder="Alderson" id="id_surname">
+                            </div>
+                            <div class="form-group">
+                                <label for="id_email">Email</label>
+                                <input type="email" name="email" value="{{ form.email.value }}" maxlength="225" class="form-control" placeholder="elliot@kthack.com" id="id_email">
+                            </div>
+                            <div class="form-group">
+                                <label for="id_phoneemail">Phone</label>
+                                <input type="text" name="phone" value="{% if form.phone.value %}{{ form.phone.value }}{% endif %}" maxlength="225" class="form-control" placeholder="+12125550179" id="id_phone">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                                    <div class="form-group">
+                                        <label for="id_city">City</label>
+                                        <input type="text" name="city" value="{% if form.city.value %}{{ form.city.value }}{% endif %}" maxlength="225" class="form-control" placeholder="New York" id="id_city">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                                    <div class="form-group">
+                                        <label for="id_country">Country</label>
+                                        <input type="text" name="country" value="{% if form.country.value %}{{ form.country.value }}{% endif %}" maxlength="225" class="form-control" placeholder="United States of America" id="id_country">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group-button">
+                                <button class="btn btn-primary btn-block" type="submit">{% trans "Update" %}</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
-         </form>
-      </div>
-    </div>
-    {% if user.type == 1 %}
-        <div class="container container-bottom">
-          <div class="section-intro text-center">
-            <h2>Organiser information</h2>
-          </div>
-          <div class="row">
-            <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
-                <h3>Departments</h3>
-                  <ul>
-                      {% for department in user.departments %}
-                        <li>{{ department }}</li>
-                      {% endfor %}
-                  </ul>
-            </div>
-          </div>
         </div>
-    {% elif user.type == 2 %}
-        <div class="container container-bottom">
-          <div class="section-intro text-center">
-            <h2>Volunteer information</h2>
-          </div>
-          <div class="row">
-            <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
-                <h3>Departments</h3>
-                  <ul>
-                      {% for department in user.departments %}
-                        <li>{{ department }}</li>
-                      {% endfor %}
-                  </ul>
+        {% if user.type == 1 %}
+            <div class="container container-bottom">
+              <div class="section-intro text-center">
+                <h2>Organiser information</h2>
+              </div>
+              <div class="row">
+                <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                    <h3>Departments</h3>
+                      <ul>
+                          {% for department in user.departments %}
+                            <li>{{ department }}</li>
+                          {% endfor %}
+                      </ul>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+        {% elif user.type == 2 %}
+            <div class="container container-bottom">
+              <div class="section-intro text-center">
+                <h2>Volunteer information</h2>
+              </div>
+              <div class="row">
+                <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                    <h3>Departments</h3>
+                      <ul>
+                          {% for department in user.departments %}
+                            <li>{{ department }}</li>
+                          {% endfor %}
+                      </ul>
+                </div>
+              </div>
+            </div>
+        {% endif %}
     {% endif %}
 {% endblock %}

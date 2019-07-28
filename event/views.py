@@ -1,20 +1,19 @@
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.http import HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import render
-from django.urls import reverse
 from django.utils import timezone
 
 from event.enums import DietType, TshirtSize, ApplicationStatus
 from event.models import Application
-from event.utils import get_event, get_application
-from user.utils import is_participant
+from event.utils import get_event, get_application, get_applications
+from user.utils import is_participant, is_organiser
 
 
 @login_required
 @user_passes_test(is_participant)
 def apply(request, code):
     current_data = dict()
-    current_event = get_event(code)
+    current_event = get_event(code=code)
     if current_event:
         current_data["event"] = current_event
         current_data["years"] = [
@@ -132,4 +131,16 @@ def apply(request, code):
                 application.save()
                 return HttpResponseRedirect("")
         return render(request, "apply.html", current_data)
+    return HttpResponseNotFound()
+
+
+@login_required
+@user_passes_test(is_organiser)
+def applications(request, code):
+    current_data = dict()
+    current_event = get_event(code=code)
+    if current_event:
+        current_data["event"] = current_event
+        current_data["applications"] = get_applications(event_id=current_event.id)
+        return render(request, "applications.html", current_data)
     return HttpResponseNotFound()

@@ -50,12 +50,25 @@ class Event(models.Model):
     starts_at = models.DateTimeField()
     ends_at = models.DateTimeField()
     published = models.BooleanField(default=False)
-    application_status = models.PositiveSmallIntegerField(
-        choices=((s.value, s.name) for s in EventApplicationStatus),
-        default=EventApplicationStatus.PENDING.value
-    )
+    application_available = models.DateTimeField()
     application_deadline = models.DateTimeField()
     custom_home = models.BooleanField(default=False)
+
+    @property
+    def application_status(self):
+        current_time = timezone.now()
+        if current_time < self.application_available:
+            return EventApplicationStatus.PENDING
+        elif self.application_available <= current_time <= self.application_deadline:
+            return EventApplicationStatus.OPEN
+        return EventApplicationStatus.CLOSED
+
+    @property
+    def application_review_available(self):
+        if self.application_status in [EventApplicationStatus.PENDING, EventApplicationStatus.OPEN]:
+            return True
+        current_time = timezone.now()
+        return current_time < self.ends_at
 
     def clean(self):
         messages = dict()
@@ -65,6 +78,8 @@ class Event(models.Model):
             messages["ends_at"] = temporal_overlap
         if self.application_deadline > self.ends_at:
             messages["application_deadline"] = "The application deadline can't be after the event has ended"
+        if self.application_available > self.application_deadline:
+            messages["application_deadline"] = "The application deadline can't be before applications open"
         if messages:
             raise ValidationError(messages)
 
@@ -171,6 +186,10 @@ class Application(models.Model):
 
     class Meta:
         unique_together = ("event", "user")
+
+    @property
+    def status_str(self):
+        return ApplicationStatus(self.status).name.upper()
 
     def is_invited(self):
         return self.invited_by is not None

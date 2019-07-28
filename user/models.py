@@ -161,7 +161,10 @@ class User(AbstractBaseUser):
     @property
     def is_underage(self):
         # TODO: Check if underage correctly
-        return (timezone.now().date() - self.birthday) < timezone.timedelta(days=365 * 18)
+        try:
+            return (timezone.now().date() - self.birthday) < timezone.timedelta(days=365 * 18)
+        except TypeError:
+            return False
 
     @property
     def is_staff(self):

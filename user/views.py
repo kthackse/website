@@ -1,11 +1,11 @@
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.shortcuts import render
 from django.urls import reverse
 
 from user import forms
-from user.enums import SexType
+from user.enums import SexType, UserType
 from user.models import User, UserChange
 
 
@@ -223,3 +223,44 @@ def profile(request):
             "picture": request.user.picture.crop["500x500"],
         },
     )
+
+
+@login_required
+def profile_other(request, id):
+    user = User.objects.filter(id=id).first()
+    if user and request.user.type in [
+        UserType.PARTICIPANT.value,
+        UserType.ORGANISER.value,
+        UserType.VOLUNTEER.value,
+        UserType.MENTOR.value,
+        UserType.SPONSOR.value,
+        UserType.RECRUITER.value,
+    ]:
+        extra_info = (
+            request.user.type
+            in [
+                UserType.ORGANISER.value,
+                UserType.VOLUNTEER.value,
+                UserType.MENTOR.value,
+            ]
+            or user.picture_public_participants
+            and request.user.type == UserType.PARTICIPANT.value
+            or user.picture_public_sponsors_and_recruiters
+            and request.user.type in [UserType.SPONSOR.value, UserType.RECRUITER.value]
+        )
+        user_data = user.get_dict()
+        form = forms.ProfileForm(user_data)
+        return render(
+            request,
+            "profile.html",
+            {
+                "form": form,
+                "user": user_data,
+                "picture": user.picture.crop["500x500"],
+                "other": True,
+                "extra_info": extra_info,
+                "type_str": UserType(user.type).name.capitalize(),
+                "underage": user.is_underage,
+            },
+        )
+    return HttpResponseNotFound()

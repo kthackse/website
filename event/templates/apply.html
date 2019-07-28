@@ -3,7 +3,7 @@
 {% load i18n %}
 {% load app_tags %}
 
-{% block head_title %}{{ event.name }} {{ event.starts_at | date:"Y" }} {% trans " application" %}{% endblock %}
+{% block head_title %}{{ event.name }} {{ event.starts_at | date:"Y" }} {% trans "application" %}{% endblock %}
 
 {% block content %}
     <div class="container">
@@ -12,9 +12,17 @@
           <h3>Current status: {{ status }}</h3>
       </div>
       <div class="row">
-          <div class="col-md-12 col-lg-12 mb-12 mb-lg-0 box-info box-bottom2">
-            Remember to <a class="button button-inline" href="{% url "user_profile" %}" target="_blank">update your profile</a> if your information has changed.
-          </div>
+          {% if application %}
+              {% if application.status == 0 %}
+                  <div class="col-md-12 col-lg-12 mb-12 mb-lg-0 box-warning box-bottom2">
+                    Your application hasn't been sent and won't be reviewed until you tap the <a class="button button-inline" href="#apply">apply button</a> at the bottom of this page.
+                  </div>
+            {% endif %}
+          {% else %}
+              <div class="col-md-12 col-lg-12 mb-12 mb-lg-0 box-info box-bottom2">
+                Remember to <a class="button button-inline" href="{% url "user_profile" %}" target="_blank">update your profile</a> if your information has changed.
+              </div>
+          {% endif %}
           <form action="" method="post" enctype="multipart/form-data" class="form">
             {% csrf_token %}
             <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
@@ -76,7 +84,7 @@
                 </div>
                 <div class="form-group">
                     <label for="id_linkedin"><i aria-hidden="true" class="fab fa-linkedin fa-lg" style="margin-right: 5px;"></i> LinkedIn?</label>
-                    <input type="text" name="linkedin" value="{{ application.linkedin | default:"" }}" {% if application and application.status != 0 %}disabled{% endif %} maxlength="225" class="form-control" placeholder="https://linkedin.com/elliotalderson" id="id_linkedin">
+                    <input type="text" name="linkedin" value="{{ application.linkedin | default:"" }}" {% if application and application.status != 0 %}disabled{% endif %} maxlength="225" class="form-control" placeholder="https://linkedin.com/in/elliotalderson" id="id_linkedin">
                 </div>
                 <div class="form-group">
                     <label for="id_website"><i aria-hidden="true" class="fas fa-globe-europe fa-lg" style="margin-right: 5px;"></i> Website?</label>
@@ -139,17 +147,19 @@
                 <div class="box-warning box-top box-bottom">
                     Remember that if you have any teammates, they still have to apply by their own, this is an individual application.
                 </div>
-                <div class="form-extra">
-                    <span>You can save your application if you want to modify things later. However, <b>it won't be reviewed unless you click the apply button</b>. Be aware that once this is done, you won't be able to edit anything else.</span>
-                </div>
-                <!-- TODO: Add required field marks -->
-                <!-- TODO: Disable buttons if some required fields not filled -->
-                <div class="form-group-button">
-                    <button class="btn btn-primary btn-block" type="submit" name="submit" value="save">{% trans "Save" %}</button>
-                </div>
-                <div class="form-group-button">
-                    <button class="btn btn-primary btn-block" type="submit" name="submit" value="apply">{% trans "Apply" %}</button>
-                </div>
+                {% if not application or application and application.status == 0 %}
+                    <div class="form-extra">
+                        <span>You can save your application if you want to modify things later. However, <b>it won't be reviewed unless you click the apply button</b>. Be aware that once this is done, you won't be able to edit anything else.</span>
+                    </div>
+                    <!-- TODO: Add required field marks -->
+                    <!-- TODO: Disable buttons if some required fields not filled -->
+                    <div class="form-group-button">
+                        <button class="btn btn-primary btn-block" type="submit" name="submit" value="save">{% trans "Save" %}</button>
+                    </div>
+                    <div class="form-group-button" id="apply">
+                        <button class="btn btn-primary btn-block" type="submit" name="submit" value="apply">{% trans "Apply" %}</button>
+                    </div>
+                {% endif %}
             </div>
          </form>
       </div>

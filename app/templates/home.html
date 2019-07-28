@@ -22,7 +22,7 @@
                         {% if event.application_status == 0 %}
                             Applications will open {{ event.starts_at | date:"l j" }}, only {{ event.starts_at | time_left | days_left }} days left!
                         {% elif event.application_status == 1 %}
-                            <a class="button button-hero mt-4" href="#">Apply to {{ event.name }} {{ event.starts_at | date:"Y" }} <i style="padding-left: 10px;" class="fas fa-long-arrow-alt-right"></i></a>
+                            <a class="button button-hero mt-4" href="event/{{ event.code }}/apply">Apply to {{ event.name }} {{ event.starts_at | date:"Y" }} <i style="padding-left: 10px;" class="fas fa-long-arrow-alt-right"></i></a>
                         {% else %}
                             Applications have already been closed!
                         {% endif %}

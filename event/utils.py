@@ -25,11 +25,13 @@ def get_next_events(published=True):
 
 
 def get_event(code, published=True):
-    return Event.objects.filter(
+    event = Event.objects.filter(
         code=code,
         published=published,
-        application_status=EventApplicationStatus.OPEN.value,
     ).first()
+    if event.application_status == EventApplicationStatus.OPEN:
+        return event
+    return None
 
 
 def get_application(event_id, user_id):
@@ -43,3 +45,9 @@ def get_application_by_resume(resume):
     return Application.objects.filter(
         resume=resume,
     ).first()
+
+
+def get_applications(event_id):
+    return Application.objects.filter(
+        event_id=event_id,
+    )

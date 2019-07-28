@@ -189,6 +189,34 @@ form .is-valid:focus {
   position: relative;
 }
 
+.header-titles {
+
+}
+
+.application-event {
+  margin-bottom: 0.75rem;
+}
+
+.application-event p {
+  margin-bottom: 0 !important;
+}
+
+.header-titles {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+}
+
+.application-profile {
+  margin: -2.5px 7.5px 0 0 !important;
+  padding: 0 !important;
+  display: inline-block !important;
+  width: 25px !important;
+  height: 25px !important;
+  border-radius: 50% !important;
+}
+
+
 /* HOME */
 
 /* global style start

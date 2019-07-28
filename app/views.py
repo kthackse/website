@@ -16,6 +16,7 @@ from event.utils import (
     get_application_by_resume,
 )
 from user.enums import UserType
+from user.utils import get_user_by_picture
 
 
 def files(request, file_):
@@ -26,16 +27,27 @@ def files(request, file_):
             "/files/__sized__/user/picture",
             "user/picture",
         ]:
-            if file_[:7] != "/files/":
-                file_ = "/files/" + file_
-            response = StreamingHttpResponse(open(settings.BASE_DIR + file_, "rb"))
-            response["Content-Type"] = ""
-            return response
+            user = get_user_by_picture(picture=file_name)
+            if file_name in ["profile.png", "profile-crop-c0-5__0-5-500x500.png"] or (user and (
+                    request.user.type
+                    in [UserType.ORGANISER.value, UserType.VOLUNTEER.value, UserType.MENTOR.value]
+                    or user.picture_public_participants
+                    and request.user.type == UserType.PARTICIPANT.value
+                    or user.picture_public_sponsors_and_recruiters
+                    and request.user.type
+                    in [UserType.SPONSOR.value, UserType.RECRUITER.value]
+                    or user == request.user)
+            ):
+                if file_[:7] != "/files/":
+                    file_ = "/files/" + file_
+                response = StreamingHttpResponse(open(settings.BASE_DIR + file_, "rb"))
+                response["Content-Type"] = ""
+                return response
         elif path[: path.rfind("/")] in ["/files/event/resume", "event/resume"]:
             application = get_application_by_resume(resume=file_)
             if application and (
                 request.user.type
-                in [UserType.ORGANISER.value, UserType.VOLUNTERR.value]
+                in [UserType.ORGANISER.value, UserType.VOLUNTEER.value]
                 or application.resume_available
                 and request.user.type
                 in [UserType.SPONSOR.value, UserType.RECRUITER.value]

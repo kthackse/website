@@ -4,7 +4,7 @@ import enum
 class UserType(enum.IntEnum):
     PARTICIPANT = 0
     ORGANISER = 1
-    VOLUNTERR = 2
+    VOLUNTEER = 2
     MENTOR = 3
     SPONSOR = 4
     RECRUITER = 5
