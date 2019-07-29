@@ -1,5 +1,8 @@
 # KTHack website
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/7f4f5aad1aea61832fae/maintainability)](https://codeclimate.com/github/kthackse/website/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/7f4f5aad1aea61832fae/test_coverage)](https://codeclimate.com/github/kthackse/website/test_coverage)
+
 Current maintainer: [@oriolclosa](https://github.com/oriolclosa).
 
 *Heavily inspired by [HackUPC registration](https://github.com/hackupc/registration).*
