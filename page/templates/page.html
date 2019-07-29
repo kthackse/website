@@ -6,7 +6,9 @@
 {% block head_title %}{{ page.title }}{% endblock %}
 
 {% block content %}
-    <h1>{{ page.title }}</h1>
+    {% if page.content.2.value != 1 %}
+        <h1>{{ page.title }}</h1>
+    {% endif %}
 
     {% if page.content.1.value == 2 %}
         {{ page.content.0 | apply_markup:"markdown" }}

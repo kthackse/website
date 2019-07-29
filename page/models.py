@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 import urllib.request
 
-from page.enums import PageContentType
+from page.enums import PageContentType, PageSourceType
 
 
 class Page(models.Model):
@@ -22,12 +22,20 @@ class Page(models.Model):
     @property
     def content(self):
         if self.content_plain:
-            return self.content_plain, PageContentType.PLAIN
+            return self.content_plain, PageContentType.PLAIN, PageSourceType.INTERNAL
         elif self.content_html:
-            return self.content_html, PageContentType.HTML
+            return self.content_html, PageContentType.HTML, PageSourceType.INTERNAL
         elif self.content_markdown:
-            return self.content_markdown, PageContentType.MARKDOWN
-        return urllib.request.urlopen(self.content_markdown_url).read().decode("utf-8"), PageContentType.MARKDOWN
+            return (
+                self.content_markdown,
+                PageContentType.MARKDOWN,
+                PageSourceType.INTERNAL,
+            )
+        return (
+            urllib.request.urlopen(self.content_markdown_url).read().decode("utf-8"),
+            PageContentType.MARKDOWN,
+            PageSourceType.URL,
+        )
 
     class Meta:
         unique_together = ("category", "code")
@@ -48,7 +56,9 @@ class Page(models.Model):
             )
             != 1
         ):
-            message = "You must ONLY FILL ONE plain, HTML, markdown content or markdown URL"
+            message = (
+                "You must ONLY FILL ONE plain, HTML, markdown content or markdown URL"
+            )
             messages["content_plain"] = message
             messages["content_html"] = message
             messages["content_markdown"] = message
