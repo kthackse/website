@@ -1,4 +1,4 @@
-# KTHack management system
+# KTHack website
 
 Current maintainer: [@oriolclosa](https://github.com/oriolclosa).
 
