@@ -1,6 +1,6 @@
 # Legal notice
 
-This Legal Notice is intended to regulate access and use and, in general, the relationship between this Website, accessible from the Internet address *https://kthack.se* (the "website") and its users.
+This Legal Notice is intended to regulate access and use and, in general, the relationship between this Website, accessible from the Internet address [kthack.se](https://kthack.se) (the "website") and its users.
 
 ## 1.Identity of the service provider
 
