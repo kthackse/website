@@ -29,3 +29,24 @@ Unless expressly stated otherwise, the contents of the website do not constitute
 Links that appear on the website may not be approved by KTHAIS.
 
 Likewise, the inclusion of these external connections will not imply any type of association, merger or participation with the connected entities.
+
+## 4.Intellectual property
+
+KTHAIS is the legitimate owner of all rights, titles and interests in and to the Website, its contents and software, including any modifications, updates and new versions, as well as any trademarks, trade names, know-how, copyrights, images, photographs, graphic drawings, text files, audio, video and any other intellectual or industrial property rights inherent therein.
+
+It is strictly forbidden to remove, circumvent or manipulate the copyright notice and any other data identifying the rights of KTHAIS or their respective owners incorporated into the contents, product and/or services, as well as the technical protection devices or any information and/or identification mechanisms that may be contained therein. Under no circumstances shall the provision of these contents to the users imply the transfer of their ownership or any right of use and/or exploitation to the user, other than the use that the legitimate use entails and in accordance with the nature of the services and functionalities of KTHAIS.
+
+Any use of any of the elements subject to industrial and intellectual property for any type of purpose, especially commercial, as well as their transmission, distribution, public communication, reproduction or storage, in whole or in part, whether for profit or for commercial or non-commercial purposes, is strictly prohibited, unless expressly authorised in writing by the owner of the same.
+
+## 5.Liability
+
+Visiting users undertake not to introduce, voluntarily or involuntarily, viruses or files of any nature that may disturb the functioning of the website; in which case they would be fully responsible.
+
+Your use and browsing of the website is at your own risk. KTHAIS shall be exempt from any liability for damages to the user and third parties in connection with the following.
+
+1. The incorrect functioning of the website.
+2. The lack of adequacy of the website and/or its services or contents to satisfy the needs, specific results or expectations of the users.
+3. Presence of contaminating codes or viruses that could produce alterations in the computer system of the users.
+4. Any damage that may occur as a result of the contents of third parties included on the website.
+
+KTHAIS reserves the right to prevent, block and/or remove from the Website those users who display inappropriate behaviour or who breach any of the clauses of this Legal Notice, without prior notice from KTHAIS.
