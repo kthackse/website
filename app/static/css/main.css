@@ -37,7 +37,7 @@ footer {
   background-size: cover;
   background-position: center;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   margin: 0;
   padding: 0;
   top: 0;
@@ -214,6 +214,13 @@ form .is-valid:focus {
   width: 25px !important;
   height: 25px !important;
   border-radius: 50% !important;
+}
+
+.align-items-center-vertically {
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
 
 

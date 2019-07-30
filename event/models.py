@@ -31,6 +31,23 @@ def path_and_rename(instance, filename):
     return os.path.join("event/picture/", filename)
 
 
+def path_and_rename_background(instance, filename):
+    """
+    Stack Overflow
+    Django ImageField change file name on upload
+    https://stackoverflow.com/questions/15140942/django-imagefield-change-file-name-on-upload
+    """
+    ext = filename.split(".")[-1]
+    # get filename
+    if instance.pk:
+        filename = "{}.{}".format(instance.pk, ext)
+    else:
+        # set filename as random string
+        filename = "{}.{}".format(uuid.uuid4().hex, ext)
+    # return the whole path to the file
+    return os.path.join("event/background/", filename)
+
+
 class Event(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField( max_length=255)
@@ -41,6 +58,11 @@ class Event(models.Model):
     )
     picture = VersatileImageField(
         "Image", upload_to=path_and_rename
+    )
+    background = models.FileField(
+        upload_to=path_and_rename_background,
+        blank=True,
+        null=True
     )
     # TODO: Divide sponsors into categories
     city = models.CharField(max_length=255, default="Stockholm")

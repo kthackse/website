@@ -7,6 +7,7 @@ from django.http import (
     HttpResponseNotFound,
 )
 from django.shortcuts import render
+from django.template import TemplateDoesNotExist
 from django.urls import reverse
 
 from app import settings
@@ -64,6 +65,7 @@ def files(request, file_):
         "/files/event/picture",
         "/files/__sized__/event/picture",
         "event/picture",
+        "event/background",
     ]:
         if file_[:7] != "/files/":
             file_ = "/files/" + file_
@@ -81,7 +83,10 @@ def home(request):
     if event:
         current_data["event"] = event
         if event.custom_home:
-            return render(request, "custom/" + event.code + "/index.html", current_data)
+            try:
+                return render(request, "custom/" + event.code + "/index.html", current_data)
+            except TemplateDoesNotExist:
+                pass
     return render(request, "home.html", current_data)
 
 

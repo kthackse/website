@@ -4,16 +4,39 @@
 {% load i18n %}
 {% load app_tags %}
 
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
 {% block head_title %}{% trans "Home" %}{% endblock %}
 
-{% block content %}
+{% block navbar %}
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+{% block body_plain %}
     {% if event %}
-        {% if event.custom_home %}
-            <!-- TODO: Load custom page -->
-            THE NEXT EVENT HAS A CUSTOM PAGE, THIS IS STILL TODO
-        {% else %}
-            <div class="container">
-                <div class="row align-items-center text-center text-md-left">
+        <div class="container-home">
+            {% if event.background %}
+                <video autoplay muted loop id="home-video">
+                    <source src="files/{{ event.background }}" type="video/mp4">
+                </video>
+            {% endif %}
+            <div class="row align-items-center-vertically home-top">
+                <div class="col-md-4 home-picture">
+                    <img class="img-fluid" src="files/{{ event.picture }}" alt="">
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="container">
+            <div class="row align-items-center text-center text-md-left">
+                <div class="col-md-12 col-lg-12 mb-12 mb-md-0">
+                    <!-- TODO: No events page -->
+                    <h2>NO EVENTS COMING!</h2>
+                    <p>This page stills needs to be done...</p>
                     <div class="col-md-6 col-lg-5 mb-5 mb-md-0">
                         <h1>{{ event.name }}</h1>
                         <p>{{ event.city }}</p>
@@ -30,16 +53,6 @@
                     <div class="col-md-6 col-lg-7 col-xl-6 offset-xl-1">
                         <img class="img-fluid" src="files/{{ event.picture }}" alt="">
                     </div>
-                </div>
-            </div>
-        {% endif %}
-    {% else %}
-        <div class="container">
-            <div class="row align-items-center text-center text-md-left">
-                <div class="col-md-12 col-lg-12 mb-12 mb-md-0">
-                    <!-- TODO: No events page -->
-                    <h2>NO EVENTS COMING!</h2>
-                    <p>This page stills needs to be done...</p>
                 </div>
             </div>
         </div>

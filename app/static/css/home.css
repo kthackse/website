@@ -1,0 +1,32 @@
+html, body {
+    height: 100%;
+}
+
+.container-home {
+    height: 100%;
+    overflow: hidden;
+}
+
+.home-top {
+    position: relative;
+}
+
+.home-picture {
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0;
+    display: block;
+}
+
+.home-picture img {
+    width: 100%;
+}
+
+#home-video {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+  opacity: 0.25;
+}
