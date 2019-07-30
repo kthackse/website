@@ -4,7 +4,7 @@ This Legal Notice is intended to regulate access and use and, in general, the re
 
 ## 1.Identity of the service provider
 
-The owner of this website is KTH AI SOCIETY (hereinafter, "KTHAIS") with organisation number 8025187249 and address Tekniska Högskolans Studentkår, Drottning Kristinas Väg 15-19, 100 44 Stockholm (Sweden) and contact email address contact@kthais.com.
+The owner of this website is KTH AI SOCIETY (hereinafter, "KTHAIS") with organisation number 8025187249 and address Tekniska Högskolans Studentkår, Drottning Kristinas Väg 15-19, 100 44 Stockholm (Sweden) and contact email address (contact@kthais.com)[mailto:contact@kthais.com].
 
 This website is informative, open and available to the public. The access to the website attributes to the person who carries it out the condition of user, who accepts from that moment on, fully and without any reservation, the conditions contained in this Legal Notice.
 
