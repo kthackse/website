@@ -50,3 +50,27 @@ Your use and browsing of the website is at your own risk. KTHAIS shall be exempt
 4. Any damage that may occur as a result of the contents of third parties included on the website.
 
 KTHAIS reserves the right to prevent, block and/or remove from the Website those users who display inappropriate behaviour or who breach any of the clauses of this Legal Notice, without prior notice from KTHAIS.
+
+## 6.Confidentiality and personal data protection
+
+In accordance with the current data protection legislation, particularly the Regulation (EU) 2016/679 of The European Parliament and of The Council, of 27 April, on the protection of natural persons with regard to the processing of personal data and on the free movement of such data, all personal data collected during the use of the website will be processed in accordance with the provisions of the (Privacy and Cookies Policy)[../privacy-and-cookies] which all users must expressly accept.
+
+## 7.Applicable law and jurisdiction
+
+This Legal Notice shall be governed by Swedish law.
+
+In the event that the user's residence is outside Sweden, KTHAIS and the user, expressly waiving any other jurisdiction to which they may be entitled, hereby submit to the jurisdiction of the Courts and Tribunals of Stockholm.
+
+KTHAIS will pursue the breach of this Legal Notice as well as any improper use of the website by exercising all civil and criminal actions that may correspond.
+
+## 8.Modification and update
+
+The information contained in these pages is current as of the date of the last update.
+
+KTHAIS reserves the right to modify this Legal Notice at any time and to restrict access temporarily or permanently, indicating in the heading of this Legal Notice the date of the last modification.
+
+If you do not agree with any updates, please contact KTHAIS.
+
+---
+
+Last Reviewed: July 30, 2019.
