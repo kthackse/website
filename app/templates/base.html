@@ -22,7 +22,9 @@
         <title>{% block title %}{% block head_title %}{% endblock %} | {% endblock %}{{ hk_app_name }}</title>
     </head>
     <body>
-        <div class="background"></div>
+        {% block background %}
+            <div class="background"></div>
+        {% endblock %}
         {% block navbar %}
             <header class="header-area">
                 <div class="main-menu">

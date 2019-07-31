@@ -82,6 +82,8 @@ def home(request):
     event = get_next_or_past_event()
     if event:
         current_data["event"] = event
+        current_data["background_video"] = (event.background.name[-4:] == ".mp4")
+        current_data["background_image"] = (event.background.name[-4:] in [".png", ".jpg", ".jpeg", ".gif", ".svg"])
         if event.custom_home:
             try:
                 return render(request, "custom/" + event.code + "/index.html", current_data)

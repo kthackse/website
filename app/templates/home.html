@@ -16,42 +16,71 @@
 {% block footer %}
 {% endblock %}
 
+{% block background %}
+    {% if event %}
+        {% if background_image %}
+            <div class="home-background" style="background-image: url('files/{{ event.background }}')"></div>
+        {% else %}
+            <div class="home-background background-color"></div>
+        {% endif %}
+    {% else %}
+        <div class="background"></div>
+    {% endif %}
+{% endblock %}
+
 {% block body_plain %}
     {% if event %}
         <div class="container-home">
-            {% if event.background %}
+            {% if background_video %}
                 <video autoplay muted loop id="home-video">
                     <source src="files/{{ event.background }}" type="video/mp4">
                 </video>
             {% endif %}
             <div class="row align-items-center-vertically home-top">
                 <div class="col-md-4 home-picture">
-                    <img class="img-fluid" src="files/{{ event.picture }}" alt="">
+                    <div class="row">
+                        <div class="col-md-5 text-center home-picture">
+                            <img class="img-fluid" src="files/{{ event.picture }}" alt="">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 text-center home-titles">
+                            <h1>{{ event.name }}</h1>
+                            <h3>{{ event.city }}, <span style="white-space: nowrap;">{{ event.starts_at | date:"F j" }} - {{ event.ends_at | date:"j" }}</span></h3>
+                            {% if event.application_status == 0 %}
+                                <p class="home-button">Applications <b>will open soon</b></p>
+                                <div class="col-md-12 text-center home-links">
+                                    {% if request.user.is_authenticated %}
+                                        <p>Hej {{ request.user.name }}, go to the <b><a class="home-button2" href="/dashboard">dashboard</a></b>?</p>
+                                    {% else %}
+                                        <p>Meanwhile you can <b><a class="home-button2" href="/user/login">login</a></b> or <b><a class="home-button2" href="/user/signup">register</a></b></p>
+                                    {% endif %}
+                                </div>
+                            {% elif event.application_status == 1 %}
+                                <a class="home-button" href="event/{{ event.code }}/apply">Apply now to {{ event.name }} {{ event.starts_at | date:"Y" }} <i style="padding-left: 10px;" class="fas fa-long-arrow-alt-right"></i></a>
+                            {% else %}
+                                <p class="home-button">Applications <b>closed</b></p>
+                                <div class="col-md-12 text-center home-links">
+                                    {% if request.user.is_authenticated %}
+                                        <p>Hej {{ request.user.name }}, go to the <b><a class="home-button2" href="/dashboard">dashboard</a></b>?</p>
+                                    {% else %}
+                                        <p>You can <b><a class="home-button2" href="/user/signup">register</a></b> for next time</p>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     {% else %}
-        <div class="container">
-            <div class="row align-items-center text-center text-md-left">
-                <div class="col-md-12 col-lg-12 mb-12 mb-md-0">
-                    <!-- TODO: No events page -->
-                    <h2>NO EVENTS COMING!</h2>
-                    <p>This page stills needs to be done...</p>
-                    <div class="col-md-6 col-lg-5 mb-5 mb-md-0">
-                        <h1>{{ event.name }}</h1>
-                        <p>{{ event.city }}</p>
-                        <p>{{ event.starts_at | date:"F j" }} - {{ event.ends_at | date:"j" }}</p>
-                        <p>{{ event.description }}</p>
-                        {% if event.application_status == 0 %}
-                            Applications will open {{ event.starts_at | date:"l j" }}, only {{ event.starts_at | time_left | days_left }} days left!
-                        {% elif event.application_status == 1 %}
-                            <a class="button button-hero mt-4" href="event/{{ event.code }}/apply">Apply to {{ event.name }} {{ event.starts_at | date:"Y" }} <i style="padding-left: 10px;" class="fas fa-long-arrow-alt-right"></i></a>
-                        {% else %}
-                            Applications have already been closed!
-                        {% endif %}
-                    </div>
-                    <div class="col-md-6 col-lg-7 col-xl-6 offset-xl-1">
-                        <img class="img-fluid" src="files/{{ event.picture }}" alt="">
+        <div class="container-home">
+            <div class="row align-items-center-vertically home-top">
+                <div class="col-md-4 home-picture">
+                    <div class="row">
+                        <div class="col-md-5 text-center home-picture">
+                            <img class="img-fluid" src="{% static "img/logo_wh.png" %}" alt="">
+                        </div>
                     </div>
                 </div>
             </div>

@@ -22,6 +22,8 @@ def login(request):
             user = auth.authenticate(email=email, password=password)
             if user and user.is_active:
                 auth.login(request, user)
+                if next_page == "/":
+                    return HttpResponseRedirect(reverse("app_dashboard"))
                 return HttpResponseRedirect(next_page)
             else:
                 form.add_error(
