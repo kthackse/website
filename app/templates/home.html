@@ -82,6 +82,18 @@
                             <img class="img-fluid" src="{% static "img/logo_wh.png" %}" alt="">
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-12 text-center home-titles">
+                            <p class="home-button">No events <b>at the moment</b></p>
+                            <div class="col-md-12 text-center home-links">
+                                {% if request.user.is_authenticated %}
+                                    <p>Hej {{ request.user.name }}, go to the <b><a class="home-button2" href="/dashboard">dashboard</a></b>?</p>
+                                {% else %}
+                                    <p>Meanwhile you can <b><a class="home-button2" href="/user/login">login</a></b> or <b><a class="home-button2" href="/user/signup">register</a></b></p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
