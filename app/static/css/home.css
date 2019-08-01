@@ -123,6 +123,7 @@ body {
 .home-faq h2 {
     color: rgba(0, 57, 132, 0.9);
     margin-bottom: 1rem;
+    text-transform: uppercase;
 }
 
 .home-faq h6 {
@@ -137,6 +138,39 @@ body {
 
 .home-faq-item {
     margin-top: 1.5rem;
+}
+
+
+.home-organisers {
+    background-color: #3F7ED1;
+    padding: 5rem 0 5rem 0;
+}
+
+.home-organisers h2 {
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}
+
+.home-organisers h6 {
+    color: rgba(240, 240, 240, 0.9);
+    font-size: 20px;
+}
+
+.home-organisers p {
+    color: rgba(235, 235, 235, 0.9);
+    line-height: 125%;
+    text-transform: uppercase;
+}
+
+.home-organisers-item {
+    margin-top: 1.5rem;
+}
+
+.home-organisers-item img {
+    width: 75%;
+    border-radius: 50%;
+    margin-bottom: 1rem;
 }
 
 .footer {

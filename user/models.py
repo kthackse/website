@@ -105,6 +105,7 @@ class User(AbstractBaseUser):
     company = models.ForeignKey(
         "Company", on_delete=models.PROTECT, null=True, blank=True
     )
+    events = models.ManyToManyField("event.Event", blank=True)
 
     # Personal information
     picture = VersatileImageField(

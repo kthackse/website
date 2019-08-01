@@ -19,7 +19,7 @@
         {% block head %}
         {% endblock %}
 
-        <title>{% block title %}{% block head_title %}{% endblock %} | {% endblock %}{{ hk_app_name }}</title>
+        <title>{% block title_plain %}{% block title %}{% block head_title %}{% endblock %} | {% endblock %}{% if event %}{{ event.name }} {{ event.starts_at | date:"Y" }}{% else %}{{ hk_app_name }}{% endif %}{% endblock %}</title>
     </head>
     <body>
         {% block background %}

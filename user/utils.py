@@ -19,3 +19,7 @@ def get_user_by_picture(picture):
         ).first()
     except ValueError:
         return None
+
+
+def get_organisers(event_id):
+    return User.objects.filter(events__in=[event_id]).order_by("name")

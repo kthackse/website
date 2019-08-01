@@ -24,3 +24,8 @@ def days_left(timedelta: timezone.timedelta):
 @register.filter
 def file_name(value):
     return os.path.basename(value.file.name)
+
+
+@register.filter
+def display_departments(departments):
+    return " / ".join([d.name for d in departments])

@@ -17,7 +17,7 @@ from event.utils import (
     get_application_by_resume,
     get_faq_items)
 from user.enums import UserType
-from user.utils import get_user_by_picture
+from user.utils import get_user_by_picture, get_organisers
 
 
 def files(request, file_):
@@ -82,6 +82,7 @@ def home(request):
     if event:
         current_data["event"] = event
         current_data["faq"] = get_faq_items(event_id=event.id)
+        current_data["organisers"] = get_organisers(event_id=event.id)
         current_data["background_video"] = (event.background.name[-4:] == ".mp4")
         current_data["background_image"] = (event.background.name[-4:] in [".png", ".jpg", ".jpeg", ".gif", ".svg"])
         if event.custom_home:

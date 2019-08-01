@@ -8,7 +8,14 @@
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
 {% endblock %}
 
-{% block head_title %}{% trans "Home" %}{% endblock %}
+{% block title_plain %}
+    {% if event %}
+        {{ event.name }} {{ event.starts_at | date:"Y" }}
+    {% else %}
+        {{ hk_app_name }}
+    {% endif %}
+{% endblock %}
+
 
 {% block navbar %}
 {% endblock %}
@@ -81,6 +88,26 @@
                                     <div class="col-md-4 text-center home-faq-item col-centered">
                                         <h6>{{ faq_item.title }}</h6>
                                         <p>{{ faq_item.description }}</p>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        {% if organisers %}
+            <div class="home-organisers">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <h2>Organisers</h2>
+                            <div class="row">
+                                {% for organiser in organisers %}
+                                    <div class="col-md-2 text-center home-organisers-item col-centered">
+                                        <img src="/files/{{ organiser.picture }}" />
+                                        <h6>{{ organiser.name }} {{ organiser.surname }}</h6>
+                                        <p>{{ organiser.departments.all | display_departments }}</p>
                                     </div>
                                 {% endfor %}
                             </div>
