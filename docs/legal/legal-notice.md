@@ -2,6 +2,8 @@
 
 This Legal Notice is intended to regulate access and use and, in general, the relationship between this Website, accessible from the Internet address [kthack.com](https://kthack.com) (the "website") and its users.
 
+*Note: This Legal notice is based on [HackUPC's Legal notice](https://my.hackupc.com/legal_notice/) retrieved July 30, 2019.*
+
 ## 1.Identity of the service provider
 
 The owner of this website is KTH AI SOCIETY (hereinafter, "KTHAIS") with organisation number 8025187249 and address Tekniska Högskolans Studentkår, Drottning Kristinas Väg 15-19, 100 44 Stockholm (Sweden) and contact email address <contact@kthais.com>.
@@ -53,7 +55,7 @@ KTHAIS reserves the right to prevent, block and/or remove from the Website those
 
 ## 6.Confidentiality and personal data protection
 
-In accordance with the current data protection legislation, particularly the Regulation (EU) 2016/679 of The European Parliament and of The Council, of 27 April, on the protection of natural persons with regard to the processing of personal data and on the free movement of such data, all personal data collected during the use of the website will be processed in accordance with the provisions of the (Privacy and Cookies Policy)[https://kthack.com/pages/legal/privacy-and-cookies] which all users must expressly accept.
+In accordance with the current data protection legislation, particularly the Regulation (EU) 2016/679 of The European Parliament and of The Council, of 27 April, on the protection of natural persons with regard to the processing of personal data and on the free movement of such data, all personal data collected during the use of the website will be processed in accordance with the provisions of the [Privacy and Cookies Policy](../privacy-and-cookies) which all users must expressly accept.
 
 ## 7.Applicable law and jurisdiction
 

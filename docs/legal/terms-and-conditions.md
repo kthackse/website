@@ -4,6 +4,8 @@ This Terms end Conditions (hereinafter, "T&C") are intended to regulate the rela
 
 For the purposes of this agreement, the parties agree that, when used capitalized herein, the following terms shall have the following meanings unless they are otherwise defined in this Agreement.
 
+*Note: This Terms and Conditions are based on [HackUPC's Terms and Conditions](https://my.hackupc.com/terms_and_conditions/) retrieved July 30, 2019.*
+
 ## Definitions
 
 * The "Organiser" refers to KTHAIS, with organisation number 8025187249 and address Tekniska Högskolans Studentkår, Drottning Kristinas Väg 15-19, 100 44 Stockholm (Sweden) and contact email address (contact@kthais.com)[mailto:contact@kthais.com].
