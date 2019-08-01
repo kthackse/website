@@ -7,7 +7,7 @@ django-phonenumber-field==3.0.1
 django-versatileimagefield~=1.10
 gunicorn~=19.9.0
 django-markup~=1.4.1
-markdown≃3.1.1
+markdown~=3.1.1
 phonenumbers==8.10.14
 pyyaml~=5.1.1
 psycopg2-binary~=2.8.3
