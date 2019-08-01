@@ -7,6 +7,7 @@ HACKATHON_DESCRIPTION = (
 )
 HACKATHON_TIMEZONE = "Europe/Stockholm"
 HACKATHON_DOMAIN = os.environ.get("HK_DOMAIN", "localhost:8000")
+HACKATHON_IP = os.environ.get("HK_IP", "localhost:8000")
 HACKATHON_EMAIL_CONTACT = "contact@kthack.com"
 HACKATHON_ORGANIZER_EMAIL_REGEX = "^.*@kthack\.com$"
 HACKATHON_EMAIL_WEBDEV = "webdev@hackupc.com"

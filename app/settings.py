@@ -68,7 +68,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                'app.utils.variables_processor',
+                "app.utils.variables_processor",
             ]
         },
     }
@@ -158,6 +158,7 @@ PASSWORD_RESET_TIMEOUT_DAYS = 1
 # Add domain to allowed hosts
 
 ALLOWED_HOSTS.append(HACKATHON_DOMAIN)
+ALLOWED_HOSTS.append(HACKATHON_IP)
 
 # Deployment configurations for proxy pass and CSRF
 
