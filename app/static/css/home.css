@@ -30,6 +30,7 @@ html, body {
   min-width: 100%;
   min-height: 100%;
   opacity: 0.25;
+  z-index: -50;
 }
 
 .home-titles h1 {
@@ -45,7 +46,7 @@ html, body {
     margin-bottom: 2rem;
 }
 
-.home-titles p, a {
+.home-titles p, .home-titles a {
     font-size: 15px;
     text-transform: uppercase;
 }
@@ -96,7 +97,7 @@ html, body {
   margin-top: -0.25rem;
 }
 
-.home-links p, a {
+.home-links p, .home-links a {
   font-size: 12px !important;
 }
 
@@ -107,4 +108,33 @@ html, body {
 
 .home-button2:hover {
   color: rgba(255, 255, 255, 0.5);
+}
+
+.home-faq {
+    background-color: #f0f0f0;
+    padding: 4.5rem 0 5rem 0;
+}
+
+.home-faq h2 {
+    color: rgba(0, 57, 132, 0.9);
+    margin-bottom: 2rem;
+}
+
+.home-faq h6 {
+    color: #111111;
+    font-size: 20px;
+}
+
+.home-faq p {
+    color: #333333;
+    line-height: 125%;
+}
+
+.home-faq .row {
+    margin-top: 1rem;
+}
+
+.footer {
+    background-color: rgba(0, 57, 132, 1) !important;
+    position: unset !important;
 }

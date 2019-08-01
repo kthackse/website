@@ -223,6 +223,11 @@ form .is-valid:focus {
   transform: translateY(-50%);
 }
 
+.footer-upper a {
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
 
 /* HOME */
 
