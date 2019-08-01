@@ -70,6 +70,11 @@ html, body {
 .background-color {
     background-color: #003984;
 }
+
+body {
+    background-color: #003984 !important;
+}
+
 .home-button {
   display: inline-block;
   border: 1px solid #ffffff;
