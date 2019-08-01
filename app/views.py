@@ -24,9 +24,8 @@ def files(request, file_):
     path, file_name = os.path.split(file_)
     if request.user.is_authenticated:
         if path in [
-            "/files/user/picture",
-            "/files/__sized__/user/picture",
             "user/picture",
+            "__sized__/user/picture",
         ]:
             user = get_user_by_picture(picture=file_name)
             if file_name in ["profile.png", "profile-crop-c0-5__0-5-500x500.png"] or (user and (
@@ -62,8 +61,8 @@ def files(request, file_):
         else:
             HttpResponseNotFound()
     if path in [
-        "/files/event/picture",
-        "/files/__sized__/event/picture",
+        "event/picture",
+        "__sized__/event/picture",
         "event/picture",
         "event/background",
     ]:
