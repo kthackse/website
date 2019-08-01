@@ -72,6 +72,7 @@ class Event(models.Model):
     starts_at = models.DateTimeField()
     ends_at = models.DateTimeField()
     published = models.BooleanField(default=False)
+    dates_public = models.BooleanField(default=True)
     application_available = models.DateTimeField()
     application_deadline = models.DateTimeField()
     custom_home = models.BooleanField(default=False)

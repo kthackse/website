@@ -43,7 +43,7 @@
                     <div class="row">
                         <div class="col-md-12 text-center home-titles">
                             <h1>{{ event.name }}</h1>
-                            <h3>{{ event.city }}, <span style="white-space: nowrap;">{{ event.starts_at | date:"F j" }} - {{ event.ends_at | date:"j" }}</span></h3>
+                            <h3>{{ event.city }}, <span style="white-space: nowrap;">{% if event.dates_public %}{{ event.starts_at | date:"F j" }} - {{ event.ends_at | date:"j" }}{% else %}{{ event.starts_at | date:"Y" }}{% endif %}</span></h3>
                             {% if event.application_status == 0 %}
                                 <p class="home-button">Applications <b>will open soon</b></p>
                                 <div class="col-md-12 text-center home-links">
