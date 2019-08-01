@@ -152,10 +152,6 @@ class User(AbstractBaseUser):
         return self.type == UserType.MEDIA.value
 
     @property
-    def is_admin(self):
-        return DepartmentType.ADMIN.value in [d.type for d in self.departments.all()]
-
-    @property
     def is_director(self):
         return DepartmentType.DIRECTOR.value in [d.type for d in self.departments.all()]
 
