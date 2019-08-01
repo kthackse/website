@@ -112,7 +112,7 @@ html, body {
 
 .home-faq {
     background-color: #f0f0f0;
-    padding: 4.5rem 0 5rem 0;
+    padding: 5rem 0 5rem 0;
 }
 
 .home-faq h2 {
@@ -130,7 +130,7 @@ html, body {
     line-height: 125%;
 }
 
-.home-faq .row {
+.home-faq-item {
     margin-top: 1rem;
 }
 

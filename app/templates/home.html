@@ -70,43 +70,25 @@
                 </div>
             </div>
         </div>
-        <div class="home-faq">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12 text-center">
-                        <h2>FAQ</h2>
-                        <div class="row">
-                            <div class="col-md-4 text-center">
-                                <h6>What is a hackathon?</h6>
-                                <p>Hackathons are awesome events full of creativity, technology and passionate tech-related students collaborating and creating. Attendees work in teams to create apps, games, robots… literally anything you want to build & learn about!</p>
-                            </div>
-                            <div class="col-md-4 text-center">
-                                <h6>What is KTHack?</h6>
-                                <p>KTHack is the first student hackathon in Sweden. This will be our first edition with 200 awesome hackers and lots of side activities to learn new technologies, meet interesting people and have fun. Come make history with us!</p>
-                            </div>
-                            <div class="col-md-4 text-center">
-                                <h6>What do you provide?</h6>
-                                <p>KTHack is free for all accepted hackers. We will provide you with Wi-Fi, meals, showers, swag, mattresses to relax and workspace.</p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4 text-center">
-                                <h6>What is a hackathon?</h6>
-                                <p>Hackathons are awesome events full of creativity, technology and passionate tech-related students collaborating and creating. Attendees work in teams to create apps, games, robots… literally anything you want to build & learn about!</p>
-                            </div>
-                            <div class="col-md-4 text-center">
-                                <h6>What is KTHack?</h6>
-                                <p>KTHack is the first student hackathon in Sweden. This will be our first edition with 200 awesome hackers and lots of side activities to learn new technologies, meet interesting people and have fun. Come make history with us!</p>
-                            </div>
-                            <div class="col-md-4 text-center">
-                                <h6>What do you provide?</h6>
-                                <p>KTHack is free for all accepted hackers. We will provide you with Wi-Fi, meals, showers, swag, mattresses to relax and workspace.</p>
+        {% if faq %}
+            <div class="home-faq">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <h2>FAQ</h2>
+                            <div class="row">
+                                {% for faq_item in faq %}
+                                    <div class="col-md-4 text-center home-faq-item col-centered">
+                                        <h6>{{ faq_item.title }}</h6>
+                                        <p>{{ faq_item.description }}</p>
+                                    </div>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
     {% else %}
         <div class="container-home">
             <div class="row align-items-center-vertically home-top">
