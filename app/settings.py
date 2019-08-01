@@ -1,4 +1,8 @@
 import os
+
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
 from app.variables import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -168,3 +172,15 @@ MAX_UPLOAD_SIZE = 5242880
 # Phone number format
 
 PHONENUMBER_DB_FORMAT = "INTERNATIONAL"
+
+# Sentry logging
+
+SE_URL = os.environ.get("SE_URL", None)
+if SE_URL:
+    sentry_sdk.init(
+        dsn=SE_URL,
+        integrations=[DjangoIntegration()],
+        debug=DEBUG,
+        environment=os.environ.get("SENTRY_ENV"),
+        send_default_pii=True,
+    )
