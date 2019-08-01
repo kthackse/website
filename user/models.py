@@ -238,11 +238,11 @@ class Department(models.Model):
             messages["code"] = "The code for this department is already being used"
         if self.type in [d.type for d in Department.objects.all().exclude(id=self.id)]:
             messages["type"] = "There can be at most one department per type"
-        if (
-            self.type is not DepartmentType.ADMIN.value
-            and Department.objects.filter(type=DepartmentType.ADMIN.value).count() < 1
-        ):
-            messages["type"] = "The admin department has to exist"
+        # if (
+        #     self.type is not DepartmentType.ADMIN.value
+        #     and Department.objects.filter(type=DepartmentType.ADMIN.value).count() < 1
+        # ):
+        #     messages["type"] = "The admin department has to exist"
         if messages:
             raise ValidationError(messages)
 
