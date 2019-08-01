@@ -129,6 +129,19 @@ class ScheduleEvent(models.Model):
             raise ValidationError(messages)
 
 
+class FAQItem(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=255)
+    description = models.TextField(max_length=2500)
+    event = models.ForeignKey("Event", on_delete=models.PROTECT)
+    active = models.BooleanField(default=False)
+    order = models.IntegerField(default=0)
+
+    class Meta:
+        verbose_name = "FAQ item"
+        verbose_name_plural = "FAQ items"
+
+
 def path_and_rename_resume(instance, filename):
     """
     Stack Overflow

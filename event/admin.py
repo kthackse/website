@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from event.models import Event, ScheduleEvent, Application, Team, Vote, Comment, Reimbursement
+from event.models import Event, ScheduleEvent, Application, Team, Vote, Comment, Reimbursement, FAQItem
 
 
 @admin.register(Event)
@@ -17,6 +17,14 @@ class ScheduleEventAdmin(admin.ModelAdmin):
     list_display = ("name", "event", "starts_at", "ends_at",)
     list_filter = ("starts_at", "ends_at",)
     ordering = ("starts_at", "ends_at", "name", "event",)
+
+
+@admin.register(FAQItem)
+class FAQItemAdmin(admin.ModelAdmin):
+    search_fields = ("id", "title", "description", "event",)
+    list_display = ("title", "event", "order",)
+    list_filter = ("event",)
+    ordering = ("order", "title",)
 
 
 @admin.register(Application)
