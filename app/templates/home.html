@@ -77,7 +77,7 @@
                 </div>
             </div>
         </div>
-        {% if faq %}
+        {% if event.faq and faq %}
             <div class="home-faq">
                 <div class="container">
                     <div class="row">
@@ -96,7 +96,7 @@
                 </div>
             </div>
         {% endif %}
-        {% if organisers %}
+        {% if event.organisers_public and organisers %}
             <div class="home-organisers">
                 <div class="container">
                     <div class="row">
