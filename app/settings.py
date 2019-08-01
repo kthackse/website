@@ -181,6 +181,6 @@ if SE_URL:
         dsn=SE_URL,
         integrations=[DjangoIntegration()],
         debug=DEBUG,
-        environment=os.environ.get("SENTRY_ENV"),
+        environment=os.environ.get("SE_ENV"),
         send_default_pii=True,
     )
