@@ -45,12 +45,12 @@ class UserManager(BaseUserManager):
         return user
 
     def create_user(
-        self, email, name, surname, type=UserType.PARTICIPANT.value, password=None
+        self, email, name, surname, type=UserType.PARTICIPANT.value, password=None, is_admin=False
     ):
         if not email:
             raise ValueError("A user must have an email")
 
-        user = self.model(email=email, name=name, surname=surname, type=type)
+        user = self.model(email=email, name=name, surname=surname, type=type, is_admin=is_admin)
 
         user.set_password(password)
         user.save(using=self._db)
@@ -58,15 +58,15 @@ class UserManager(BaseUserManager):
 
     def create_superuser(self, email, name, surname, password):
         user = self.create_user(
-            email, name, surname, UserType.ORGANISER.value, password
+            email, name, surname, UserType.ORGANISER.value, password, is_admin=True
         )
-        department = Department.objects.filter(type=DepartmentType.ADMIN.value).first()
-        if not department:
-            department = Department(
-                name="Admin", code="admin", type=DepartmentType.ADMIN.value
-            )
-            department.save(using=self._db)
-        user.departments.add(department)
+        # department = Department.objects.filter(type=DepartmentType.ADMIN.value).first()
+        # if not department:
+        #     department = Department(
+        #         name="Admin", code="admin", type=DepartmentType.ADMIN.value
+        #     )
+        #     department.save(using=self._db)
+        # user.departments.add(department)
         user.save(using=self._db)
         return user
 
@@ -100,6 +100,7 @@ class User(AbstractBaseUser):
         choices=((u.value, u.name) for u in UserType),
         default=UserType.PARTICIPANT.value,
     )
+    is_admin = models.BooleanField(default=False)
     departments = models.ManyToManyField("Department", blank=True)
     company = models.ForeignKey(
         "Company", on_delete=models.PROTECT, null=True, blank=True

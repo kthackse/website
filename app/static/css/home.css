@@ -122,7 +122,7 @@ body {
 
 .home-faq h2 {
     color: rgba(0, 57, 132, 0.9);
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 .home-faq h6 {
@@ -136,7 +136,7 @@ body {
 }
 
 .home-faq-item {
-    margin-top: 1rem;
+    margin-top: 1.5rem;
 }
 
 .footer {

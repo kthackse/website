@@ -93,6 +93,9 @@ class Event(models.Model):
         current_time = timezone.now()
         return current_time < self.ends_at
 
+    def __str__(self):
+        return self.name + " " + str(self.starts_at.year)
+
     def clean(self):
         messages = dict()
         if Event.objects.filter(starts_at__lte=self.ends_at, ends_at__gte=self.starts_at).exclude(id=self.id).exists():
