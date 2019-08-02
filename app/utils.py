@@ -71,9 +71,9 @@ def send_email(
     msg = EmailMultiAlternatives(
         subject=subject,
         body=body_plain,
-        from_email=from_email or HACKATHON_EMAIL_NOREPLY,
+        from_email=from_email or HACKATHON_NAME + "<" + HACKATHON_EMAIL_NOREPLY + ">",
         to=to,
-        reply_to=reply_to or [HACKATHON_EMAIL_CONTACT],
+        reply_to=reply_to or [HACKATHON_NAME + "<" + HACKATHON_EMAIL_CONTACT + ">"],
         attachments=attachments,
     )
 
