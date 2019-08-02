@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.utils import timezone
 
 from event.enums import EventApplicationStatus, CompanyTier, SubscriberStatus
@@ -52,22 +53,25 @@ def get_faq_items(event_id):
 
 
 def add_subscriber(email, event):
-    if validate_email.match(email):
-        user_id = None
-        user = User.objects.filter(email=email).first()
-        if user:
-            user_id = user.id
-        subscriber = Subscriber.objects.filter(email=email).first()
-        if not subscriber:
-            subscriber = Subscriber(email=email, user_id=user_id)
-            subscriber.save()
-            send_subscriber_new(subscriber, event=event)
-            return subscriber
-        elif subscriber.status == SubscriberStatus.UNSUBSCRIBED.value:
-            subscriber.status = SubscriberStatus.SUBSCRIBED.value
-            subscriber.save()
-            send_subscriber_resubscribed(subscriber, event=event)
-            return subscriber
+    try:
+        validate_email(email)
+    except ValidationError:
+        return None
+    user_id = None
+    user = User.objects.filter(email=email).first()
+    if user:
+        user_id = user.id
+    subscriber = Subscriber.objects.filter(email=email).first()
+    if not subscriber:
+        subscriber = Subscriber(email=email, user_id=user_id)
+        subscriber.save()
+        send_subscriber_new(subscriber, event=event)
+        return subscriber
+    elif subscriber.status == SubscriberStatus.UNSUBSCRIBED.value:
+        subscriber.status = SubscriberStatus.SUBSCRIBED.value
+        subscriber.save()
+        send_subscriber_resubscribed(subscriber, event=event)
+        return subscriber
     return None
 
 
