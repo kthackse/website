@@ -38,10 +38,7 @@ def is_email_organizer(email):
 
 
 def get_notification_template(type: str, method: str, task: str, format: str):
-    template = settings.NOTIFY_TEMPLATES[method][type][task][format]
-    if format == "subject":
-        return HACKATHON_EMAIL_PREFIX + template
-    return template
+    return settings.NOTIFY_TEMPLATES[method][type][task][format]
 
 
 def send_email(
