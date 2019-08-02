@@ -57,6 +57,7 @@ def add_subscriber(email, event, request=None):
     try:
         validate_email(email)
     except ValidationError:
+        messages.add_message(request, messages.ERROR, "We are sorry, but we couldn't subscribe the email!")
         return None
     user_id = None
     user = User.objects.filter(email=email).first()
