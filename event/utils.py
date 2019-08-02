@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
@@ -52,7 +53,7 @@ def get_faq_items(event_id):
     return FAQItem.objects.filter(event_id=event_id, active=True).order_by("order")
 
 
-def add_subscriber(email, event):
+def add_subscriber(email, event, request=None):
     try:
         validate_email(email)
     except ValidationError:
@@ -66,12 +67,18 @@ def add_subscriber(email, event):
         subscriber = Subscriber(email=email, user_id=user_id)
         subscriber.save()
         send_subscriber_new(subscriber, event=event)
+        if request:
+            messages.success(request, "Thank-you for subscribing, remember to verify your email!")
         return subscriber
     elif subscriber.status == SubscriberStatus.UNSUBSCRIBED.value:
         subscriber.status = SubscriberStatus.SUBSCRIBED.value
         subscriber.save()
         send_subscriber_resubscribed(subscriber, event=event)
+        if request:
+            messages.success(request, "Thank-you for subscribing again!")
         return subscriber
+    if request:
+        messages.add_message(request, messages.ERROR, "We are sorry, but we couldn't subscribe the email!")
     return None
 
 
