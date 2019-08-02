@@ -8,6 +8,7 @@ django-money==0.15
 django-phonenumber-field==3.0.1
 django-versatileimagefield~=1.10
 gunicorn~=19.9.0
+html2text~=2018.1.9
 django-markup~=1.4.1
 markdown~=3.1.1
 phonenumbers==8.10.14

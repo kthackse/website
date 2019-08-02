@@ -1,5 +1,6 @@
 import re
 
+import html2text as html2text
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 
@@ -65,14 +66,18 @@ def send_email(
     if reply_to and not isinstance(reply_to, (list, tuple)):
         reply_to = [reply_to]
 
+    body_plain = html2text.html2text(body)
+
     msg = EmailMultiAlternatives(
         subject=subject,
-        body=body,
+        body=body_plain,
         from_email=from_email or HACKATHON_EMAIL_NOREPLY,
         to=to,
         reply_to=reply_to or [HACKATHON_EMAIL_CONTACT],
         attachments=attachments,
     )
+
+    msg.attach_alternative(body, "text/html")
 
     if tags:
         msg.tags = tags

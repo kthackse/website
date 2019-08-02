@@ -59,10 +59,12 @@ def add_subscriber(email, event):
         subscriber = Subscriber(email=email, user_id=user_id)
         subscriber.save()
         send_subscriber_new(subscriber, event=event)
+        return subscriber
     elif subscriber.status == SubscriberStatus.UNSUBSCRIBED.value:
         subscriber.status = SubscriberStatus.SUBSCRIBED.value
         subscriber.save()
         send_subscriber_resubscribed(subscriber, event=event)
+        return subscriber
     return None
 
 

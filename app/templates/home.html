@@ -60,9 +60,9 @@
                                 {% else %}
                                     <h4>Applications <b>will open soon</b></h4>
                                     <div class="col-md-12 text-center home-links">
-                                        {% if subscribed %}
+                                        {% if subscriber.status == 0 %}
                                             <p><span style="white-space: nowrap;">Thank-you for subscribing,</span> <span style="white-space: nowrap;">remember to <b>confirm</b> your email!</span></p>
-                                        {% elif subscribed_already %}
+                                        {% elif subscriber == 1 %}
                                             <p><span style="white-space: nowrap;">You are already subscribed,</span> <span style="white-space: nowrap;">remember to <b>confirm</b> your email!</span></p>
                                         {% else %}
                                             <p><span style="white-space: nowrap;">Don't miss the oportunity,</span> <span style="white-space: nowrap;"><b>subscribe</b> to receive updates!</span></p>
