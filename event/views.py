@@ -155,7 +155,7 @@ def subscribe(request, id):
         subscriber.save()
         messages.add_message(request, messages.INFO, "Your email has been verified!")
     else:
-        messages.add_message(request, messages.WARNING, "We are sorry, but we couldn't verify your email!")
+        messages.add_message(request, messages.ERROR, "We are sorry, but we couldn't verify your email!")
     return HttpResponseRedirect(reverse("app_home"))
 
 
@@ -166,5 +166,5 @@ def unsubscribe(request, id):
         subscriber.save()
         messages.add_message(request, messages.INFO, "You have been unsubscribed!")
     else:
-        messages.add_message(request, messages.WARNING, "We are sorry, but we couldn't verify your email!")
+        messages.add_message(request, messages.ERROR, "We are sorry, but we couldn't verify your email!")
     return HttpResponseRedirect(reverse("app_home"))
