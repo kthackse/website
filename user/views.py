@@ -1,4 +1,4 @@
-from django.contrib import auth
+from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.shortcuts import render
@@ -42,6 +42,7 @@ def signup(request):
 
     if request.method == "POST":
         form = forms.RegisterForm(request.POST)
+        # TODO: Fix validation
         if form.is_valid():
             email = form.cleaned_data["email"]
             password = form.cleaned_data["password"]
@@ -54,8 +55,7 @@ def signup(request):
             country = form.cleaned_data["country"]
 
             if User.objects.filter(email=email).first() is not None:
-                # messages.error(request, 'An account with this email already exists')
-                pass
+                messages.add_message(request, messages.ERROR, "Signup failed, an account with this email already exists!")
             else:
                 user = User.objects.create_participant(
                     email=email,
@@ -71,6 +71,8 @@ def signup(request):
                 user = auth.authenticate(email=email, password=password)
                 auth.login(request, user)
                 return HttpResponseRedirect(reverse("app_home"))
+        else:
+            messages.add_message(request, messages.ERROR, "Signup failed, some fields might be wrong or empty!")
     else:
         form = forms.RegisterForm()
 
@@ -91,7 +93,7 @@ def signup(request):
 
 def logout(request):
     auth.logout(request)
-    # messages.success(request, 'Successfully logged out!')
+    messages.success(request, "Successfully logged out!")
     return HttpResponseRedirect(reverse("user_login"))
 
 
