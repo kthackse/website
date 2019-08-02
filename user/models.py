@@ -247,10 +247,31 @@ class Department(models.Model):
             raise ValidationError(messages)
 
 
+def path_and_rename_company(instance, filename):
+    """
+    Stack Overflow
+    Django ImageField change file name on upload
+    https://stackoverflow.com/questions/15140942/django-imagefield-change-file-name-on-upload
+    """
+    ext = filename.split(".")[-1]
+    # get filename
+    if instance.pk:
+        filename = "{}.{}".format(instance.pk, ext)
+    else:
+        # set filename as random string
+        filename = "{}.{}".format(uuid.uuid4().hex, ext)
+    # return the whole path to the file
+    return os.path.join("user/company/", filename)
+
+
 class Company(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
     code = models.CharField(max_length=31, unique=True)
+    logo = VersatileImageField(
+        "Image", upload_to=path_and_rename_company
+    )
+    website = models.URLField(blank=True, null=True)
 
     class Meta:
         verbose_name_plural = "Companies"

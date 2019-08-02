@@ -1,6 +1,7 @@
 from django.contrib import admin
 
-from event.models import Event, ScheduleEvent, Application, Team, Vote, Comment, Reimbursement, FAQItem
+from event.models import Event, ScheduleEvent, Application, Team, Vote, Comment, Reimbursement, FAQItem, Subscriber, \
+    CompanyEvent
 
 
 @admin.register(Event)
@@ -65,3 +66,19 @@ class ReimbursementAdmin(admin.ModelAdmin):
     list_display = ("id", "reimbursed_by", "comment", "type", "status", "expires_at",)
     list_filter = ("created_at", "type", "status", "expires_at",)
     ordering = ("created_at", "expires_at",)
+
+
+@admin.register(Subscriber)
+class SubscriberAdmin(admin.ModelAdmin):
+    search_fields = ("id", "email", "status",)
+    list_display = ("email", "status", "created_at", "updated_at",)
+    list_filter = ("status",)
+    ordering = ("created_at", "updated_at",)
+
+
+@admin.register(CompanyEvent)
+class CompanyEventAdmin(admin.ModelAdmin):
+    search_fields = ("id", "event", "company", "tier",)
+    list_display = ("event", "company", "tier",)
+    list_filter = ("tier",)
+    ordering = ("event", "tier", "company",)

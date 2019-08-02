@@ -46,9 +46,16 @@ html, body {
     margin-bottom: 2rem;
 }
 
+.home-titles h4 {
+    font-size: 20px;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+}
+
 .home-titles p, .home-titles a {
     font-size: 15px;
     text-transform: uppercase;
+    margin-bottom: 1.5rem;
 }
 
 .home-background {
@@ -77,10 +84,10 @@ body {
 
 .home-button {
   display: inline-block;
-  border: 1px solid #ffffff;
-  color: #fff;
+  border: 1px solid #ffffff !important;
+  color: #fff !important;
   border-radius: 30px;
-  padding: 8px 25px;
+  padding: 8px 25px !important;
   -webkit-transition: all 0.3s ease 0s;
   -moz-transition: all 0.3s ease 0s;
   -o-transition: all 0.3s ease 0s;
@@ -89,13 +96,13 @@ body {
 
 @media (min-width: 600px) {
   .home-button {
-    padding: 6px 24px;
+    padding: 6px 24px !important;
   }
 }
 
 .home-button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #fff;
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: #fff !important;
 }
 
 .home-links {
@@ -140,9 +147,8 @@ body {
     margin-top: 1.5rem;
 }
 
-
 .home-organisers {
-    background-color: #3F7ED1;
+    background-color: #1e5cb1;
     padding: 5rem 0 5rem 0;
 }
 
@@ -176,4 +182,70 @@ body {
 .footer {
     background-color: rgba(0, 57, 132, 1) !important;
     position: unset !important;
+}
+
+.form-home p, .form-home a {
+    font-size: 10px !important;
+    text-transform: uppercase !important;
+    line-height: 150%;
+}
+
+.home-button3 {
+  display: inline-block;
+  border: none;
+  color: #fff !important;
+  border-radius: 30px;
+  padding: 9px 25px !important;
+  margin-top: -1px;
+  -webkit-transition: all 0.3s ease 0s;
+  -moz-transition: all 0.3s ease 0s;
+  -o-transition: all 0.3s ease 0s;
+  transition: all 0.3s ease 0s;
+  background-color: #1e5cb1;
+  text-transform: uppercase;
+  font-size: 13px;
+  width: 100%;
+}
+
+@media (min-width: 600px) {
+  .home-button3 {
+    padding: 9px 24px !important;
+    margin-top: -1px;
+  }
+}
+
+.home-button3:hover {
+  background-color: rgba(0, 57, 132, 1) !important;
+  color: #fff !important;
+}
+
+.home-companies {
+    background-color: #3F7ED1;
+    padding: 5rem 0 5rem 0;
+}
+
+.home-companies h2 {
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}
+
+.home-companies h6 {
+    color: rgba(240, 240, 240, 0.9);
+    font-size: 20px;
+}
+
+.home-companies p {
+    color: rgba(235, 235, 235, 0.9);
+    line-height: 125%;
+    text-transform: uppercase;
+}
+
+.home-companies-item {
+    margin-top: 1.5rem;
+}
+
+.home-companies-item img {
+    width: 75%;
+    margin-bottom: 1rem;
 }

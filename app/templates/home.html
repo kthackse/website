@@ -52,14 +52,30 @@
                             <h1>{{ event.name }}</h1>
                             <h3>{{ event.city }}, <span style="white-space: nowrap;">{% if event.dates_public %}{{ event.starts_at | date:"F j" }} - {{ event.ends_at | date:"j" }}{% else %}{{ event.starts_at | date:"Y" }}{% endif %}</span></h3>
                             {% if event.application_status == 0 %}
-                                <p class="home-button">Applications <b>will open soon</b></p>
-                                <div class="col-md-12 text-center home-links">
-                                    {% if request.user.is_authenticated %}
+                                {% if request.user.is_authenticated %}
+                                    <p>Applications <b>will open soon</b></p>
+                                    <div class="col-md-12 text-center home-links">
                                         <p>Hej {{ request.user.name }}, go to the <b><a class="home-button2" href="/dashboard">dashboard</a></b>?</p>
-                                    {% else %}
-                                        <p>Meanwhile you can <b><a class="home-button2" href="/user/login">login</a></b> or <b><a class="home-button2" href="/user/signup">register</a></b></p>
-                                    {% endif %}
-                                </div>
+                                    </div>
+                                {% else %}
+                                    <h4>Applications <b>will open soon</b></h4>
+                                    <div class="col-md-12 text-center home-links">
+                                        <p><span style="white-space: nowrap;">Don't miss the oportunity,</span> <span style="white-space: nowrap;"><b>subscribe</b> to receive updates!</span></p>
+                                        <div class="row" style="max-width: 500px; margin-left: auto; margin-right: auto;">
+                                            <form action="" method="post" class="form form-home">
+                                                {% csrf_token %}
+                                                <div class="col-md-7" style="padding-right: 0;">
+                                                    <input type="email" name="email" maxlength="225" style="width: 100%;" class="home-button" placeholder="elliot@kthack.com" id="id_email">
+                                                </div>
+                                                <div class="col-md-5" style="padding-left: 1rem;">
+                                                    <button class="home-button3" type="submit">{% trans "Subscribe" %}</button>
+                                                </div>
+                                                <!-- TODO: Accept policy
+                                                <p>By subscribing you accept our <a href="/page/legal/privacy-and-cookies" target="_blank">Privacy and Cookies policy</a>.</p> -->
+                                            </form>
+                                        </div>
+                                    </div>
+                                {% endif %}
                             {% elif event.application_status == 1 %}
                                 <a class="home-button" href="event/{{ event.code }}/apply">Apply now to {{ event.name }} {{ event.starts_at | date:"Y" }} <i style="padding-left: 10px;" class="fas fa-long-arrow-alt-right"></i></a>
                             {% else %}
@@ -96,6 +112,42 @@
                 </div>
             </div>
         {% endif %}
+        {% if event.companies_public and sponsors or event.companies_public and partners %}
+            <div class="home-companies">
+                <div class="container">
+                    {% if sponsors %}
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <h2>Sponsors</h2>
+                                <div class="row">
+                                    <!-- TODO: Handle if not logged or picture is not public -->
+                                    {% for sponsor in sponsors %}
+                                        <div class="col-md-2 text-center home-companies-item col-centered">
+                                            <img src="/files/{{ sponsor.company.logo }}" />
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if partners %}
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <h2>Partners</h2>
+                                <div class="row">
+                                    <!-- TODO: Handle if not logged or picture is not public -->
+                                    {% for partner in partners %}
+                                        <div class="col-md-2 text-center home-companies-item col-centered">
+                                            <img src="/files/{{ partner.company.logo }}" />
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
         {% if event.organisers_public and organisers %}
             <div class="home-organisers">
                 <div class="container">
@@ -103,6 +155,7 @@
                         <div class="col-md-12 text-center">
                             <h2>Organisers</h2>
                             <div class="row">
+                                <!-- TODO: Handle if not logged or picture is not public -->
                                 {% for organiser in organisers %}
                                     <div class="col-md-2 text-center home-organisers-item col-centered">
                                         <img src="/files/{{ organiser.picture }}" />

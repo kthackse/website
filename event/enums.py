@@ -61,3 +61,19 @@ class ReimbursementStatus(enum.IntEnum):
     DENIED = 5
     EXPIRED = 6
     WAILISTED = 7
+
+
+class SubscriberStatus(enum.IntEnum):
+    PENDING = 0
+    SUBSCRIBED = 1
+    UNSUBSCRIBED = 2
+
+
+class CompanyTier(enum.IntEnum):
+    TERA = 10
+    GIGA = 20
+    MEGA = 30
+    KILO = 40
+    MILI = 50
+    PARTNER = 60
+    SUPPORT = 70

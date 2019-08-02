@@ -7,8 +7,15 @@ from django.db import models
 from django.utils import timezone
 from versatileimagefield.fields import VersatileImageField
 
-from event.enums import EventType, EventApplicationStatus, ApplicationStatus, DietType, TshirtSize, ReimbursementType, \
-    ReimbursementStatus
+from event.enums import (
+    EventType,
+    EventApplicationStatus,
+    ApplicationStatus,
+    DietType,
+    TshirtSize,
+    ReimbursementType,
+    ReimbursementStatus,
+    SubscriberStatus, CompanyTier)
 from user.enums import UserType
 
 from djmoney.models.fields import MoneyField
@@ -50,31 +57,26 @@ def path_and_rename_background(instance, filename):
 
 class Event(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField( max_length=255)
+    name = models.CharField(max_length=255)
     code = models.CharField(max_length=31, unique=True)
     description = models.TextField(max_length=1000, blank=True, null=True)
     type = models.PositiveSmallIntegerField(
         choices=((t.value, t.name) for t in EventType)
     )
-    picture = VersatileImageField(
-        "Image", upload_to=path_and_rename
-    )
+    picture = VersatileImageField("Image", upload_to=path_and_rename)
     background = models.FileField(
-        upload_to=path_and_rename_background,
-        blank=True,
-        null=True
+        upload_to=path_and_rename_background, blank=True, null=True
     )
     # TODO: Divide sponsors into categories
     city = models.CharField(max_length=255, default="Stockholm")
     country = models.CharField(max_length=255, default="Sweden")
-    sponsors = models.ManyToManyField("user.Company", blank=True, null=True, related_name="sponsors")
-    partners = models.ManyToManyField("user.Company", blank=True, null=True, related_name="partners")
     starts_at = models.DateTimeField()
     ends_at = models.DateTimeField()
     published = models.BooleanField(default=False)
     dates_public = models.BooleanField(default=True)
     faq_public = models.BooleanField(default=True)
     organisers_public = models.BooleanField(default=True)
+    companies_public = models.BooleanField(default=True)
     application_available = models.DateTimeField()
     application_deadline = models.DateTimeField()
     custom_home = models.BooleanField(default=False)
@@ -90,7 +92,10 @@ class Event(models.Model):
 
     @property
     def application_review_available(self):
-        if self.application_status in [EventApplicationStatus.PENDING, EventApplicationStatus.OPEN]:
+        if self.application_status in [
+            EventApplicationStatus.PENDING,
+            EventApplicationStatus.OPEN,
+        ]:
             return True
         current_time = timezone.now()
         return current_time < self.ends_at
@@ -100,14 +105,24 @@ class Event(models.Model):
 
     def clean(self):
         messages = dict()
-        if Event.objects.filter(starts_at__lte=self.ends_at, ends_at__gte=self.starts_at).exclude(id=self.id).exists():
+        if (
+            Event.objects.filter(
+                starts_at__lte=self.ends_at, ends_at__gte=self.starts_at
+            )
+            .exclude(id=self.id)
+            .exists()
+        ):
             temporal_overlap = "There's another event already taking place for the selected range of dates"
             messages["starts_at"] = temporal_overlap
             messages["ends_at"] = temporal_overlap
         if self.application_deadline > self.ends_at:
-            messages["application_deadline"] = "The application deadline can't be after the event has ended"
+            messages[
+                "application_deadline"
+            ] = "The application deadline can't be after the event has ended"
         if self.application_available > self.application_deadline:
-            messages["application_deadline"] = "The application deadline can't be before applications open"
+            messages[
+                "application_deadline"
+            ] = "The application deadline can't be before applications open"
         if messages:
             raise ValidationError(messages)
 
@@ -128,11 +143,27 @@ class ScheduleEvent(models.Model):
                 "starts_at"
             ] = "The schedule event can't start before the event itself"
         if self.ends_at and self.ends_at > self.event.ends_at:
-            messages[
-                "ends_at"
-            ] = "The schedule event can't end after the event itself"
+            messages["ends_at"] = "The schedule event can't end after the event itself"
         if messages:
             raise ValidationError(messages)
+
+    class Meta:
+        verbose_name = "Schedule in event"
+        verbose_name_plural = "Schedules     in events"
+
+
+class CompanyEvent(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    event = models.ForeignKey("Event", on_delete=models.PROTECT)
+    company = models.ForeignKey("user.Company", on_delete=models.PROTECT)
+    tier = models.PositiveSmallIntegerField(
+        choices=((t.value, t.name) for t in CompanyTier)
+    )
+
+    class Meta:
+        verbose_name = "Company in event"
+        verbose_name_plural = "Companies in events"
+        unique_together = ("event", "company",)
 
 
 class FAQItem(models.Model):
@@ -212,13 +243,11 @@ class Application(models.Model):
 
     # Swag
     diet = models.PositiveSmallIntegerField(
-        choices=((t.value, t.name) for t in DietType),
-        default=DietType.REGULAR.value,
+        choices=((t.value, t.name) for t in DietType), default=DietType.REGULAR.value
     )
     diet_other = models.CharField(max_length=255, blank=True, null=True)
     tshirt = models.PositiveSmallIntegerField(
-        choices=((t.value, t.name) for t in TshirtSize),
-        default=TshirtSize.L.value,
+        choices=((t.value, t.name) for t in TshirtSize), default=TshirtSize.L.value
     )
     hardware = models.TextField(max_length=1000, null=True, blank=True)
 
@@ -336,3 +365,21 @@ class Reimbursement(models.Model):
     expires_at = models.DateTimeField()
 
     # TODO: Check only one reimbursement per application
+
+
+class Subscriber(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    email = models.EmailField(max_length=255, unique=True)
+    user = models.ForeignKey(
+        "user.User",
+        on_delete=models.PROTECT,
+        related_name="subscriber_user",
+        blank=True,
+        null=True,
+    )
+    status = models.PositiveSmallIntegerField(
+        choices=((s.value, s.name) for s in SubscriberStatus),
+        default=SubscriberStatus.PENDING.value,
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

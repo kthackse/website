@@ -15,7 +15,7 @@ from event.utils import (
     get_next_or_past_event,
     get_next_events,
     get_application_by_resume,
-    get_faq_items)
+    get_faq_items, add_subscriber, get_partners_in_event, get_sponsors_in_event)
 from user.enums import UserType
 from user.utils import get_user_by_picture, get_organisers
 
@@ -65,6 +65,7 @@ def files(request, file_):
         "__sized__/event/picture",
         "event/picture",
         "event/background",
+        "user/company",
     ]:
         if file_[:7] != "/files/":
             file_ = "/files/" + file_
@@ -78,11 +79,17 @@ def files(request, file_):
 
 def home(request):
     current_data = dict()
+    if request.method == "POST" and "email" in request.POST:
+        email = request.POST["email"]
+        add_subscriber(email=email)
+        current_data["subscribed"] = True
     event = get_next_or_past_event()
     if event:
         current_data["event"] = event
         current_data["faq"] = get_faq_items(event_id=event.id)
         current_data["organisers"] = get_organisers(event_id=event.id)
+        current_data["sponsors"] = get_sponsors_in_event(event_id=event.id)
+        current_data["partners"] = get_partners_in_event(event_id=event.id)
         current_data["background_video"] = (event.background.name[-4:] == ".mp4")
         current_data["background_image"] = (event.background.name[-4:] in [".png", ".jpg", ".jpeg", ".gif", ".svg"])
         if event.custom_home:

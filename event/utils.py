@@ -1,7 +1,8 @@
 from django.utils import timezone
 
-from event.enums import EventApplicationStatus
-from event.models import Event, Application, FAQItem
+from event.enums import EventApplicationStatus, CompanyTier
+from event.models import Event, Application, FAQItem, Subscriber, CompanyEvent
+from user.models import User
 
 
 def get_next_or_past_event(published=True):
@@ -45,3 +46,19 @@ def get_applications(event_id):
 
 def get_faq_items(event_id):
     return FAQItem.objects.filter(event_id=event_id, active=True).order_by("order")
+
+
+def add_subscriber(email):
+    user_id = None
+    user = User.objects.filter(email=email).first()
+    if user:
+        user_id = user.id
+    return Subscriber(email=email, user_id=user_id)
+
+
+def get_sponsors_in_event(event_id):
+    return CompanyEvent.objects.filter(event_id=event_id, tier__lt=CompanyTier.PARTNER.value)
+
+
+def get_partners_in_event(event_id):
+    return CompanyEvent.objects.filter(event_id=event_id, tier=CompanyTier.PARTNER.value)
