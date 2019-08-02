@@ -53,7 +53,9 @@ def add_subscriber(email):
     user = User.objects.filter(email=email).first()
     if user:
         user_id = user.id
-    return Subscriber(email=email, user_id=user_id)
+    subscriber = Subscriber(email=email, user_id=user_id)
+    subscriber.save()
+    return subscriber
 
 
 def get_sponsors_in_event(event_id):

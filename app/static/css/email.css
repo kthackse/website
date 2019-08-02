@@ -1,0 +1,171 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-size: 100%;
+    font-family: "Avenir", sans-serif;
+    line-height: 1.65;
+}
+
+img {
+    max-width: 100%;
+    margin: 0 auto;
+    display: block;
+}
+
+body, .body-wrap {
+    width: 100% !important;
+    height: 100%;
+    background: #f8f8f8;
+}
+
+a {
+    color: #1e5cb1;
+    text-decoration: none;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-left {
+    text-align: left;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 20px;
+    line-height: 1.25;
+    color: #333333;
+}
+
+h1 {
+    font-size: 32px;
+}
+
+h2 {
+    font-size: 28px;
+}
+
+h3 {
+    font-size: 24px;
+}
+
+h4 {
+    font-size: 20px;
+}
+
+h5 {
+    font-size: 16px;
+}
+
+p, ul, ol {
+    font-size: 16px;
+    font-weight: normal;
+    margin-bottom: 20px;
+    color: #333333;
+}
+
+a {
+    text-decoration: none;
+}
+
+.container {
+    display: block !important;
+    clear: both !important;
+    margin: 0 auto !important;
+    max-width: 580px !important;
+}
+
+.container table {
+    width: 100% !important;
+    border-collapse: collapse;
+}
+
+.container .masthead {
+    padding: 40px 25px;
+    background: #1e5cb1;
+    color: white;
+}
+
+.container .masthead h1 {
+    margin: 15px auto 0 auto !important;
+    max-width: 90%;
+    text-transform: uppercase;
+    font-weight: 800;
+    font-size: 25px;
+    color: #ffffff;
+}
+
+.container .masthead h3 {
+    margin: 0 auto !important;
+    max-width: 90%;
+    text-transform: uppercase;
+    font-size: 20px;
+    color: #ffffff;
+}
+
+.container .content {
+    background: white;
+    padding: 30px 35px;
+}
+
+.container .content.footer {
+    background: 0;
+    padding: 25px 30px 35px 30px;
+}
+
+.container .content.footer p {
+    margin-bottom: 0;
+    color: #888;
+    text-align: center;
+    font-size: 14px;
+}
+
+.container .content.footer a {
+    color: #888;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.white-link, .white-link:hover, .white-link:active {
+    color: #FFF !important;
+    text-decoration: none;;
+}
+
+.email-button {
+    display: inline-block;
+    border: none;
+    color: #fff !important;
+    border-radius: 30px;
+    padding: 9px 25px !important;
+    margin-top: -1px;
+    -webkit-transition: all 0.3s ease 0s;
+    -moz-transition: all 0.3s ease 0s;
+    -o-transition: all 0.3s ease 0s;
+    transition: all 0.3s ease 0s;
+    background-color: #1e5cb1;
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 400 !important;
+}
+
+@media (min-width: 600px) {
+    .email-button {
+        padding: 9px 24px !important;
+        margin-top: -1px;
+    }
+}
+
+.email-button:hover {
+    background-color: rgba(0, 57, 132, 1) !important;
+    color: #fff !important;
+}
+
+.email-legal {
+    font-weight: 400 !important;
+    text-transform: uppercase;
+    font-size: 12px;
+}

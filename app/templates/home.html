@@ -60,20 +60,24 @@
                                 {% else %}
                                     <h4>Applications <b>will open soon</b></h4>
                                     <div class="col-md-12 text-center home-links">
-                                        <p><span style="white-space: nowrap;">Don't miss the oportunity,</span> <span style="white-space: nowrap;"><b>subscribe</b> to receive updates!</span></p>
-                                        <div class="row" style="max-width: 500px; margin-left: auto; margin-right: auto;">
-                                            <form action="" method="post" class="form form-home">
-                                                {% csrf_token %}
-                                                <div class="col-md-7" style="padding-right: 0;">
-                                                    <input type="email" name="email" maxlength="225" style="width: 100%;" class="home-button" placeholder="elliot@kthack.com" id="id_email">
-                                                </div>
-                                                <div class="col-md-5" style="padding-left: 1rem;">
-                                                    <button class="home-button3" type="submit">{% trans "Subscribe" %}</button>
-                                                </div>
-                                                <!-- TODO: Accept policy
-                                                <p>By subscribing you accept our <a href="/page/legal/privacy-and-cookies" target="_blank">Privacy and Cookies policy</a>.</p> -->
-                                            </form>
-                                        </div>
+                                        {% if subscribed %}
+                                            <p><span style="white-space: nowrap;">Thank-you for subscribing,</span> <span style="white-space: nowrap;">remember to <b>confirm</b> your email!</span></p>
+                                        {% else %}
+                                            <p><span style="white-space: nowrap;">Don't miss the oportunity,</span> <span style="white-space: nowrap;"><b>subscribe</b> to receive updates!</span></p>
+                                            <div class="row" style="max-width: 500px; margin-left: auto; margin-right: auto;">
+                                                <form action="" method="post" class="form form-home">
+                                                    {% csrf_token %}
+                                                    <div class="col-md-7" style="padding-right: 0;">
+                                                        <input type="email" name="email" maxlength="225" style="width: 100%;" class="home-button" placeholder="elliot@kthack.com" id="id_email">
+                                                    </div>
+                                                    <div class="col-md-5" style="padding-left: 1rem;">
+                                                        <button class="home-button3" type="submit">{% trans "Subscribe" %}</button>
+                                                    </div>
+                                                    <!-- TODO: Accept policy
+                                                    <p>By subscribing you accept our <a href="/page/legal/privacy-and-cookies" target="_blank">Privacy and Cookies policy</a>.</p> -->
+                                                </form>
+                                            </div>
+                                        {% endif %}
                                     </div>
                                 {% endif %}
                             {% elif event.application_status == 1 %}

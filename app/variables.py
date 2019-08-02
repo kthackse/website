@@ -13,12 +13,12 @@ HACKATHON_ORGANIZER_EMAIL_REGEX = "^.*@kthack\.com$"
 HACKATHON_EMAIL_WEBDEV = "webdev@kthack.com"
 HACKATHON_EMAIL_SPONSORSHIP = "sponsorship@kthack.com"
 
-HACKATHON_SN_FACEBOOK = "kthackse"
-HACKATHON_SN_TWITTER = "kthackse"
-HACKATHON_SN_INSTAGRAM = "kthackse"
-HACKATHON_SN_YOUTUBE = "kthackse"
-HACKATHON_SN_LINKEDIN = "kthackse"
-HACKATHON_SN_MEDIUM = "kthackse"
+# HACKATHON_SN_FACEBOOK = "kthackse"
+# HACKATHON_SN_TWITTER = "kthackse"
+# HACKATHON_SN_INSTAGRAM = "kthackse"
+# HACKATHON_SN_YOUTUBE = "kthackse"
+# HACKATHON_SN_LINKEDIN = "kthackse"
+# HACKATHON_SN_MEDIUM = "kthackse"
 HACKATHON_SN_GITHUB = "kthackse"
 
 # TODO: Add the rest of variables including images, Google Analytics, texts, currency, deadlines...

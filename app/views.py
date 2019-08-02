@@ -83,6 +83,7 @@ def home(request):
     if request.method == "POST" and "email" in request.POST:
         email = request.POST["email"]
         add_subscriber(email=email)
+        print(email)
         current_data["subscribed"] = True
     event = get_next_or_past_event()
     if event:

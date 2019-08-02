@@ -89,36 +89,7 @@
                             <p>Need help? Ping us at {{ hk_email_contact | urlize }}!</p>
                         </div>
                         <div class="social-icons col-sm-6 text-right text-center-xs">
-                            {% if hk_sn_facebook %}
-                                <a class="btns" target="_blank" href="https://facebook.com/{{ hk_sn_facebook }}">
-                                    <i aria-hidden="true" class="fab fa-facebook fa-lg"></i>
-                                </a>
-                            {% endif %}
-                            {% if hk_sn_twitter %}
-                                <a class="btns" target="_blank" href="https://twitter.com/{{ hk_sn_twitter }}">
-                                    <i aria-hidden="true" class="fab fa-twitter fa-lg"></i>
-                                </a>
-                            {% endif %}
-                            {% if hk_sn_instagram %}
-                                <a class="btns" target="_blank" href="https://instagram.com/{{ hk_sn_instagram }}">
-                                    <i aria-hidden="true" class="fab fa-instagram fa-lg"></i>
-                                </a>
-                            {% endif %}
-                            {% if hk_sn_youtube %}
-                                <a class="btns" target="_blank" href="https://youtube.com/channel/{{ hk_sn_youtube }}">
-                                    <i aria-hidden="true" class="fab fa-youtube fa-lg"></i>
-                                </a>
-                            {% endif %}
-                            {% if hk_sn_medium %}
-                                <a class="btns" target="_blank" href="https://medium.com/@{{ hk_sn_medium }}">
-                                    <i aria-hidden="true" class="fab fa-medium fa-lg"></i>
-                                </a>
-                            {% endif %}
-                            {% if hk_sn_github %}
-                                <a class="btns" target="_blank" href="https://github.com/{{ hk_sn_github }}">
-                                    <i aria-hidden="true" class="fab fa-github fa-lg"></i>
-                                </a>
-                            {% endif %}
+                            {% include "include/social.html" %}
                         </div>
                     </div>
                     <div class="row">

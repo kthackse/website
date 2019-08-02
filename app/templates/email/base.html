@@ -1,0 +1,82 @@
+{% load static %}
+{% load bootstrap4 %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="theme-color" content="#003984">
+        <meta name="author" content="{{ hk_name }}">
+        <meta name="description" content="{{ hk_description }}">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+        <link rel="stylesheet" href="{% static 'css/fontawesome.css' %}">
+        <link rel="stylesheet" href="{% static 'css/main.css' %}">
+        <link rel="stylesheet" href="{% static 'css/email.css' %}">
+    </head>
+    <body>
+        <table class="body-wrap">
+	        <tr>
+		        <td class="container" style="padding-top: 35px !important;">
+                    <table>
+		                <tr>
+		                    <td align="center" class="masthead">
+		                        <img style="max-height: 100px;" src="//{{ hk_domain }}/files/{{ event.picture }}" />
+                                <h1>{{ event.name }}</h1>
+                                <h3>{{ event.city }}, <span style="white-space: nowrap;">{% if event.dates_public %}{{ event.starts_at | date:"F j" }} - {{ event.ends_at | date:"j" }}{% else %}{{ event.starts_at | date:"Y" }}{% endif %}</span></h3>
+		                    </td>
+                        </tr>
+                        <tr>
+                            <td class="content" style="margin: 30px 35px !important;">
+                                {% block email_opening %}
+                                    {% if email_user %}
+                                        <h4>Hej, {{ user.name }}!</h4>
+                                    {% else %}
+                                        <h4>Hej!</h4>
+                                    {% endif %}
+                                {% endblock %}
+                                {% block email_body %}
+                                    {% block email_message_pre %}
+                                        <p>Looks like there's been a problem, this email doesn't have content! Please, let us know if this is the result of registering, subscribing or any other action you might think that have caused this.</p>
+                                    {% endblock %}
+                                    {% block email_button %}
+                                         <table>
+                                            <tr>
+                                                <td align="center">
+                                                    <p>
+                                                        <a href="{% block email_button_url %}mailto:{{ hk_email_contact }}{% endblock %}" class="email-button">{% block email_button_text %}Contact us{% endblock %}</a>
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                         </table>
+                                    {% endblock %}
+                                    {% block email_message_post %}
+                                    {% endblock %}
+                                {% endblock %}
+                                {% block email_closing %}
+                                    <p style="margin:0;">Best, {{ hk_name }} team.</p>
+                                {% endblock %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="container" style="margin: 0 auto !important;">
+                                <table>
+                                    <tr>
+                                        <td class="content footer" align="center">
+                                            {% include "include/social.html" %}
+                                            <p style="margin-top: 5px;">Sent with 💛 by students in KTH 🇸🇪</p>
+                                            <a href="/page/legal/legal-notice" class="email-legal">Legal notice</a>
+                                            <a href="/page/legal/terms-and-conditions" style="margin-left: 15px;" class="email-legal">Terms and Conditions</a>
+                                            <a href="/page/legal/privacy-and-cookies" style="margin-left: 15px;" class="email-legal">Privacy and Cookies</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+	    </table>
+    </body>
+</html>
