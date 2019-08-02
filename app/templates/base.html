@@ -35,7 +35,7 @@
         {% block background %}
             {% if event %}
                 {% if background_image %}
-                    <div class="home-background" style="background-image: url('http://{{ hk_domain }}/files/{{ event.background }}')"></div>
+                    <div class="home-background" style="background-image: url('/files/{{ event.background }}')"></div>
                 {% else %}
                     <div class="home-background background-color"></div>
                 {% endif %}
