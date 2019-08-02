@@ -79,6 +79,6 @@ class SubscriberAdmin(admin.ModelAdmin):
 @admin.register(CompanyEvent)
 class CompanyEventAdmin(admin.ModelAdmin):
     search_fields = ("id", "event", "company", "tier",)
-    list_display = ("event", "company", "tier",)
+    list_display = ("company", "event", "tier",)
     list_filter = ("tier",)
     ordering = ("event", "tier", "company",)

@@ -11,6 +11,7 @@ from django.template import TemplateDoesNotExist
 from django.urls import reverse
 
 from app import settings
+from event.enums import CompanyTier
 from event.utils import (
     get_next_or_past_event,
     get_next_events,
@@ -88,7 +89,12 @@ def home(request):
         current_data["event"] = event
         current_data["faq"] = get_faq_items(event_id=event.id)
         current_data["organisers"] = get_organisers(event_id=event.id)
-        current_data["sponsors"] = get_sponsors_in_event(event_id=event.id)
+        sponsors = get_sponsors_in_event(event_id=event.id)
+        if sponsors:
+            sponsors_dict = dict()
+            for tier in CompanyTier:
+                sponsors_dict[tier.name.lower()] = sponsors.filter(tier=tier.value)
+            current_data["sponsors"] = sponsors_dict
         current_data["partners"] = get_partners_in_event(event_id=event.id)
         current_data["background_video"] = (event.background.name[-4:] == ".mp4")
         current_data["background_image"] = (event.background.name[-4:] in [".png", ".jpg", ".jpeg", ".gif", ".svg"])

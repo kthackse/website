@@ -159,11 +159,12 @@ class CompanyEvent(models.Model):
     tier = models.PositiveSmallIntegerField(
         choices=((t.value, t.name) for t in CompanyTier)
     )
+    public = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = "Company in event"
         verbose_name_plural = "Companies in events"
-        unique_together = ("event", "company",)
+        # unique_together = ("event", "company",)
 
 
 class FAQItem(models.Model):

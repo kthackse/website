@@ -57,8 +57,8 @@ def add_subscriber(email):
 
 
 def get_sponsors_in_event(event_id):
-    return CompanyEvent.objects.filter(event_id=event_id, tier__lt=CompanyTier.PARTNER.value)
+    return CompanyEvent.objects.filter(event_id=event_id, tier__lt=CompanyTier.PARTNER.value, public=True)
 
 
 def get_partners_in_event(event_id):
-    return CompanyEvent.objects.filter(event_id=event_id, tier=CompanyTier.PARTNER.value)
+    return CompanyEvent.objects.filter(event_id=event_id, tier=CompanyTier.PARTNER.value, public=True)
