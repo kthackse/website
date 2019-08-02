@@ -52,7 +52,7 @@ def get_faq_items(event_id):
 
 
 def add_subscriber(email, event):
-    if validate_email(email):
+    if validate_email.match(email):
         user_id = None
         user = User.objects.filter(email=email).first()
         if user:
