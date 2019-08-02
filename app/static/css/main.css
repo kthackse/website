@@ -244,6 +244,60 @@ form .is-valid:focus {
   white-space: nowrap;
 }
 
+#CookielawBanner {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: rgba(240, 240, 240, 0.75);
+  padding: 1rem 0;
+  color: #333333;
+  z-index: 50;
+}
+
+#CookielawBanner p {
+  margin-bottom: 0;
+  line-height: 125%;
+}
+
+@media (max-width: 768px) {
+  #CookielawBanner p {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 13px;
+  }
+}
+
+.button4 {
+    display: inline-block;
+    border: none;
+    color: #fff !important;
+    border-radius: 30px;
+    padding: 9px 25px !important;
+    margin-top: -1px;
+    -webkit-transition: all 0.3s ease 0s;
+    -moz-transition: all 0.3s ease 0s;
+    -o-transition: all 0.3s ease 0s;
+    transition: all 0.3s ease 0s;
+    background-color: #1e5cb1;
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 400 !important;
+    width: 100%;
+    text-align: center;
+}
+
+@media (min-width: 600px) {
+    .home-button4 {
+        padding: 9px 24px !important;
+        margin-top: -1px;
+    }
+}
+
+.home-button4:hover {
+    background-color: rgba(0, 57, 132, 1) !important;
+    color: #fff !important;
+}
+
 
 /* HOME */
 
