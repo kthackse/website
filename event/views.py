@@ -155,7 +155,11 @@ def subscribe(request, id):
         subscriber.save()
         messages.add_message(request, messages.INFO, "Your email has been verified!")
     else:
-        messages.add_message(request, messages.ERROR, "We are sorry, but we couldn't verify your email!")
+        subscriber = Subscriber.objects.filter(id=id, status=SubscriberStatus.SUBSCRIBED.value).first()
+        if subscriber:
+            messages.add_message(request, messages.INFO, "Your email has already been verified before!")
+        else:
+            messages.add_message(request, messages.ERROR, "We are sorry, but we couldn't verify your email!")
     return HttpResponseRedirect(reverse("app_home"))
 
 

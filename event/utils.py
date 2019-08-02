@@ -5,6 +5,8 @@ from event.models import Event, Application, FAQItem, Subscriber, CompanyEvent
 from event.tasks import send_subscriber_new, send_subscriber_resubscribed
 from user.models import User
 
+from django.core.validators import validate_email
+
 
 def get_next_or_past_event(published=True):
     event = (
@@ -50,21 +52,22 @@ def get_faq_items(event_id):
 
 
 def add_subscriber(email, event):
-    user_id = None
-    user = User.objects.filter(email=email).first()
-    if user:
-        user_id = user.id
-    subscriber = Subscriber.objects.filter(email=email).first()
-    if not subscriber:
-        subscriber = Subscriber(email=email, user_id=user_id)
-        subscriber.save()
-        send_subscriber_new(subscriber, event=event)
-        return subscriber
-    elif subscriber.status == SubscriberStatus.UNSUBSCRIBED.value:
-        subscriber.status = SubscriberStatus.SUBSCRIBED.value
-        subscriber.save()
-        send_subscriber_resubscribed(subscriber, event=event)
-        return subscriber
+    if validate_email.match(email):
+        user_id = None
+        user = User.objects.filter(email=email).first()
+        if user:
+            user_id = user.id
+        subscriber = Subscriber.objects.filter(email=email).first()
+        if not subscriber:
+            subscriber = Subscriber(email=email, user_id=user_id)
+            subscriber.save()
+            send_subscriber_new(subscriber, event=event)
+            return subscriber
+        elif subscriber.status == SubscriberStatus.UNSUBSCRIBED.value:
+            subscriber.status = SubscriberStatus.SUBSCRIBED.value
+            subscriber.save()
+            send_subscriber_resubscribed(subscriber, event=event)
+            return subscriber
     return None
 
 
