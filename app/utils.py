@@ -14,6 +14,7 @@ def get_substitutions_templates():
         "hk_domain": getattr(settings, "HACKATHON_DOMAIN", None),
         "hk_email_contact": getattr(settings, "HACKATHON_EMAIL_CONTACT", None),
         "hk_email_webdev": getattr(settings, "HACKATHON_EMAIL_WEBDEV", None),
+        "hk_email_sponsorship": getattr(settings, "HACKATHON_EMAIL_SPONSORSHIP", None),
         "hk_sn_facebook": getattr(settings, "HACKATHON_SN_FACEBOOK", None),
         "hk_sn_twitter": getattr(settings, "HACKATHON_SN_TWITTER", None),
         "hk_sn_instagram": getattr(settings, "HACKATHON_SN_INSTAGRAM", None),

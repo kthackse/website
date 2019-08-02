@@ -112,7 +112,7 @@
                 </div>
             </div>
         {% endif %}
-        {% if event.companies_public and sponsors or event.companies_public and partners %}
+        {% if event.companies_public %}
             <div class="home-companies">
                 <div class="container">
                     {% if sponsors %}
@@ -150,6 +150,17 @@
                                         {% endfor %}
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if event.companies_open %}
+                        <div class="row" {% if sponsors or partners %}style="margin-top: 2rem;"{% endif %}>
+                            <div class="col-md-12 text-center">
+                                <h3>Interested in sponsoring?</h3>
+                                <p style="margin-bottom: 0;">Our sponsors help us unite {{ event.hackers }} developers, designers and builders in {{ event.city }}.</p>
+                                <p>They make the event possible and give the hackers the opportunity to build something incredible.</p>
+                                <p>Interested? Email us at {{ hk_email_sponsorship | urlize }}.</p>
+                                <a class="home-button3 sponsorship-button" href="mailto:{{ hk_email_sponsorship }}">Become a sponsor</a>
                             </div>
                         </div>
                     {% endif %}

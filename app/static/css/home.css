@@ -205,6 +205,7 @@ body {
   text-transform: uppercase;
   font-size: 13px;
   width: 100%;
+  font-weight: 400 !important;
 }
 
 @media (min-width: 600px) {
@@ -230,6 +231,13 @@ body {
     text-transform: uppercase;
 }
 
+.home-companies h3 {
+    color: rgba(255, 255, 255, 0.9);
+    text-transform: uppercase;
+    font-size: 20px;
+    margin-bottom: 1.5rem;
+}
+
 .home-companies h6 {
     color: rgba(240, 240, 240, 0.9);
     font-size: 20px;
@@ -238,7 +246,12 @@ body {
 .home-companies p {
     color: rgba(235, 235, 235, 0.9);
     line-height: 125%;
-    text-transform: uppercase;
+}
+
+.home-companies a {
+    color: rgba(235, 235, 235, 0.8);
+    line-height: 100%;
+    font-weight: 800;
 }
 
 .home-companies-item {
@@ -279,4 +292,10 @@ body {
 .company-partner img {
     /*height: 50px;*/
     height: 60px;
+}
+
+.sponsorship-button {
+    width: unset !important;
+    padding: 15px 25px !important;
+    margin-top: 1rem;
 }

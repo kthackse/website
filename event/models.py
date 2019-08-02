@@ -72,6 +72,7 @@ class Event(models.Model):
     country = models.CharField(max_length=255, default="Sweden")
     starts_at = models.DateTimeField()
     ends_at = models.DateTimeField()
+    hackers = models.IntegerField(default=200)
     published = models.BooleanField(default=False)
     dates_public = models.BooleanField(default=True)
     faq_public = models.BooleanField(default=True)
@@ -79,6 +80,7 @@ class Event(models.Model):
     companies_public = models.BooleanField(default=True)
     application_available = models.DateTimeField()
     application_deadline = models.DateTimeField()
+    companies_open = models.BooleanField(default=True)
     custom_home = models.BooleanField(default=False)
 
     @property

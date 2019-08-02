@@ -11,6 +11,7 @@ HACKATHON_IP = os.environ.get("HK_IP", "localhost:8000")
 HACKATHON_EMAIL_CONTACT = "contact@kthack.com"
 HACKATHON_ORGANIZER_EMAIL_REGEX = "^.*@kthack\.com$"
 HACKATHON_EMAIL_WEBDEV = "webdev@hackupc.com"
+HACKATHON_EMAIL_SPONSORSHIP = "sponsorship@hackupc.com"
 
 HACKATHON_SN_FACEBOOK = "kthackse"
 HACKATHON_SN_TWITTER = "kthackse"
