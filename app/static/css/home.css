@@ -14,7 +14,7 @@ html, body {
 .home-picture {
     margin-left: auto;
     margin-right: auto;
-    padding: 0;
+    padding: 0 15px;
     display: block;
 }
 
@@ -76,6 +76,19 @@ html, body {
 
 .background-color {
     background-color: #003984;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: rgba(240, 240, 240, 1);
+  opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  color: rgba(240, 240, 240, 1);
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+  color: rgba(240, 240, 240, 1);
 }
 
 body {
