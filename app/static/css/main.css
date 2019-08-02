@@ -228,6 +228,22 @@ form .is-valid:focus {
   text-transform: uppercase;
 }
 
+@media (max-width: 991px) {
+  .mobile-center {
+    text-align: center !important;
+  }
+  .mobile-center p {
+    margin-bottom: 0.5rem !important;
+  }
+  .mobile-center .btns {
+    margin-bottom: 2rem !important;
+  }
+}
+
+.legal-page {
+  white-space: nowrap;
+}
+
 
 /* HOME */
 
