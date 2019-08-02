@@ -20,18 +20,6 @@
 {% block navbar %}
 {% endblock %}
 
-{% block background %}
-    {% if event %}
-        {% if background_image %}
-            <div class="home-background" style="background-image: url('files/{{ event.background }}')"></div>
-        {% else %}
-            <div class="home-background background-color"></div>
-        {% endif %}
-    {% else %}
-        <div class="background"></div>
-    {% endif %}
-{% endblock %}
-
 {% block body_plain %}
     {% if event %}
         <div class="container-home">

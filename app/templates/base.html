@@ -33,7 +33,15 @@
             {% cookielaw_banner %}
         {% endblock %}
         {% block background %}
-            <div class="background"></div>
+            {% if event %}
+                {% if background_image %}
+                    <div class="home-background" style="background-image: url('http://{{ hk_domain }}/files/{{ event.background }}')"></div>
+                {% else %}
+                    <div class="home-background background-color"></div>
+                {% endif %}
+            {% else %}
+                <div class="background"></div>
+            {% endif %}
         {% endblock %}
         {% block navbar %}
             <header class="header-area">
@@ -62,8 +70,11 @@
                                         <li class="nav-item"><a class="nav-link" href="{% url 'user_logout' %}">Logout</a></li>
                                         <li class="nav-item"><a href="{% url 'user_profile' %}"><img class="header-profile" src="{{ request.user.picture.crop.500x500 }}"/></a></li>
                                     {% else %}
-                                        <li class="nav-item"><a class="nav-link" href="{% url 'user_login' %}">Login</a></li>
-                                        <li class="nav-item"><a class="nav-link" href="{% url 'user_signup' %}">Signup</a></li>
+                                        <!-- TODO: Temporary disable login/signup -->
+                                        <!--
+                                            <li class="nav-item"><a class="nav-link" href="{% url 'user_login' %}">Login</a></li>
+                                            <li class="nav-item"><a class="nav-link" href="{% url 'user_signup' %}">Signup</a></li>
+                                        -->
                                     {% endif %}
                                 </ul>
                             </div>
