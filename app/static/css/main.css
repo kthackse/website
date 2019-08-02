@@ -248,7 +248,7 @@ form .is-valid:focus {
   position: fixed;
   bottom: 0;
   width: 100%;
-  background-color: rgba(240, 240, 240, 0.75);
+  background-color: rgba(240, 240, 240, 0.9);
   padding: 1rem 0;
   color: #333333;
   z-index: 50;
