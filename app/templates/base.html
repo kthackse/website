@@ -17,6 +17,7 @@
         <link rel="stylesheet" href="{% static 'css/fontawesome.css' %}">
         <link rel="stylesheet" href="{% static 'css/main.css' %}">
 
+        <script src="{% static 'js/jquery.js' %}"></script>
         <script src="{% static "cookielaw/js/cookielaw.js"%}" type="text/javascript"></script>
 
         {% block head %}
@@ -25,7 +26,12 @@
         <title>{% block title_plain %}{% block title %}{% block head_title %}{% endblock %} | {% endblock %}{% if event %}{{ event.name }} {{ event.starts_at | date:"Y" }}{% else %}{{ hk_app_name }}{% endif %}{% endblock %}</title>
     </head>
     <body>
-        {% cookielaw_banner %}
+        {% block messages %}
+            {% include "include/messages.html" %}
+        {% endblock %}
+        {% block cookie %}
+            {% cookielaw_banner %}
+        {% endblock %}
         {% block background %}
             <div class="background"></div>
         {% endblock %}

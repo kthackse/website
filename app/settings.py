@@ -3,6 +3,8 @@ import os
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
+from django.contrib.messages import constants as message_constants
+
 from app.variables import *
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -205,3 +207,8 @@ NOTIFY_TEMPLATES = dict(
         ),
     ),
 )
+
+# Messages level
+
+if DEBUG:
+    MESSAGE_LEVEL = message_constants.DEBUG

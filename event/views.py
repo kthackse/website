@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.http import HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import render
@@ -152,7 +153,9 @@ def subscribe(request, id):
     if subscriber:
         subscriber.status = SubscriberStatus.SUBSCRIBED.value
         subscriber.save()
-        # TODO: Add message correctly subscribed
+        messages.add_message(request, messages.INFO, "Your email has been verified!")
+    else:
+        messages.add_message(request, messages.WARNING, "We are sorry, but we couldn't verify your email!")
     return HttpResponseRedirect(reverse("app_home"))
 
 
@@ -161,5 +164,7 @@ def unsubscribe(request, id):
     if subscriber:
         subscriber.status = SubscriberStatus.UNSUBSCRIBED.value
         subscriber.save()
-        # TODO: Add message correctly subscribed
+        messages.add_message(request, messages.INFO, "You have been unsubscribed!")
+    else:
+        messages.add_message(request, messages.WARNING, "We are sorry, but we couldn't verify your email!")
     return HttpResponseRedirect(reverse("app_home"))

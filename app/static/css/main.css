@@ -298,6 +298,18 @@ form .is-valid:focus {
     color: #fff !important;
 }
 
+#messages-hide {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  margin: 0 0 2rem 2rem;
+  background-color: rgba(240, 240, 240, 0.9);
+  color: #333333;
+  padding: 0.5rem 1.5rem;
+  border-radius: 4px;
+}
+
 
 /* HOME */
 

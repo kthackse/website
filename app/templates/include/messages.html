@@ -1,0 +1,17 @@
+{% if messages %}
+    <div id="messages-hide">
+        {% for message in messages %}
+          <div class="{{ message.tags }}" role="alert">
+            {{ message }}
+          </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            setTimeout(function() {
+                $('#messages-hide').fadeOut("slow");
+            }, 5000);
+        });
+    </script>
+{% endif %}
