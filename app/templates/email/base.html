@@ -10,10 +10,10 @@
         <meta name="author" content="{{ hk_name }}">
         <meta name="description" content="{{ hk_description }}">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
-        <link rel="stylesheet" href="{% static 'css/fontawesome.css' %}">
-        <link rel="stylesheet" href="{% static 'css/main.css' %}">
-        <link rel="stylesheet" href="{% static 'css/email.css' %}">
+        <link rel="stylesheet" href="http://{{ hk_domain }}/static/css/bootstrap.css">
+        <link rel="stylesheet" href="http://{{ hk_domain }}/static/css/fontawesome.css">
+        <link rel="stylesheet" href="http://{{ hk_domain }}/static/css/main.css">
+        <link rel="stylesheet" href="http://{{ hk_domain }}/static/css/email.css">
     </head>
     <body>
         <table class="body-wrap">
@@ -22,7 +22,7 @@
                     <table>
 		                <tr>
 		                    <td align="center" class="masthead">
-		                        <img style="max-height: 100px;" src="//{{ hk_domain }}/files/{{ event.picture }}" />
+		                        <img style="max-height: 100px;" src="http://{{ hk_domain }}/files/{{ event.picture }}" />
                                 <h1>{{ event.name }}</h1>
                                 <h3>{{ event.city }}, <span style="white-space: nowrap;">{% if event.dates_public %}{{ event.starts_at | date:"F j" }} - {{ event.ends_at | date:"j" }}{% else %}{{ event.starts_at | date:"Y" }}{% endif %}</span></h3>
 		                    </td>
@@ -66,9 +66,9 @@
                                         <td class="content footer" align="center">
                                             {% include "include/social.html" %}
                                             <p style="margin-top: 5px;">Sent with 💛 by students in KTH 🇸🇪</p>
-                                            <a href="/page/legal/legal-notice" class="email-legal">Legal notice</a>
-                                            <a href="/page/legal/terms-and-conditions" style="margin-left: 15px;" class="email-legal">Terms and Conditions</a>
-                                            <a href="/page/legal/privacy-and-cookies" style="margin-left: 15px;" class="email-legal">Privacy and Cookies</a>
+                                            <a href="http://{{ hk_domain }}/page/legal/legal-notice" class="email-legal">Legal notice</a>
+                                            <a href="http://{{ hk_domain }}/page/legal/terms-and-conditions" style="margin-left: 15px;" class="email-legal">Terms and Conditions</a>
+                                            <a href="http://{{ hk_domain }}/page/legal/privacy-and-cookies" style="margin-left: 15px;" class="email-legal">Privacy and Cookies</a>
                                         </td>
                                     </tr>
                                 </table>

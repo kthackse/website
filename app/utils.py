@@ -1,8 +1,10 @@
 import re
 
 from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
 
-from app.variables import HACKATHON_ORGANIZER_EMAIL_REGEX
+from app.variables import HACKATHON_ORGANIZER_EMAIL_REGEX, HACKATHON_EMAIL_PREFIX, HACKATHON_EMAIL_NOREPLY, \
+    HACKATHON_EMAIL_CONTACT, HACKATHON_NAME
 
 
 def get_substitutions_templates():
@@ -32,3 +34,49 @@ def variables_processor(request):
 
 def is_email_organizer(email):
     return re.match(HACKATHON_ORGANIZER_EMAIL_REGEX, email)
+
+
+def get_notification_template(type: str, method: str, task: str, format: str):
+    template = settings.NOTIFY_TEMPLATES[method][type][task][format]
+    if format == "subject":
+        return HACKATHON_EMAIL_PREFIX + template
+    return template
+
+
+def send_email(
+    subject,
+    body,
+    to,
+    from_email=None,
+    reply_to=None,
+    tags=None,
+    track_clicks=False,
+    fail_silently=False,
+    attachments=None,
+):
+    if tags is None:
+        tags = []
+
+    tags += HACKATHON_NAME.lower()
+
+    if to and not isinstance(to, (list, tuple)):
+        to = [to]
+
+    if reply_to and not isinstance(reply_to, (list, tuple)):
+        reply_to = [reply_to]
+
+    msg = EmailMultiAlternatives(
+        subject=subject,
+        body=body,
+        from_email=from_email or HACKATHON_EMAIL_NOREPLY,
+        to=to,
+        reply_to=reply_to or [HACKATHON_EMAIL_CONTACT],
+        attachments=attachments,
+    )
+
+    if tags:
+        msg.tags = tags
+
+    msg.track_clicks = track_clicks
+
+    return msg.send(fail_silently=fail_silently)

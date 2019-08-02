@@ -80,12 +80,14 @@ def files(request, file_):
 
 def home(request):
     current_data = dict()
+    event = get_next_or_past_event()
     if request.method == "POST" and "email" in request.POST:
         email = request.POST["email"]
-        add_subscriber(email=email)
-        print(email)
-        current_data["subscribed"] = True
-    event = get_next_or_past_event()
+        subscriber = add_subscriber(email=email, event=event)
+        if subscriber:
+            current_data["subscribed"] = True
+        else:
+            current_data["subscribed_already"] = True
     if event:
         current_data["event"] = event
         current_data["faq"] = get_faq_items(event_id=event.id)

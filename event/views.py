@@ -1,10 +1,11 @@
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.http import HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse
 from django.utils import timezone
 
-from event.enums import DietType, TshirtSize, ApplicationStatus
-from event.models import Application
+from event.enums import DietType, TshirtSize, ApplicationStatus, SubscriberStatus
+from event.models import Application, Subscriber
 from event.utils import get_event, get_application, get_applications
 from user.utils import is_participant, is_organiser
 
@@ -144,3 +145,21 @@ def applications(request, code):
         current_data["applications"] = get_applications(event_id=current_event.id)
         return render(request, "applications.html", current_data)
     return HttpResponseNotFound()
+
+
+def subscribe(request, id):
+    subscriber = Subscriber.objects.filter(id=id, status__in=[SubscriberStatus.PENDING.value, SubscriberStatus.UNSUBSCRIBED.value]).first()
+    if subscriber:
+        subscriber.status = SubscriberStatus.SUBSCRIBED.value
+        subscriber.save()
+        # TODO: Add message correctly subscribed
+    return HttpResponseRedirect(reverse("app_home"))
+
+
+def unsubscribe(request, id):
+    subscriber = Subscriber.objects.filter(id=id, status=SubscriberStatus.SUBSCRIBED.value).first()
+    if subscriber:
+        subscriber.status = SubscriberStatus.UNSUBSCRIBED.value
+        subscriber.save()
+        # TODO: Add message correctly subscribed
+    return HttpResponseRedirect(reverse("app_home"))

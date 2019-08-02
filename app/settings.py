@@ -147,7 +147,8 @@ MEDIA_ROOT = BASE_DIR + "/files"
 # Sendgrid API key
 
 SENDGRID_API_KEY = os.environ.get("SG_KEY", None)
-EMAIL_BACKEND = "sgbackend.SendGridBackend"
+if SENDGRID_API_KEY:
+    EMAIL_BACKEND = "sgbackend.SendGridBackend"
 
 # Set up custom authenthication
 
@@ -185,3 +186,20 @@ if SE_URL:
         environment=os.environ.get("SE_ENV"),
         send_default_pii=True,
     )
+
+# Notify templates
+
+NOTIFY_TEMPLATES = dict(
+    email=dict(
+        subscribe=dict(
+            new=dict(
+                subject="Confirm your email to subscribe!",
+                html="email/subscribe/new.html",
+            ),
+            resubscribe=dict(
+                subject="Thank-you for subscribing again!",
+                html="email/subscribe/resubscribed.html",
+            ),
+        ),
+    ),
+)

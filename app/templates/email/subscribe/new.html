@@ -1,0 +1,13 @@
+{% extends "email/base.html" %}
+
+{% block email_message_pre %}
+    <p>Thank-you for subscribing! In order for us to be able to send you a reminder of the next event, we need you to confirm this email as soon as possible by clicking the following button. Otherwise, you won't receive any updates!</p>
+{% endblock %}
+
+{% block email_button_url %}
+    http://{{ hk_domain }}/event/subscribe/confirm/{{ subscriber.id }}
+{% endblock %}
+
+{% block email_button_text %}
+    Confirm email
+{% endblock %}
