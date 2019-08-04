@@ -242,6 +242,8 @@ form .is-valid:focus {
 
 .legal-page {
   white-space: nowrap;
+  margin-left: 7.5px;
+  margin-right: 7.5px;
 }
 
 #CookielawBanner {
@@ -319,7 +321,6 @@ form .is-valid:focus {
   }
 }
 
-
 .home-background {
     background-size: cover;
     background-position: center;
@@ -343,6 +344,15 @@ form .is-valid:focus {
     background-color: #003984;
 }
 
+table {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+td {
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+}
+
 /* HOME */
 
 /* global style start
@@ -356,9 +366,7 @@ body {
 }
 
 ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
+  list-style-type: disclosure-closed;
 }
 
 a:hover {

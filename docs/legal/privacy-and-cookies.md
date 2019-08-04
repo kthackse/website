@@ -6,9 +6,9 @@ In compliance with current regulations on the protection of personal data you ar
 
 ## 1.Data controller
 
-KTH AI Society (hereinafter, "KTHAIS"), with organisation number 8025187249 and address Tekniska Högskolans Studentkår, Drottning Kristinas Väg 15-19, 100 44 Stockholm (Sweden) and contact email address (contact@kthais.com)[mailto:contact@kthais.com] is the data controller of the processing of your personal data.
+KTH AI Society (hereinafter, "KTHAIS"), with organisation number 8025187249 and address Tekniska Högskolans Studentkår, Drottning Kristinas Väg 15-19, 100 44 Stockholm (Sweden) and contact email address [contact@kthais.com](mailto:contact@kthais.com) is the data controller of the processing of your personal data.
 
-You may contact KTHAIS in the postal address previously indicated or in the following email address for any query, request or clarification regarding the processing of your personal data at (contact@kthais.com)[mailto:contact@kthais.com].
+You may contact KTHAIS in the postal address previously indicated or in the following email address for any query, request or clarification regarding the processing of your personal data at [contact@kthais.com](mailto:contact@kthais.com).
 
 ## 2.What personal data we process and how we have obtained it
 

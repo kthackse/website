@@ -212,3 +212,14 @@ NOTIFY_TEMPLATES = dict(
 
 if DEBUG:
     MESSAGE_LEVEL = message_constants.DEBUG
+
+# Markup settings
+
+MARKUP_SETTINGS = {
+    "markdown": {
+        # As all markdown URLs added under pages are expected to be ours,
+        # we disable the safe mode un order to render HTML including tables
+        "safe_mode": False,
+        "extensions": ("tables",)
+    }
+}
