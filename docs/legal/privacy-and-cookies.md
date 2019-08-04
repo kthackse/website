@@ -173,11 +173,11 @@ There are two types of cookies: Session cookies and persistent cookies. We also 
 
 We use both session ID cookies and persistent cookies. We use session cookies to make it easier for you to navigate our Website. A session ID cookie expires when you close your browser. A persistent cookie remains on your hard drive for an extended period of time.
 
-Cookie | Owner | Duration | Purpose
---- | --- | --- | ---
-cookielaw_accepted | KTHAIS | Undefined | Determines if the user has agreed with the Privacy and Cookies policy.
-csrftoken | KTHAIS | Undefined | Protects against CSRF attacks.
-sessionid | KTHAIS | 15 days | Mantains the session as logged.
+| Cookie | Owner | Duration | Purpose |
+| --- | --- | --- | --- |
+| cookielaw_accepted | KTHAIS | Undefined | Determines if the user has agreed with the Privacy and Cookies policy. |
+| csrftoken | KTHAIS | Undefined | Protects against CSRF attacks. |
+| sessionid | KTHAIS | 15 days | Mantains the session as logged. |
 
 ### Can I refuse or opt out of cookies?
 
