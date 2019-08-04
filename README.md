@@ -7,6 +7,9 @@ Current maintainer: [@oriolclosa](https://github.com/oriolclosa).
 
 *Heavily inspired by [HackUPC registration](https://github.com/hackupc/registration).*
 
+
+![Website preview](app/static/img/preview.png)
+
 ## Features
 
 ### Users
