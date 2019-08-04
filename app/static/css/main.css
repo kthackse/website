@@ -313,9 +313,9 @@ form .is-valid:focus {
 
 @media (max-width: 768px) {
   #messages-hide {
-    margin: 0 2rem 2rem 2rem;
-    text-align: center;
-    line-height: 125%;
+    margin: 0 2rem 2rem 2rem !important;
+    text-align: center !important;
+    line-height: 125% !important;
   }
 }
 
