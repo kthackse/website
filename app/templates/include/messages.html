@@ -10,13 +10,17 @@
     <script>
         $(document).ready(function () {
             setTimeout(function() {
+                if($("#CookielawBanner").css("display") !== "none"){
+                    var added_height = $("#CookielawBanner").outerHeight();
+                    $("#messages-hide").css("margin-bottom", "+=" + added_height + "px")
+                }
                 $('#messages-hide').fadeIn("fast");
             }, 0);
         });
         $(document).ready(function () {
             setTimeout(function() {
                 $('#messages-hide').fadeOut("slow");
-            }, 5000);
+            }, 10000);
         });
     </script>
 {% endif %}
