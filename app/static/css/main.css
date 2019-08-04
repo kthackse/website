@@ -311,6 +311,15 @@ form .is-valid:focus {
   display: none;
 }
 
+@media (max-width: 768px) {
+  #messages-hide {
+    margin: 0 2rem 2rem 2rem;
+    text-align: center;
+    line-height: 125%;
+  }
+}
+
+
 .home-background {
     background-size: cover;
     background-position: center;
