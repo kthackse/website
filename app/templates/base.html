@@ -50,7 +50,14 @@
                     <nav class="navbar navbar-expand-lg navbar-light">
                         <div class="container box_1620">
                             <!-- TODO: Change logo when PNG is ready -->
-                            <a class="navbar-brand white-text" style="color: #eeeeee;" href="/">{{ hk_app_name }}</a>
+                            {% if event %}
+                                <a class="navbar-brand" href="/">
+                                    <img src="/files/{{ event.picture }}">
+                                    <b>{{ event.name }}</b> {{ event.starts_at | date:"Y" }}
+                                </a>
+                            {% else %}
+                                <a class="navbar-brand" href="/"><b>{{ hk_name }}</b></a>
+                            {% endif %}
                             <!--<a class="navbar-brand white-text" href="/"><img src="{% static 'img/logo.png' %}" /></a>-->
                             <!-- TODO: Fix mobile menu -->
                             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

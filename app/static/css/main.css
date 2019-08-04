@@ -1,5 +1,12 @@
+.navbar-brand {
+    color: #f4f4f4 !important;
+    text-transform: uppercase;
+}
+
 .navbar-brand img{
     height: 40px;
+    margin-bottom: 5px;
+    margin-right: 5px;
 }
 
 .footer .container{
@@ -15,6 +22,36 @@ body {
 body .content{
   padding-top: 160px;
   padding-bottom: 230px;
+}
+
+@media (max-width: 768px) {
+  body .content{
+    padding: 100px 25px 250px 25px !important;
+  }
+
+  h1 {
+    font-size: 40px !important;
+  }
+
+  h2 {
+    font-size: 35px !important;
+  }
+
+  h3 {
+    font-size: 30px !important;
+  }
+
+  h4 {
+    font-size: 25px !important;
+  }
+
+  h5 {
+    font-size: 20px !important;
+  }
+
+  h6 {
+    font-size: 15px !important;
+  }
 }
 
 .col-centered {
@@ -569,7 +606,7 @@ h3, .h3 {
 
 .header-area .navbar .nav .nav-item .nav-link {
   font-family: "Roboto", sans-serif;
-  color: #d4d4d4;
+  color: #f4f4f4;
   text-transform: capitalize;
   font-weight: 500;
   padding: 33px 0;
@@ -581,7 +618,7 @@ h3, .h3 {
 }
 
 .header-area .navbar .nav .nav-item:hover .nav-link, .header-area .navbar .nav .nav-item.active .nav-link {
-  color: #bababa;
+  color: #d4d4d4;
   opacity: 1;
 }
 
@@ -825,9 +862,6 @@ h3, .h3 {
     margin-top: 27px;
     margin-bottom: 23px;
   }
-  .header-area .navbar {
-    background: #d1cff4;
-  }
   .header-area .navbar .nav-item.active .nav-link {
     color: rgba(0, 57, 132, 0.75) !important;
   }
@@ -851,7 +885,7 @@ h3, .h3 {
     display: block;
     width: 25px;
     height: 3px;
-    background: rgba(0, 57, 132, 0.75);
+    background: rgba(255, 255, 255, 1);
     margin: auto;
     margin-bottom: 4px;
     transition: all 400ms linear;
