@@ -103,7 +103,6 @@ def home(request):
                 return render(request, "custom/" + event.code + "/index.html", current_data)
             except TemplateDoesNotExist:
                 pass
-    messages.add_message(request, messages.ERROR, "We are sorry, but we couldn't subscribe the email!")
     return render(request, "home.html", current_data)
 
 
