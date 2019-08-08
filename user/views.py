@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.shortcuts import render
 from django.urls import reverse
 
+from app.settings import SIGNUP_DISABLED
 from user import forms
 from user.enums import SexType, UserType
 from user.models import User, UserChange
@@ -36,6 +37,9 @@ def login(request):
 
 
 def signup(request):
+    if SIGNUP_DISABLED:
+        return HttpResponseRedirect(reverse("app_home"))
+
     current_data = dict()
     if request.user.is_authenticated:
         return HttpResponseRedirect(reverse("app_dashboard"))

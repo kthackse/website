@@ -223,3 +223,7 @@ MARKUP_SETTINGS = {
         "extensions": ("tables",)
     }
 }
+
+# Signup status
+
+SIGNUP_DISABLED = os.environ.get("SIGNUP_DISABLED", "false").lower() == "true"
