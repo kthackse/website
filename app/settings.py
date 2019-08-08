@@ -21,7 +21,7 @@ SECRET_KEY = os.environ.get(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("PROD_MODE", "False").lower() == "False"
+DEBUG = os.environ.get("PROD_MODE", "false").lower() == "false"
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0"]
 
@@ -226,4 +226,4 @@ MARKUP_SETTINGS = {
 
 # Signup status
 
-SIGNUP_DISABLED = os.environ.get("SIGNUP_DISABLED", "False").lower() == "True"
+SIGNUP_DISABLED = os.environ.get("SIGNUP_DISABLED", "false").lower() == "true"
