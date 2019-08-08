@@ -171,6 +171,10 @@ The local server updates automatically once a change has been spotted, there's n
 - **PG_HOST**: PostgreSQL host (`'localhost'` by default).
 - **SG_KEY**: SendGrid API key for email handling.
 - **HK_DOMAIN**: Hackathon domain.
+- **HK_IP**: Hackathon server IP.
+- **SE_URL**: Sentry post URL.
+- **SE_ENV**: Sentry environment.
+- **GO_ID**: Google Analytics ID.
 
 ## Management guide
 
