@@ -12,6 +12,7 @@ from user.models import User, UserChange
 
 def login(request):
     if request.user.is_authenticated:
+        messages.error(request, "The signup page has temporarily been disabled.")
         return HttpResponseRedirect(reverse("app_dashboard"))
 
     if request.method == "POST":
