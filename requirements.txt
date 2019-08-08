@@ -5,7 +5,6 @@ celery~=4.3.0
 Django==2.2.4
 django-bootstrap4~=0.0.8
 django-cookie-law~=1.0.1
-django-google-analytics-app~=4.3.9
 django-money==0.15
 django-phonenumber-field==3.0.1
 django-versatileimagefield~=1.10

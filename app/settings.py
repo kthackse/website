@@ -230,10 +230,4 @@ SIGNUP_DISABLED = os.environ.get("SIGNUP_DISABLED", "false").lower() == "true"
 
 # Google Analytics
 
-if os.environ.get("GO_ID"):
-    INSTALLED_APPS += ["google_analytics"]
-    MIDDLEWARE += ["google_analytics.middleware.GoogleAnalyticsMiddleware"]
-
-    GOOGLE_ANALYTICS = {
-        "google_analytics_id": os.environ.get("GO_ID"),
-    }
+GO_ID = os.environ.get("GO_ID", None)

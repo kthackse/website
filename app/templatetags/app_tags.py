@@ -3,7 +3,14 @@ import os
 from django import template
 from django.utils import timezone
 
+from app import settings
+
 register = template.Library()
+
+
+@register.simple_tag
+def settings_value(name):
+    return getattr(settings, name, "")
 
 
 @register.filter
