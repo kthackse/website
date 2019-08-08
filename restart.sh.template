@@ -12,6 +12,9 @@ export PG_PWD="[VARIABLE]"
 export HK_DOMAIN="kthack.com"
 export HK_IP="138.197.178.142"
 
+# Signup status
+export SIGNUP_DISABLED="False"
+
 echo "[MyKTHack] REDEPLOYING"
 echo "Installing new requirements..."
 ./env/bin/pip install -r requirements.txt
