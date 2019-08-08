@@ -45,7 +45,7 @@
                                     <div class="col-md-12 text-center home-links">
                                         <p>Hej {{ request.user.name }}, go to the <b><a class="home-button2" href="/dashboard">dashboard</a></b>?</p>
                                     </div>
-                                {% else %}
+                                {% elif event.subscribe_public %}
                                     <h4>Applications <b>will open soon</b></h4>
                                     <div class="col-md-12 text-center home-links">
                                         {% if not subscriber %}
@@ -65,6 +65,8 @@
                                             </div>
                                         {% endif %}
                                     </div>
+                                {% else %}
+                                    <p class="home-button">Applications <b>will open soon</b></p>
                                 {% endif %}
                             {% elif event.application_status == 1 %}
                                 <a class="home-button" href="event/{{ event.code }}/apply">Apply now to {{ event.name }} {{ event.starts_at | date:"Y" }} <i style="padding-left: 10px;" class="fas fa-long-arrow-alt-right"></i></a>

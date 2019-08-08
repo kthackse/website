@@ -75,6 +75,7 @@ class Event(models.Model):
     hackers = models.IntegerField(default=200)
     published = models.BooleanField(default=False)
     dates_public = models.BooleanField(default=True)
+    subscribe_public = models.BooleanField(default=True)
     faq_public = models.BooleanField(default=True)
     organisers_public = models.BooleanField(default=True)
     companies_public = models.BooleanField(default=True)

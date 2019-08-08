@@ -84,7 +84,10 @@ def home(request):
     event = get_next_or_past_event()
     if request.method == "POST" and "email" in request.POST:
         email = request.POST["email"]
-        current_data["subscriber"] = add_subscriber(email=email, event=event, request=request)
+        if not email:
+            messages.add_message(request, messages.ERROR, "You need to enter a valid email!")
+        else:
+            current_data["subscriber"] = add_subscriber(email=email, event=event, request=request)
     if event:
         current_data["event"] = event
         current_data["faq"] = get_faq_items(event_id=event.id)
