@@ -2,6 +2,7 @@
 {% load bootstrap4 %}
 {% load i18n %}
 {% load cookielaw_tags %}
+{% load google_analytics_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -135,4 +136,9 @@
             </footer>
         {% endblock %}
     </body>
+    <footer>
+        <div style="display:none">
+            <img src="{% google_analytics %}" width="0" height="0" />
+        </div>
+    </footer>
 </html>

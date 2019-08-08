@@ -20,6 +20,9 @@ export HK_IP="138.197.178.142"
 export SE_URL="[VARIABLE]"
 export SE_ENV="[VARIABLE]"
 
+# Google Analytics
+export GO_ID="[VARIABLE]"
+
 # Signup status
 export SIGNUP_DISABLED="False"
 
