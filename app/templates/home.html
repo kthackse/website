@@ -52,6 +52,7 @@
                                     <div class="col-md-12 text-center home-links">
                                         {% if not subscriber %}
                                             <p><span style="white-space: nowrap;">Don't miss the oportunity,</span> <span style="white-space: nowrap;"><b>subscribe</b> to receive updates!</span></p>
+                                            <p class="form-privacy">By subscribing you accept our <a href="/page/legal/privacy-and-cookies" target="_blank">Privacy and Cookies policy</a>.</p>
                                             <div class="row" style="max-width: 500px; margin-left: auto; margin-right: auto;">
                                                 <form action="" method="post" class="form form-home">
                                                     {% csrf_token %}
@@ -61,8 +62,6 @@
                                                     <div class="col-md-5" style="padding-left: 1rem;">
                                                         <button class="home-button3" type="submit">{% trans "Subscribe" %}</button>
                                                     </div>
-                                                    <!-- TODO: Accept policy
-                                                    <p>By subscribing you accept our <a href="/page/legal/privacy-and-cookies" target="_blank">Privacy and Cookies policy</a>.</p> -->
                                                 </form>
                                             </div>
                                         {% endif %}
