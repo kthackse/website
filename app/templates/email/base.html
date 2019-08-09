@@ -22,7 +22,7 @@
 		                <tr>
 		                    <td align="center" class="masthead">
 		                        <img style="max-height: 100px;" src="http://{{ hk_domain }}/files/{{ event.picture }}" />
-                                <h1>{{ event.name }}</h1>
+                                <!-- <h1>{{ event.name }}</h1> -->
                                 <h3>{{ event.city }}, <span style="white-space: nowrap;">{% if event.dates_public %}{{ event.starts_at | date:"F j" }} - {{ event.ends_at | date:"j" }}{% else %}{{ event.starts_at | date:"Y" }}{% endif %}</span></h3>
 		                    </td>
                         </tr>

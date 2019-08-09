@@ -20,7 +20,7 @@ html, body {
 
 .home-picture img {
     width: 100%;
-    margin-bottom: 2.5rem;
+    margin-bottom: 1rem;
 }
 
 #home-video {
@@ -72,9 +72,9 @@ html, body {
 }
 
 .home-background {
-    opacity: 1 !important;
-    filter: blur(0px) !important;;
-    -webkit-filter: blur(0px) !important;;
+    opacity: 0.75 !important;
+    filter: blur(5px) !important;;
+    -webkit-filter: blur(5px) !important;;
 }
 
 body {
