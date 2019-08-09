@@ -43,7 +43,7 @@
                             <h3>{{ event.city }}, <span style="white-space: nowrap;">{% if event.dates_public %}{{ event.starts_at | date:"F j" }} - {{ event.ends_at | date:"j" }}{% else %}{{ event.starts_at | date:"Y" }}{% endif %}</span></h3>
                             {% if event.application_status == 0 %}
                                 {% if request.user.is_authenticated %}
-                                    <p class="home-button">Applications <b>will open soon</b></p>
+                                    <p class="home-button">Applications <b style="white-space: nowrap;">will open soon</b></p>
                                     <div class="col-md-12 text-center home-links">
                                         <p>Hej {{ request.user.name }}, go to the <b><a class="home-button2" href="/dashboard">dashboard</a></b>?</p>
                                     </div>
