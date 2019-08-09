@@ -44,7 +44,7 @@ Current maintainer: [@oriolclosa](https://github.com/oriolclosa).
 
 Requirements: Python 3, virtualenv and pip.
 
-- `git clone https://github.com/kthackais/mykthack && cd mykthack`.
+- `git clone https://github.com/kthackse/website && cd website`.
 - `virtualenv env --python=python3`.
 - `source ./env/bin/activate`.
 - `pip install -r requirements.txt`.

@@ -811,9 +811,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1"
-     inkscape:cx="10730.31"
-     inkscape:cy="5706.3327"
+     inkscape:zoom="2"
+     inkscape:cx="10693.91"
+     inkscape:cy="5499.1984"
      inkscape:document-units="mm"
      inkscape:current-layer="g2688"
      showgrid="false"
@@ -2432,7 +2432,7 @@
            xml:space="preserve"
            id="flowRoot2482"
            style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#003984;fill-opacity:1;stroke:none"
-           transform="matrix(0.27510156,0,0,0.27510156,-131.68052,-2252.8816)"><flowRegion
+           transform="matrix(0.27324511,0,0,0.27510156,-112.13017,-2252.8816)"><flowRegion
              id="flowRegion2484"
              style="fill:#003984;fill-opacity:1"><rect
                id="rect2486"
@@ -2450,7 +2450,7 @@
            xml:space="preserve"
            id="flowRoot2482-8"
            style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#003984;fill-opacity:1;stroke:none"
-           transform="matrix(0.26458333,0,0,0.26458333,12.791408,-2190.3486)"><flowRegion
+           transform="matrix(0.26343768,0,0,0.26458333,24.710309,-2190.3486)"><flowRegion
              id="flowRegion2484-5"
              style="fill:#003984;fill-opacity:1"><rect
                id="rect2486-7"
@@ -2460,7 +2460,7 @@
                y="4003.3896"
                style="fill:#003984;fill-opacity:1" /></flowRegion><flowPara
              id="flowPara2488-4"
-             style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:26.66666794px;font-family:Avenir;-inkscape-font-specification:'Avenir Light';text-align:start;letter-spacing:5.7750001px;text-anchor:start;fill:#003984;fill-opacity:1">STOCKHOLM, SWEDEN</flowPara></flowRoot>      </g>
+             style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;font-size:26.66666794px;font-family:Avenir;-inkscape-font-specification:'Avenir Light';text-align:start;letter-spacing:5.72000027px;text-anchor:start;fill:#003984;fill-opacity:1">STOCKHOLM, SWEDEN</flowPara></flowRoot>      </g>
     </g>
   </g>
 </svg>
