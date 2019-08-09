@@ -23,6 +23,12 @@ html, body {
     margin-bottom: 1rem;
 }
 
+@media (min-width: 600px) {
+    .home-picture img {
+        margin-bottom: 2rem;
+    }
+}
+
 #home-video {
     position: fixed;
     right: 0;
