@@ -33,13 +33,13 @@
                     <div class="row home-mobile-center">
                         <div class="col-md-5 text-center home-picture">
                             <a href="">
-                                <img class="img-fluid" src="files/{{ event.picture }}" alt="">
+                                <img class="img-fluid" src="files/{{ event.logo }}" alt="">
                             </a>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12 text-center home-titles">
-                            <!-- <h1>{{ event.name }}</h1> -->
+                            <h1>{{ event.name }}</h1>
                             <h3>{{ event.city }}, <span style="white-space: nowrap;">{% if event.dates_public %}{{ event.starts_at | date:"F j" }} - {{ event.ends_at | date:"j" }}{% else %}{{ event.starts_at | date:"Y" }}{% endif %}</span></h3>
                             {% if event.application_status == 0 %}
                                 {% if request.user.is_authenticated %}

@@ -63,7 +63,7 @@ class Event(models.Model):
     type = models.PositiveSmallIntegerField(
         choices=((t.value, t.name) for t in EventType)
     )
-    picture = VersatileImageField("Image", upload_to=path_and_rename)
+    logo = VersatileImageField("Logo", upload_to=path_and_rename)
     background = models.FileField(
         upload_to=path_and_rename_background, blank=True, null=True
     )
