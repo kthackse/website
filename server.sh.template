@@ -14,7 +14,6 @@ export SG_KEY="[VARIABLE]"
 
 # Hackathon information
 export HK_DOMAIN="kthack.com"
-export HK_IP="138.197.178.142"
 
 # Sentry configuration
 export SE_URL="[VARIABLE]"

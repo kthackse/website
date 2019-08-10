@@ -10,7 +10,6 @@ export PG_PWD="[VARIABLE]"
 
 # Hackathon information
 export HK_DOMAIN="kthack.com"
-export HK_IP="138.197.178.142"
 
 # Signup status
 export SIGNUP_DISABLED="False"

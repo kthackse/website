@@ -163,7 +163,7 @@ PASSWORD_RESET_TIMEOUT_DAYS = 1
 # Add domain to allowed hosts
 
 ALLOWED_HOSTS.append(HACKATHON_DOMAIN)
-ALLOWED_HOSTS.append(HACKATHON_IP)
+ALLOWED_HOSTS.append("www." + HACKATHON_DOMAIN)
 
 # Deployment configurations for proxy pass and CSRF
 
