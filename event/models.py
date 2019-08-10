@@ -374,6 +374,7 @@ class Reimbursement(models.Model):
 class Subscriber(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(max_length=255, unique=True)
+    events = models.ManyToManyField("Event")
     status = models.PositiveSmallIntegerField(
         choices=((s.value, s.name) for s in SubscriberStatus),
         default=SubscriberStatus.PENDING.value,
