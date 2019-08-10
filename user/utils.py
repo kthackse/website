@@ -32,7 +32,7 @@ def get_organisers(event_id):
 
 def generate_verify_key(user: User):
     chars = "abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)"
-    secret_key = get_random_string(50, chars)
+    secret_key = get_random_string(32, chars)
     return hashlib.sha256((secret_key + user.email).encode("utf-8")).hexdigest()
 
 
