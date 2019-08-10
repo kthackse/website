@@ -1,17 +1,18 @@
 from django.contrib import messages
-from django.contrib.auth.decorators import user_passes_test, login_required
+from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
 
+from app.utils import login_verified_required
 from event.enums import DietType, TshirtSize, ApplicationStatus, SubscriberStatus
 from event.models import Application, Subscriber
 from event.utils import get_event, get_application, get_applications
 from user.utils import is_participant, is_organiser
 
 
-@login_required
+@login_verified_required
 @user_passes_test(is_participant)
 def apply(request, code):
     current_data = dict()
@@ -136,7 +137,7 @@ def apply(request, code):
     return HttpResponseNotFound()
 
 
-@login_required
+@login_verified_required
 @user_passes_test(is_organiser)
 def applications(request, code):
     current_data = dict()

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+{% load i18n %}
+
+{% block head_title %}{% trans "Verify your email" %}{% endblock %}
+
+{% block content %}
+    <div class="container">
+         <div class="section-intro text-center">
+            <h2>Verify your email</h2>
+        </div>
+        <div class="text-center">
+            <h4>Thank-you for registering to {{ hk_name }}!</h4>
+            <p>You should have received an email at {{ user.email | urlize }} which you need to confirm to proceed. Remember to check the spam folder!</p>
+        </div>
+        <div class="section-intro-mid text-center">
+            <a href="{% url "user_sendverification" %}" class="link-button">Resend verification</a>
+        </div>
+    </div>
+{% endblock %}

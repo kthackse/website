@@ -204,6 +204,12 @@ NOTIFY_TEMPLATES = dict(
                 subject="Thank-you for subscribing again!",
                 html="email/subscribe/resubscribed.html",
             ),
+        ),
+        signup=dict(
+            verify=dict(
+                subject="Confirm your email to register!",
+                html="email/signup/verify.html",
+            ),
         )
     )
 )

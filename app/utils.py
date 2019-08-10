@@ -3,6 +3,8 @@ import re
 import html2text as html2text
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 from app.variables import HACKATHON_ORGANIZER_EMAIL_REGEX, HACKATHON_EMAIL_PREFIX, HACKATHON_EMAIL_NOREPLY, \
     HACKATHON_EMAIL_CONTACT, HACKATHON_NAME
@@ -88,3 +90,15 @@ def send_email(
     msg.track_clicks = track_clicks
 
     return msg.send(fail_silently=fail_silently)
+
+
+def login_verified_required(function):
+    def wrapper(request, *args, **kw):
+        if request.user.id:
+            if request.user.email_verified:
+                return function(request, *args, **kw)
+            else:
+                return HttpResponseRedirect(reverse("user_verify"))
+        else:
+            return HttpResponseRedirect(reverse("app_home"))
+    return wrapper

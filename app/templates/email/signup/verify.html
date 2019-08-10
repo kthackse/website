@@ -1,0 +1,13 @@
+{% extends "email/base.html" %}
+
+{% block email_message_pre %}
+    <p>Thank-you for registering! In order for you to be able to <i>surf</i> on our website and apply to any event we need you to confirm this email as soon as possible by clicking the following button.</p>
+{% endblock %}
+
+{% block email_button_url %}
+    http://{{ hk_domain }}/user/verify/{{ verify_key }}
+{% endblock %}
+
+{% block email_button_text %}
+    Confirm email
+{% endblock %}

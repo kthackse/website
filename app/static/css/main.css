@@ -390,6 +390,58 @@ td {
   border-top: 1px solid rgba(255, 255, 255, 0.25);
 }
 
+.link-button {
+    display: inline-block;
+    border: none;
+    color: #fff !important;
+    border-radius: 30px;
+    padding: 9px 25px !important;
+    margin-top: -1px;
+    -webkit-transition: all 0.3s ease 0s;
+    -moz-transition: all 0.3s ease 0s;
+    -o-transition: all 0.3s ease 0s;
+    transition: all 0.3s ease 0s;
+    background-color: rgba(0, 57, 132, 1);
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 400 !important;
+}
+
+@media (min-width: 600px) {
+    .link-button {
+        padding: 9px 24px !important;
+        margin-top: -1px;
+    }
+}
+
+.link-button:hover {
+    background-color: #00295e !important;
+    color: #fff !important;
+}
+
+.link-button2 {
+    display: inline-block;
+    border: 1px solid #ffffff !important;
+    color: #fff !important;
+    border-radius: 30px;
+    padding: 8px 25px !important;
+    -webkit-transition: all 0.3s ease 0s;
+    -moz-transition: all 0.3s ease 0s;
+    -o-transition: all 0.3s ease 0s;
+    transition: all 0.3s ease 0s;
+}
+
+@media (min-width: 600px) {
+    .link-button2 {
+        padding: 6px 24px !important;
+    }
+}
+
+.link-button2:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: #fff !important;
+}
+
 /* HOME */
 
 /* global style start
@@ -1333,6 +1385,10 @@ h3, .h3 {
 
 .section-intro-img {
   margin-bottom: 10px;
+}
+
+.section-intro-mid {
+  margin-top: 35px;
 }
 
 .subsection-intro {

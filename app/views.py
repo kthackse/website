@@ -1,7 +1,6 @@
 import os
 
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from django.http import (
     HttpResponseRedirect,
     StreamingHttpResponse,
@@ -12,6 +11,7 @@ from django.template import TemplateDoesNotExist
 from django.urls import reverse
 
 from app import settings
+from app.utils import login_verified_required
 from event.enums import CompanyTier
 from event.utils import (
     get_next_or_past_event,
@@ -109,7 +109,7 @@ def home(request):
     return render(request, "home.html", current_data)
 
 
-@login_required
+@login_verified_required
 def dashboard(request):
     events = get_next_events()
     return render(request, "dashboard.html", {"events": events})

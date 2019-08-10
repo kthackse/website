@@ -8,4 +8,7 @@ urlpatterns = [
     url(r'^logout/$', views.logout, name='user_logout'),
     url(r'^profile/$', views.profile, name='user_profile'),
     url(r'^profile/(?P<id>[\w-]+)$', views.profile_other, name='user_profileother'),
+    url(r'^verify/$', views.verify, name='user_verify'),
+    url(r'^verify/(?P<verification_key>.+)$', views.verify_key, name='user_verifykey'),
+    url(r'^sendverification/$', views.send_verification, name='user_sendverification'),
 ]

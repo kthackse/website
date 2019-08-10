@@ -5,9 +5,11 @@ from django.shortcuts import render
 from django.urls import reverse
 
 from app.settings import SIGNUP_DISABLED
+from app.utils import login_verified_required
 from user import forms
 from user.enums import SexType, UserType
 from user.models import User, UserChange
+from user.utils import send_verify
 
 
 def login(request):
@@ -74,7 +76,9 @@ def signup(request):
                     country=country,
                 )
                 user = auth.authenticate(email=email, password=password)
+                send_verify(user)
                 auth.login(request, user)
+                messages.success(request, "Thank-you for registering, remember to confirm your email!")
                 return HttpResponseRedirect(reverse("app_home"))
         else:
             messages.add_message(request, messages.ERROR, "Signup failed, some fields might be wrong or empty!")
@@ -102,7 +106,7 @@ def logout(request):
     return HttpResponseRedirect(reverse("user_login"))
 
 
-@login_required
+@login_verified_required
 def profile(request):
     if request.method == "POST":
         form = forms.ProfileForm(request.POST, request.FILES)
@@ -234,7 +238,7 @@ def profile(request):
     )
 
 
-@login_required
+@login_verified_required
 def profile_other(request, id):
     user = User.objects.filter(id=id).first()
     if user and request.user.type in [
@@ -273,3 +277,27 @@ def profile_other(request, id):
             },
         )
     return HttpResponseNotFound()
+
+
+@login_required
+def verify(request):
+    if request.user.email_verified:
+        return HttpResponseRedirect(reverse("app_dashboard"))
+    return render(request, "verify.html")
+
+
+@login_required
+def verify_key(request, key):
+    if request.user.email_verified:
+        return HttpResponseRedirect(reverse("app_dashboard"))
+    request.user.verify(verify_key=key)
+    if not request.user.email_verified:
+        messages.error(request, "We couldn't verify your email as the verification key expired.")
+    return HttpResponseRedirect(reverse("user_verify"))
+
+
+@login_required
+def send_verification(request):
+    send_verify(request.user)
+    messages.success(request, "The email verification has been sent again!")
+    return HttpResponseRedirect(reverse("user_verify"))

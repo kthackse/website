@@ -93,9 +93,14 @@ class User(AbstractBaseUser):
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(verbose_name="First name", max_length=255)
     surname = models.CharField(verbose_name="Last name", max_length=255)
+
     email_verified = models.BooleanField(default=False)
+    verify_key = models.CharField(max_length=63, blank=True, null=True)
+    verify_expiration = models.DateTimeField(default=timezone.now())
+
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
+
     type = models.PositiveSmallIntegerField(
         choices=((u.value, u.name) for u in UserType),
         default=UserType.PARTICIPANT.value,
@@ -193,6 +198,16 @@ class User(AbstractBaseUser):
             "type": self.type,
             "departments": list(self.departments.all()),
         }
+
+    def update_verify(self, verify_key, verify_expiration = timezone.now() + timezone.timedelta(hours=1)):
+        self.verify_key = verify_key
+        self.verify_expiration = verify_expiration
+        self.save()
+
+    def verify(self, verify_key):
+        if timezone.now() <= self.verify_expiration and self.verify_key == verify_key:
+            self.email_verified = True
+            self.save()
 
     def clean(self):
         messages = dict()

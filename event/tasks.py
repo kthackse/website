@@ -3,7 +3,6 @@ from django.template.loader import render_to_string
 
 from app.enums import MailTag
 from app.utils import get_notification_template, send_email, get_substitutions_templates
-from app.variables import HACKATHON_DOMAIN, HACKATHON_NAME, HACKATHON_DESCRIPTION
 from event.models import Subscriber, Event
 
 
