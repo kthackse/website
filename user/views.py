@@ -108,7 +108,7 @@ def logout(request):
     return HttpResponseRedirect(reverse("user_login"))
 
 
-@login_verified_required
+@login_required
 def profile(request):
     if request.method == "POST":
         form = forms.ProfileForm(request.POST, request.FILES)
