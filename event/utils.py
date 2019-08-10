@@ -61,8 +61,7 @@ def add_subscriber(email, event, request=None):
         return None
     subscriber = Subscriber.objects.filter(email=email).first()
     if not subscriber:
-        subscriber = Subscriber(email=email)
-        subscriber.events.add(event)
+        subscriber = Subscriber(email=email, events=[event])
         subscriber.save()
         send_subscriber_new(subscriber, event=event)
         if request:
