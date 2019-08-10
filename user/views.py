@@ -31,9 +31,7 @@ def login(request):
                     return HttpResponseRedirect(reverse("app_dashboard"))
                 return HttpResponseRedirect(next_page)
             else:
-                form.add_error(
-                    None, "The email or password are invalid, please try again"
-                )
+                messages.error(request, "Login failed, the email or password are invalid!")
     else:
         form = forms.LoginForm()
 
@@ -144,7 +142,8 @@ def profile(request):
                 ).save()
                 request.user.email_verified = False
                 request.user.email = email
-                # TODO: Send confirmation email and set message of that on webpage
+                send_verify(request.user)
+                messages.success(request, "The email has been changed, you need to verify it again!")
             if "picture" in request.FILES:
                 picture = request.FILES["picture"]
                 UserChange(
@@ -226,6 +225,7 @@ def profile(request):
                 ).save()
                 request.user.country = country
             request.user.save()
+            messages.success(request, "Profile updated successfully!")
 
     user_data = request.user.get_dict()
     form = forms.ProfileForm(user_data)

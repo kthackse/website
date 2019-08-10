@@ -199,6 +199,10 @@ class User(AbstractBaseUser):
             "departments": list(self.departments.all()),
         }
 
+    def disable_verify(self):
+        self.email_verified = False
+        self.save()
+
     def update_verify(self, verify_key, verify_expiration = timezone.now() + timezone.timedelta(hours=1)):
         self.verify_key = verify_key
         self.verify_expiration = verify_expiration

@@ -11,9 +11,6 @@ export PG_PWD="[VARIABLE]"
 # Hackathon information
 export HK_DOMAIN="kthack.com"
 
-# Signup status
-export SIGNUP_DISABLED="False"
-
 echo "[MyKTHack] REDEPLOYING"
 echo "Installing new requirements..."
 ./env/bin/pip install -r requirements.txt

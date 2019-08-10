@@ -37,6 +37,7 @@ def generate_verify_key(user: User):
 
 
 def send_verify(user: User):
+    user.disable_verify()
     verify_key = generate_verify_key(user)
     user.update_verify(verify_key=verify_key)
     send_verify_email(user=user, verify_key=verify_key)
