@@ -18,7 +18,7 @@ HACKATHON_EMAIL_NOREPLY = "noreply@kthack.com"
 # HACKATHON_SN_TWITTER = "kthackse"
 # HACKATHON_SN_INSTAGRAM = "kthackse"
 # HACKATHON_SN_YOUTUBE = "kthackse"
-# HACKATHON_SN_LINKEDIN = "kthackse"
+HACKATHON_SN_LINKEDIN = "kthackse"
 HACKATHON_SN_MEDIUM = "kthackse"
 HACKATHON_SN_GITHUB = "kthackse"
 

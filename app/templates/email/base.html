@@ -91,6 +91,11 @@
                                                     <img style="max-height: 20px; display: inline-block;" src="http://{{ hk_domain }}{% static "img/sm_medium.png" %}" />
                                                 </a>
                                             {% endif %}
+                                            {% if hk_sn_linkedin %}
+                                                <a class="btns" target="_blank" href="https://linkedin.com/company/{{ hk_sn_linkedin }}">
+                                                    <img style="max-height: 20px; display: inline-block;" src="http://{{ hk_domain }}{% static "img/sm_linkedin.png" %}" />
+                                                </a>
+                                            {% endif %}
                                             {% if hk_sn_github %}
                                                 <a class="btns" target="_blank" href="https://github.com/{{ hk_sn_github }}">
                                                     <img style="max-height: 20px; display: inline-block;" src="http://{{ hk_domain }}{% static "img/sm_github.png" %}" />
