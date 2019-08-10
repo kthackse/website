@@ -95,7 +95,7 @@ class User(AbstractBaseUser):
     surname = models.CharField(verbose_name="Last name", max_length=255)
 
     email_verified = models.BooleanField(default=False)
-    verify_key = models.CharField(max_length=63, blank=True, null=True)
+    verify_key = models.CharField(max_length=127, blank=True, null=True)
     verify_expiration = models.DateTimeField(default=timezone.now())
 
     created_at = models.DateTimeField(default=timezone.now)
