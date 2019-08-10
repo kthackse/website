@@ -293,7 +293,9 @@ def verify_key(request, verification_key):
     if request.user.email_verified:
         return HttpResponseRedirect(reverse("app_dashboard"))
     request.user.verify(verify_key=verification_key)
-    if not request.user.email_verified:
+    if request.user.email_verified:
+        messages.success(request, "Thank-you, your email has been verified!")
+    else:
         messages.error(request, "We couldn't verify your email as the verification key expired.")
     return HttpResponseRedirect(reverse("user_verify"))
 
