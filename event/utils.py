@@ -89,3 +89,9 @@ def get_sponsors_in_event(event_id):
 
 def get_partners_in_event(event_id):
     return CompanyEvent.objects.filter(event_id=event_id, tier=CompanyTier.PARTNER.value, public=True)
+
+
+def link_subscriber_with_user(user: User):
+    subscriber = Subscriber.objects.filter(email=user.email).first()
+    if subscriber:
+        subscriber.link_user(user)

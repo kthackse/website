@@ -387,3 +387,7 @@ class Subscriber(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def link_user(self, user):
+        self.user = user
+        self.save()
