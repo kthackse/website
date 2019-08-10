@@ -65,7 +65,6 @@ def files(request, file_):
     if path in [
         "event/picture",
         "__sized__/event/picture",
-        "event/picture",
         "event/background",
         "user/company",
     ]:

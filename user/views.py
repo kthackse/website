@@ -289,10 +289,10 @@ def verify(request):
 
 
 @login_required
-def verify_key(request, key):
+def verify_key(request, verification_key):
     if request.user.email_verified:
         return HttpResponseRedirect(reverse("app_dashboard"))
-    request.user.verify(verify_key=key)
+    request.user.verify(verify_key=verification_key)
     if not request.user.email_verified:
         messages.error(request, "We couldn't verify your email as the verification key expired.")
     return HttpResponseRedirect(reverse("user_verify"))
