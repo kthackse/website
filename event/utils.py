@@ -62,8 +62,8 @@ def add_subscriber(email, event, request=None):
     subscriber = Subscriber.objects.filter(email=email).first()
     if not subscriber:
         subscriber = Subscriber(email=email)
-        subscriber.events.set([event])
         subscriber.save()
+        subscriber.events.add(event)
         send_subscriber_new(subscriber, event=event)
         if request:
             messages.success(request, "Thank-you for subscribing, remember to verify your email!")
