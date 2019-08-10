@@ -374,20 +374,9 @@ class Reimbursement(models.Model):
 class Subscriber(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(max_length=255, unique=True)
-    user = models.ForeignKey(
-        "user.User",
-        on_delete=models.PROTECT,
-        related_name="subscriber_user",
-        blank=True,
-        null=True,
-    )
     status = models.PositiveSmallIntegerField(
         choices=((s.value, s.name) for s in SubscriberStatus),
         default=SubscriberStatus.PENDING.value,
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    def link_user(self, user):
-        self.user = user
-        self.save()

@@ -6,7 +6,6 @@ from django.urls import reverse
 
 from app.settings import SIGNUP_DISABLED
 from app.utils import login_verified_required
-from event.utils import link_subscriber_with_user
 from user import forms
 from user.enums import SexType, UserType
 from user.models import User, UserChange
@@ -76,7 +75,6 @@ def signup(request):
                 )
                 user = auth.authenticate(email=email, password=password)
                 send_verify(user)
-                link_subscriber_with_user(user)
                 auth.login(request, user)
                 messages.success(request, "Thank-you for registering, remember to confirm your email!")
                 return HttpResponseRedirect(reverse("app_home"))

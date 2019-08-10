@@ -59,13 +59,9 @@ def add_subscriber(email, event, request=None):
     except ValidationError:
         messages.add_message(request, messages.ERROR, "We are sorry, but we couldn't subscribe the email!")
         return None
-    user_id = None
-    user = User.objects.filter(email=email).first()
-    if user:
-        user_id = user.id
     subscriber = Subscriber.objects.filter(email=email).first()
     if not subscriber:
-        subscriber = Subscriber(email=email, user_id=user_id)
+        subscriber = Subscriber(email=email)
         subscriber.save()
         send_subscriber_new(subscriber, event=event)
         if request:
@@ -89,9 +85,3 @@ def get_sponsors_in_event(event_id):
 
 def get_partners_in_event(event_id):
     return CompanyEvent.objects.filter(event_id=event_id, tier=CompanyTier.PARTNER.value, public=True)
-
-
-def link_subscriber_with_user(user: User):
-    subscriber = Subscriber.objects.filter(email=user.email).first()
-    if subscriber:
-        subscriber.link_user(user)

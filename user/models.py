@@ -96,7 +96,7 @@ class User(AbstractBaseUser):
 
     email_verified = models.BooleanField(default=False)
     verify_key = models.CharField(max_length=127, blank=True, null=True)
-    verify_expiration = models.DateTimeField(default=timezone.now())
+    verify_expiration = models.DateTimeField(default=timezone.now)
 
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
