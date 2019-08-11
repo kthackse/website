@@ -100,5 +100,5 @@ def login_verified_required(function):
             else:
                 return HttpResponseRedirect(reverse("user_verify"))
         else:
-            return HttpResponseRedirect(reverse("app_home"))
+            return HttpResponseRedirect(reverse("user_login"))
     return wrapper

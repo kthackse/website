@@ -15,7 +15,9 @@ from event.enums import (
     TshirtSize,
     ReimbursementType,
     ReimbursementStatus,
-    SubscriberStatus, CompanyTier)
+    SubscriberStatus,
+    CompanyTier,
+)
 from user.enums import UserType
 
 from djmoney.models.fields import MoneyField
@@ -168,6 +170,9 @@ class CompanyEvent(models.Model):
         verbose_name = "Company in event"
         verbose_name_plural = "Companies in events"
         # unique_together = ("event", "company",)
+
+    def __str__(self):
+        return self.company.name + " (" + self.event.name + ")"
 
 
 class FAQItem(models.Model):
@@ -381,3 +386,46 @@ class Subscriber(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+class Invoice(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    code = models.CharField(max_length=31)
+    company_event = models.ForeignKey("CompanyEvent", on_delete=models.PROTECT)
+    responsible_event = models.ForeignKey(
+        "user.User", on_delete=models.PROTECT, related_name="responisble_event"
+    )
+    responsible_company = models.ForeignKey(
+        "user.User", on_delete=models.PROTECT, related_name="responisble_company"
+    )
+    amount = MoneyField(max_digits=7, decimal_places=2, default_currency="SEK")
+    add_vat = models.BooleanField(default=False)
+    date_due = models.DateField(blank=True)
+    invoice = models.FileField(null=True, blank=True, upload_to="invoice")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def clean(self):
+        messages = dict()
+        if not self.responsible_event.is_organiser:
+            messages["responsible_event"] = "An event responsible must be an organiser"
+        if not self.responsible_company.is_sponsor:
+            messages["responsible_company"] = "A company responsible must be a sponsor"
+        if self.responsible_event.company != self.responsible_company.company:
+            messages["responsible_company"] = "The company responsible company must be the same"
+        if messages:
+            raise ValidationError(messages)
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        if not self.code:
+            self.code = (
+                str(timezone.now().year)
+                + "-"
+                + f"{Invoice.objects.filter(created_at__year=timezone.now().year).count()+10:04d}"
+            )
+        if not self.date_due:
+            time_now = timezone.now()
+            time_month = time_now.month + 2
+            self.date_due = timezone.datetime(day=time_now.day, month=time_month, year=(time_now.year if time_month <= 12 else time_now.year + 1)).date()
+        return super().save(*args, **kwargs)

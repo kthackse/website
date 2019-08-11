@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from event.models import Event, ScheduleEvent, Application, Team, Vote, Comment, Reimbursement, FAQItem, Subscriber, \
-    CompanyEvent
+    CompanyEvent, Invoice
 
 
 @admin.register(Event)
@@ -82,3 +82,11 @@ class CompanyEventAdmin(admin.ModelAdmin):
     list_display = ("company", "event", "tier", "public",)
     list_filter = ("tier",)
     ordering = ("event", "tier", "company",)
+
+
+@admin.register(Invoice)
+class InvoiceAdmin(admin.ModelAdmin):
+    search_fields = ("id", "company_event", "responisble_event", "responisble_company",)
+    list_display = ("code", "company_event", "responsible_company", "responsible_event", "created_at", "invoice",)
+    ordering = ("created_at", "updated_at", "company_event",)
+    readonly_fields = ("invoice", "code",)

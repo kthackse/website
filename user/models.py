@@ -291,6 +291,12 @@ class Company(models.Model):
         "Image", upload_to=path_and_rename_company
     )
     website = models.URLField(blank=True, null=True)
+    organisation_name = models.CharField(max_length=255, blank=True, null=True)
+    organisation_number = models.CharField(max_length=255, blank=True, null=True)
+    address_1 = models.CharField(max_length=255, blank=True, null=True)
+    address_2 = models.CharField(max_length=255, blank=True, null=True)
+    postcode = models.CharField(max_length=15, blank=True, null=True)
+    city = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         verbose_name_plural = "Companies"
