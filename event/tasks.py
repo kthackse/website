@@ -45,10 +45,11 @@ def send_subscriber_resubscribed(subscriber: Subscriber, event: Event = None):
 
 
 @shared_task
-def send_invoice(invoice: Invoice, request = None):
+def send_invoice(invoice: Invoice, request=None):
     context = get_substitutions_templates()
     context["invoice"] = invoice
     context["event"] = invoice.company_event.event
+    context["user"] = invoice.responsible_company
     template = get_notification_template(
         method="email", type="sponsorship", task="invoice", format="html"
     )
@@ -56,14 +57,20 @@ def send_invoice(invoice: Invoice, request = None):
         method="email", type="sponsorship", task="invoice", format="subject"
     ).format(event_name=str(invoice.company_event.event))
     body = render_to_string(template, context)
-    attachments = [(invoice.invoice.name, invoice.invoice.read(), "application/pdf")]
+    attachments = [
+        (
+            invoice.invoice.name[invoice.invoice.name.rfind("/") + 1 :],
+            invoice.invoice.read(),
+            "application/pdf",
+        )
+    ]
 
     send_email(
         subject=subject,
         body=body,
         to=invoice.responsible_company.email,
         tags=[MailTag.INVOICE],
-        attachments=attachments
+        attachments=attachments,
     )
 
     invoice.mark_as_sent(request=request)
