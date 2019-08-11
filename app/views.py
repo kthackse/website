@@ -86,7 +86,7 @@ def files(request, file_):
         return response
     else:
         HttpResponseNotFound()
-    return HttpResponseRedirect(reverse("user_login"))
+    return HttpResponseRedirect("%s?next=%s" % (reverse("user_login"), request.path))
 
 
 def home(request):

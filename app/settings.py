@@ -210,6 +210,12 @@ NOTIFY_TEMPLATES = dict(
                 subject="Confirm your email to register!",
                 html="email/signup/verify.html",
             ),
+        ),
+        sponsorship=dict(
+            invoice=dict(
+                subject="Your invoice for {event_name}",
+                html="email/sponsorship/invoice.html",
+            ),
         )
     )
 )

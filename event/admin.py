@@ -1,7 +1,14 @@
-from django.contrib import admin
+from django.contrib import admin, messages
+from django.shortcuts import redirect
+from django.urls import path, reverse
+from django.utils.html import format_html
 
+from app.utils import require_department
+from event.enums import InvoiceStatus
 from event.models import Event, ScheduleEvent, Application, Team, Vote, Comment, Reimbursement, FAQItem, Subscriber, \
     CompanyEvent, Invoice
+from event.tasks import send_invoice
+from user.enums import DepartmentType
 
 
 @admin.register(Event)
@@ -87,6 +94,30 @@ class CompanyEventAdmin(admin.ModelAdmin):
 @admin.register(Invoice)
 class InvoiceAdmin(admin.ModelAdmin):
     search_fields = ("id", "company_event", "responisble_event", "responisble_company",)
-    list_display = ("code", "company_event", "responsible_company", "responsible_event", "created_at", "invoice",)
+    list_display = ("code", "company_event", "responsible_company", "responsible_event", "created_at", "status", "invoice", "send",)
     ordering = ("-code", "created_at", "updated_at", "company_event",)
-    readonly_fields = ("invoice", "code",)
+    readonly_fields = ("invoice", "code", "status", "sent_by",)
+
+    def get_urls(self):
+        urls = super().get_urls()
+
+        return [
+            path(
+                r"<path:id>/send_invoice/",
+                self.send_invoice,
+                name="send_invoice",
+            ),
+        ] + urls
+
+    @require_department([DepartmentType.SPONSORSHIP])
+    def send_invoice(self, request, id):
+        send_invoice(Invoice.objects.filter(id=id).first(), request=request)
+        messages.success(request, "Invoice was successfully sent!")
+        return redirect(reverse("admin:event_invoice_changelist"))
+
+    def send(self, invoice):
+        if invoice.status == InvoiceStatus.SENT.value:
+            return format_html("<span class=\"readonly\">Already sent</span> (<a href=\"" + str(invoice.id) + "/send_invoice\">resend</a>)")
+        return format_html("<a href=\"" + str(invoice.id) + "/send_invoice\">Send to " + invoice.responsible_company.email + "</a>")
+
+    send.short_description = "Send invoice"

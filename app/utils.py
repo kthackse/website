@@ -1,13 +1,19 @@
 import re
+from typing import List
 
 import html2text as html2text
 from django.conf import settings
+from django.contrib import messages
+from django.core.handlers.wsgi import WSGIRequest
 from django.core.mail import EmailMultiAlternatives
 from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
+from django.template.defaultfilters import first
 from django.urls import reverse
 
 from app.variables import HACKATHON_ORGANIZER_EMAIL_REGEX, HACKATHON_EMAIL_PREFIX, HACKATHON_EMAIL_NOREPLY, \
     HACKATHON_EMAIL_CONTACT, HACKATHON_NAME
+from user.enums import DepartmentType
 
 
 def get_substitutions_templates():
@@ -102,3 +108,39 @@ def login_verified_required(function):
         else:
             return HttpResponseRedirect(reverse("user_login"))
     return wrapper
+
+
+def require_department(departments: List[DepartmentType], **decokwargs):
+    def _funcwrap(view_func):
+        def _argwrap(*args, **kwargs):
+            request = first(
+                [
+                    a
+                    for a in list(args) + list(kwargs.values())
+                    if isinstance(a, WSGIRequest)
+                ]
+            )
+
+            if not departments:
+                raise Exception("Provide at least one department to require it.")
+
+            if not request:
+                raise Exception(
+                    "One of the arguments of decorated function must be a WSGIRequest instance."
+                )
+
+            if not request.user:
+                messages.error(request, "You need to be logged in!")
+                return redirect(request.path)
+
+            if request.user.is_admin or request.user.is_director or any([department.value in request.user.departments.all().values_list("type", flat=True) for department in departments]):
+                return view_func(*args, **kwargs)
+
+            messages.error(
+                request, "You don't have enough permissions to do this action."
+            )
+            return redirect(reverse("admin:index"))
+
+        return _argwrap
+
+    return _funcwrap

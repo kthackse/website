@@ -246,7 +246,7 @@ class User(AbstractBaseUser):
             messages[
                 "departments"
             ] = "A user must be an organiser in order to belong to a department"
-        if (not self.is_sponsor or not self.is_recruiter) and self.company:
+        if not (self.is_sponsor or self.is_recruiter) and self.company:
             messages[
                 "company"
             ] = "A user must be a sponsor or a recruiter in order to belong to a company"

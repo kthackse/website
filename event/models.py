@@ -20,7 +20,7 @@ from event.enums import (
     ReimbursementStatus,
     SubscriberStatus,
     CompanyTier,
-)
+    InvoiceStatus)
 from user.enums import UserType
 
 from djmoney.models.fields import MoneyField
@@ -407,6 +407,13 @@ class Invoice(models.Model):
     vat = models.PositiveIntegerField(default=0)
     date_due = models.DateField(blank=True)
     invoice = models.FileField(null=True, blank=True, upload_to="invoice")
+    status = models.PositiveSmallIntegerField(
+        choices=((s.value, s.name) for s in InvoiceStatus),
+        default=InvoiceStatus.DRAFT.value,
+    )
+    sent_by = models.ForeignKey(
+        "user.User", on_delete=models.PROTECT, related_name="sent_by", blank=True, null=True
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -546,11 +553,17 @@ class Invoice(models.Model):
             name=self.company_event.event.code + "_" + self.code + ".pdf",
         )
 
+    def mark_as_sent(self, request=None):
+        self.status = InvoiceStatus.SENT.value
+        if request:
+            self.sent_by = request.user
+        self.save()
+
     def clean(self):
         messages = dict()
         if not self.responsible_event.is_organiser:
             messages["responsible_event"] = "An event responsible must be an organiser"
-        if False and not self.responsible_company.is_sponsor:
+        if not self.responsible_company.is_sponsor:
             messages["responsible_company"] = "A company responsible must be a sponsor"
         if self.responsible_event.company != self.responsible_company.company:
             messages[

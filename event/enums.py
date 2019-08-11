@@ -77,3 +77,8 @@ class CompanyTier(enum.IntEnum):
     MILI = 50
     PARTNER = 60
     SUPPORT = 70
+
+
+class InvoiceStatus(enum.IntEnum):
+    DRAFT = 0
+    SENT = 1
