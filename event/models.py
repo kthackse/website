@@ -402,6 +402,7 @@ class Invoice(models.Model):
     responsible_company = models.ForeignKey(
         "user.User", on_delete=models.PROTECT, related_name="responisble_company"
     )
+    description = models.CharField(max_length=255, blank=True, null=True)
     amount = MoneyField(max_digits=7, decimal_places=2, default_currency="SEK")
     vat = models.PositiveIntegerField(default=0)
     date_due = models.DateField(blank=True)
@@ -426,7 +427,9 @@ class Invoice(models.Model):
             + ", "
             + self.company_event.event.country.upper(),
         )
-        invoice_svg = invoice_svg.replace("{{company_name}}", self.company_event.company.name)
+        invoice_svg = invoice_svg.replace(
+            "{{company_name}}", self.company_event.company.name
+        )
         invoice_svg = invoice_svg.replace(
             "{{date_today}}", str(timezone.now().strftime("%B %d, %Y")).upper()
         )
@@ -466,23 +469,27 @@ class Invoice(models.Model):
         )
         if self.code_invoice_company:
             invoice_svg = invoice_svg.replace(
-                "{{company_invoice_reference}}", "Company reference: " + self.code_invoice_company
+                "{{company_invoice_reference}}",
+                "Company reference: " + self.code_invoice_company,
             )
         else:
             invoice_svg = invoice_svg.replace("{{company_invoice_reference}}", "")
-        invoice_svg = invoice_svg.replace(
-            "{{invoice_item}}",
-            (
-                item
-                if item
-                else self.company_event.event.name
-                + " "
-                + str(self.company_event.event.starts_at.year)
-                + " "
-                + CompanyTier(self.company_event.tier).name.capitalize()
-                + " Sponsorship"
-            ),
-        )
+        if self.description:
+            invoice_svg = invoice_svg.replace("{{invoice_item}}", self.description)
+        else:
+            invoice_svg = invoice_svg.replace(
+                "{{invoice_item}}",
+                (
+                    item
+                    if item
+                    else self.company_event.event.name
+                    + " "
+                    + str(self.company_event.event.starts_at.year)
+                    + " "
+                    + CompanyTier(self.company_event.tier).name.capitalize()
+                    + " Sponsorship"
+                ),
+            )
         invoice_svg = invoice_svg.replace(
             "{{invoice_amount}}",
             "{:,.2f}".format(self.amount.amount)
@@ -543,7 +550,7 @@ class Invoice(models.Model):
         messages = dict()
         if not self.responsible_event.is_organiser:
             messages["responsible_event"] = "An event responsible must be an organiser"
-        if not self.responsible_company.is_sponsor:
+        if False and not self.responsible_company.is_sponsor:
             messages["responsible_company"] = "A company responsible must be a sponsor"
         if self.responsible_event.company != self.responsible_company.company:
             messages[
@@ -555,11 +562,18 @@ class Invoice(models.Model):
     def save(self, *args, **kwargs):
         self.clean()
         if not self.code:
-            self.code = (
-                str(timezone.now().year)
-                + "-"
-                + f"{Invoice.objects.filter(created_at__year=timezone.now().year).count()+10:04d}"
-            )
+            if (
+                not Invoice.objects.filter(created_at__year=timezone.now().year)
+                .exclude(id=self.id)
+                .exists()
+            ):
+                self.code = str(timezone.now().year) + "-" + f"{10:04d}"
+            else:
+                self.code = (
+                    str(timezone.now().year)
+                    + "-"
+                    + f"{int(Invoice.objects.filter(created_at__year=timezone.now().year).order_by('-created_at').first().code[-4:])+1:04d}"
+                )
         if not self.date_due:
             time_now = timezone.now()
             time_month = time_now.month + 2
