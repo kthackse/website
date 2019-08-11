@@ -304,6 +304,12 @@ class Company(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def org_name(self):
+        if self.organisation_name:
+            return self.organisation_name
+        return self.name + " AB"
+
     def clean(self):
         messages = dict()
         if self.code in [c.code for c in Company.objects.all().exclude(id=self.id)]:

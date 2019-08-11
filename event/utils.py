@@ -5,7 +5,6 @@ from django.utils import timezone
 from event.enums import EventApplicationStatus, CompanyTier, SubscriberStatus
 from event.models import Event, Application, FAQItem, Subscriber, CompanyEvent
 from event.tasks import send_subscriber_new, send_subscriber_resubscribed
-from user.models import User
 
 from django.core.validators import validate_email
 
