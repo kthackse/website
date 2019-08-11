@@ -4,6 +4,7 @@ bleach-whitelist~=0.0.10
 CairoSVG~=2.4.0
 celery~=4.3.0
 Django==2.2.4
+django-bootstrap4~=0.0.8
 django-cookie-law~=1.0.1
 django-money==0.15
 django-phonenumber-field==3.0.1

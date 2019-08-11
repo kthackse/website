@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "phonenumber_field",
     "djmoney",
+    "bootstrap4",
     "django_markup",
     "versatileimagefield",
     "user",
