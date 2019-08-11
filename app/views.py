@@ -17,7 +17,7 @@ from event.utils import (
     get_next_or_past_event,
     get_next_events,
     get_application_by_resume,
-    get_faq_items, add_subscriber, get_partners_in_event, get_sponsors_in_event)
+    get_faq_items, add_subscriber, get_partners_in_event, get_sponsors_in_event, get_invoice_by_invoice)
 from user.enums import UserType
 from user.utils import get_user_by_picture, get_organisers
 
@@ -54,6 +54,17 @@ def files(request, file_):
                 and request.user.type
                 in [UserType.SPONSOR.value, UserType.RECRUITER.value]
                 or application.user == request.user
+            ):
+                if file_[:7] != "/files/":
+                    file_ = "/files/" + file_
+                response = StreamingHttpResponse(open(settings.BASE_DIR + file_, "rb"))
+                response["Content-Type"] = ""
+                return response
+        elif path in ["/files/invoice", "invoice"]:
+            invoice = get_invoice_by_invoice(invoice=file_)
+            if invoice and (
+                    request.user.is_sponsorship
+                    or request.user.company == invoice.company_event.company
             ):
                 if file_[:7] != "/files/":
                     file_ = "/files/" + file_

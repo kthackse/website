@@ -14,16 +14,7 @@ from user.enums import UserType, DepartmentType, SexType
 
 class UserManager(BaseUserManager):
     def create_participant(
-        self,
-        email,
-        name,
-        surname,
-        password,
-        phone,
-        birthday,
-        sex,
-        city,
-        country,
+        self, email, name, surname, password, phone, birthday, sex, city, country
     ):
         if not email:
             raise ValueError("A user must have an email")
@@ -45,12 +36,20 @@ class UserManager(BaseUserManager):
         return user
 
     def create_user(
-        self, email, name, surname, type=UserType.PARTICIPANT.value, password=None, is_admin=False
+        self,
+        email,
+        name,
+        surname,
+        type=UserType.PARTICIPANT.value,
+        password=None,
+        is_admin=False,
     ):
         if not email:
             raise ValueError("A user must have an email")
 
-        user = self.model(email=email, name=name, surname=surname, type=type, is_admin=is_admin)
+        user = self.model(
+            email=email, name=name, surname=surname, type=type, is_admin=is_admin
+        )
 
         user.set_password(password)
         user.save(using=self._db)
@@ -138,6 +137,30 @@ class User(AbstractBaseUser):
         return self.type == UserType.ORGANISER.value
 
     @property
+    def is_director(self):
+        return self.is_admin or (
+            self.type == UserType.ORGANISER.value
+            and DepartmentType.DIRECTOR.value
+            in self.departments.all().values_list("type", flat=True)
+        )
+
+    @property
+    def is_sponsorship(self):
+        return (
+            self.is_admin
+            or (
+                self.type == UserType.ORGANISER.value
+                and DepartmentType.DIRECTOR.value
+                in self.departments.all().values_list("type", flat=True)
+            )
+            or (
+                self.type == UserType.ORGANISER.value
+                and DepartmentType.SPONSORSHIP.value
+                in self.departments.all().values_list("type", flat=True)
+            )
+        )
+
+    @property
     def is_participant(self):
         return self.type == UserType.PARTICIPANT.value
 
@@ -165,7 +188,9 @@ class User(AbstractBaseUser):
     def is_underage(self):
         # TODO: Check if underage correctly
         try:
-            return (timezone.now().date() - self.birthday) < timezone.timedelta(days=365 * 18)
+            return (timezone.now().date() - self.birthday) < timezone.timedelta(
+                days=365 * 18
+            )
         except TypeError:
             return False
 
@@ -203,7 +228,9 @@ class User(AbstractBaseUser):
         self.email_verified = False
         self.save()
 
-    def update_verify(self, verify_key, verify_expiration = timezone.now() + timezone.timedelta(hours=1)):
+    def update_verify(
+        self, verify_key, verify_expiration=timezone.now() + timezone.timedelta(hours=1)
+    ):
         self.verify_key = verify_key
         self.verify_expiration = verify_expiration
         self.save()
@@ -287,9 +314,7 @@ class Company(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
     code = models.CharField(max_length=31, unique=True)
-    logo = VersatileImageField(
-        "Image", upload_to=path_and_rename_company
-    )
+    logo = VersatileImageField("Image", upload_to=path_and_rename_company)
     website = models.URLField(blank=True, null=True)
     organisation_name = models.CharField(max_length=255, blank=True, null=True)
     organisation_number = models.CharField(max_length=255, blank=True, null=True)

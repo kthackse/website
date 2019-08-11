@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 
 from event.enums import EventApplicationStatus, CompanyTier, SubscriberStatus
-from event.models import Event, Application, FAQItem, Subscriber, CompanyEvent
+from event.models import Event, Application, FAQItem, Subscriber, CompanyEvent, Invoice
 from event.tasks import send_subscriber_new, send_subscriber_resubscribed
 
 from django.core.validators import validate_email
@@ -85,3 +85,7 @@ def get_sponsors_in_event(event_id):
 
 def get_partners_in_event(event_id):
     return CompanyEvent.objects.filter(event_id=event_id, tier=CompanyTier.PARTNER.value, public=True)
+
+
+def get_invoice_by_invoice(invoice):
+    return Invoice.objects.filter(invoice=invoice).first()

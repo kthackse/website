@@ -14,7 +14,6 @@ from user.utils import send_verify
 
 def login(request):
     if request.user.is_authenticated:
-        messages.error(request, "The signup page has temporarily been disabled.")
         return HttpResponseRedirect(reverse("app_dashboard"))
 
     if request.method == "POST":
@@ -39,6 +38,7 @@ def login(request):
 
 def signup(request):
     if SIGNUP_DISABLED:
+        messages.error(request, "The signup page has temporarily been disabled.")
         return HttpResponseRedirect(reverse("app_home"))
 
     current_data = dict()

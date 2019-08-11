@@ -16,7 +16,7 @@ class DepartmentType(enum.IntEnum):
     DIRECTOR = 1
     DESIGN = 2
     FINANCE = 3
-    FUNDRAISING = 4
+    SPONSORSHIP = 4
     HACKERXPERIENCE = 5
     LOGISTICS = 6
     MARKETING = 7

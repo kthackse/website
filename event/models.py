@@ -1,9 +1,11 @@
 import os
 import uuid
 from decimal import Decimal
+from io import BytesIO
 
 import cairosvg
 from django.core.exceptions import ValidationError
+from django.core.files.base import ContentFile
 from django.db import models
 from django.utils import timezone
 from versatileimagefield.fields import VersatileImageField
@@ -392,6 +394,7 @@ class Subscriber(models.Model):
 class Invoice(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     code = models.CharField(max_length=31)
+    code_invoice_company = models.CharField(max_length=31, blank=True, null=True)
     company_event = models.ForeignKey("CompanyEvent", on_delete=models.PROTECT)
     responsible_event = models.ForeignKey(
         "user.User", on_delete=models.PROTECT, related_name="responisble_event"
@@ -411,31 +414,130 @@ class Invoice(models.Model):
             invoice_svg = open("app/templates/file/invoice/base_with_vat.svg").read()
         else:
             invoice_svg = open("app/templates/file/invoice/base.svg").read()
-        invoice_svg = invoice_svg.replace("{{event_name}}", self.company_event.event.name.upper() + " " + str(
-            self.company_event.event.starts_at.year))
-        invoice_svg = invoice_svg.replace("{{event_location}}", self.company_event.event.city.upper() + ", " + self.company_event.event.country.upper())
-        invoice_svg = invoice_svg.replace("{{company_name}}", "KTH")
-        invoice_svg = invoice_svg.replace("{{date_today}}", str(timezone.now().strftime("%B %d, %Y")).upper())
-        invoice_svg = invoice_svg.replace("{{company_organisation_name}}", self.company_event.company.org_name.upper())
-        invoice_svg = invoice_svg.replace("{{company_address_1}}", (self.company_event.company.address_1.upper() if self.company_event.company.address_1 else "Address: UNKNOWN"))
-        invoice_svg = invoice_svg.replace("{{company_address_2}}", (self.company_event.company.address_2.upper() if self.company_event.company.address_2 else self.company_event.event.city))
-        invoice_svg = invoice_svg.replace("{{company_organisation_number}}", (self.company_event.company.organisation_number if self.company_event.company.organisation_number else "UNKNOWN"))
+        invoice_svg = invoice_svg.replace(
+            "{{event_name}}",
+            self.company_event.event.name.upper()
+            + " "
+            + str(self.company_event.event.starts_at.year),
+        )
+        invoice_svg = invoice_svg.replace(
+            "{{event_location}}",
+            self.company_event.event.city.upper()
+            + ", "
+            + self.company_event.event.country.upper(),
+        )
+        invoice_svg = invoice_svg.replace("{{company_name}}", self.company_event.company.name)
+        invoice_svg = invoice_svg.replace(
+            "{{date_today}}", str(timezone.now().strftime("%B %d, %Y")).upper()
+        )
+        invoice_svg = invoice_svg.replace(
+            "{{company_organisation_name}}", self.company_event.company.org_name.upper()
+        )
+        invoice_svg = invoice_svg.replace(
+            "{{company_address_1}}",
+            (
+                self.company_event.company.address_1.upper()
+                if self.company_event.company.address_1
+                else "Address: UNKNOWN"
+            ),
+        )
+        invoice_svg = invoice_svg.replace(
+            "{{company_address_2}}",
+            (
+                self.company_event.company.address_2.upper()
+                if self.company_event.company.address_2
+                else self.company_event.event.city
+            ),
+        )
+        invoice_svg = invoice_svg.replace(
+            "{{company_organisation_number}}",
+            (
+                self.company_event.company.organisation_number
+                if self.company_event.company.organisation_number
+                else "UNKNOWN"
+            ),
+        )
         invoice_svg = invoice_svg.replace("{{invoice_reference}}", self.code)
-        invoice_svg = invoice_svg.replace("{{invoice_created}}", timezone.now().strftime("%Y-%m-%d %H:%M"))
-        invoice_svg = invoice_svg.replace("{{invoice_due}}", self.date_due.strftime("%Y-%m-%d"))
-        invoice_svg = invoice_svg.replace("{{invoice_item}}", (item if item else self.company_event.event.name + " " + str(self.company_event.event.starts_at.year) + " " + CompanyTier(self.company_event.tier).name.capitalize() + " Sponsorship"))
-        invoice_svg = invoice_svg.replace("{{invoice_amount}}", "{:,.2f}".format(self.amount.amount).replace(",", ";").replace(".", ",").replace(";", ".") + " " + str(self.amount.currency))
-        if self.vat > 0:
-            invoice_svg = invoice_svg.replace("{{invoice_vat}}", str(self.vat) + "% VAT")
-            vat_amount = ((float(self.amount.amount) * float(self.vat))/100.0)
-            invoice_svg = invoice_svg.replace("{{invoice_vat_amount}}", "{:,.2f}".format(vat_amount).replace(",", ";").replace(".", ",").replace(";", ".") + " " + str(self.amount.currency))
-            invoice_svg = invoice_svg.replace("{{invoice_total}}", "{:,.2f}".format(self.amount.amount + Decimal(vat_amount)).replace(",", ";").replace(".", ",").replace(";", ".") + " " + str(self.amount.currency))
+        invoice_svg = invoice_svg.replace(
+            "{{invoice_created}}", timezone.now().strftime("%Y-%m-%d %H:%M")
+        )
+        invoice_svg = invoice_svg.replace(
+            "{{invoice_due}}", self.date_due.strftime("%Y-%m-%d")
+        )
+        if self.code_invoice_company:
+            invoice_svg = invoice_svg.replace(
+                "{{company_invoice_reference}}", "Company reference: " + self.code_invoice_company
+            )
         else:
-            invoice_svg = invoice_svg.replace("{{invoice_total}}", "{:,.2f}".format(self.amount.amount).replace(",", ";").replace(".", ",").replace(";", ".") + " " + str(self.amount.currency))
-        invoice_svg = invoice_svg.replace("{{event_responsible_name}}", str(self.responsible_event))
-        invoice_svg = invoice_svg.replace("{{event_responsible_phone}}", str(self.responsible_event.phone))
-        invoice_svg = invoice_svg.replace("{{event_responsible_email}}", str(self.responsible_event.email))
-        return cairosvg.svg2pdf(bytestring=invoice_svg, write_to="app/test.pdf")
+            invoice_svg = invoice_svg.replace("{{company_invoice_reference}}", "")
+        invoice_svg = invoice_svg.replace(
+            "{{invoice_item}}",
+            (
+                item
+                if item
+                else self.company_event.event.name
+                + " "
+                + str(self.company_event.event.starts_at.year)
+                + " "
+                + CompanyTier(self.company_event.tier).name.capitalize()
+                + " Sponsorship"
+            ),
+        )
+        invoice_svg = invoice_svg.replace(
+            "{{invoice_amount}}",
+            "{:,.2f}".format(self.amount.amount)
+            .replace(",", ";")
+            .replace(".", ",")
+            .replace(";", ".")
+            + " "
+            + str(self.amount.currency),
+        )
+        if self.vat > 0:
+            invoice_svg = invoice_svg.replace(
+                "{{invoice_vat}}", str(self.vat) + "% VAT"
+            )
+            vat_amount = (float(self.amount.amount) * float(self.vat)) / 100.0
+            invoice_svg = invoice_svg.replace(
+                "{{invoice_vat_amount}}",
+                "{:,.2f}".format(vat_amount)
+                .replace(",", ";")
+                .replace(".", ",")
+                .replace(";", ".")
+                + " "
+                + str(self.amount.currency),
+            )
+            invoice_svg = invoice_svg.replace(
+                "{{invoice_total}}",
+                "{:,.2f}".format(self.amount.amount + Decimal(vat_amount))
+                .replace(",", ";")
+                .replace(".", ",")
+                .replace(";", ".")
+                + " "
+                + str(self.amount.currency),
+            )
+        else:
+            invoice_svg = invoice_svg.replace(
+                "{{invoice_total}}",
+                "{:,.2f}".format(self.amount.amount)
+                .replace(",", ";")
+                .replace(".", ",")
+                .replace(";", ".")
+                + " "
+                + str(self.amount.currency),
+            )
+        invoice_svg = invoice_svg.replace(
+            "{{event_responsible_name}}", str(self.responsible_event)
+        )
+        invoice_svg = invoice_svg.replace(
+            "{{event_responsible_phone}}", str(self.responsible_event.phone)
+        )
+        invoice_svg = invoice_svg.replace(
+            "{{event_responsible_email}}", str(self.responsible_event.email)
+        )
+        return ContentFile(
+            BytesIO((cairosvg.svg2pdf(bytestring=invoice_svg))).getvalue(),
+            name=self.company_event.event.code + "_" + self.code + ".pdf",
+        )
 
     def clean(self):
         messages = dict()
@@ -444,7 +546,9 @@ class Invoice(models.Model):
         if not self.responsible_company.is_sponsor:
             messages["responsible_company"] = "A company responsible must be a sponsor"
         if self.responsible_event.company != self.responsible_company.company:
-            messages["responsible_company"] = "The company responsible company must be the same"
+            messages[
+                "responsible_company"
+            ] = "The company responsible company must be the same"
         if messages:
             raise ValidationError(messages)
 
@@ -459,6 +563,10 @@ class Invoice(models.Model):
         if not self.date_due:
             time_now = timezone.now()
             time_month = time_now.month + 2
-            self.date_due = timezone.datetime(day=time_now.day, month=time_month, year=(time_now.year if time_month <= 12 else time_now.year + 1)).date()
-        self.create_invoice()
+            self.date_due = timezone.datetime(
+                day=time_now.day,
+                month=time_month,
+                year=(time_now.year if time_month <= 12 else time_now.year + 1),
+            ).date()
+        self.invoice = self.create_invoice()
         return super().save(*args, **kwargs)
