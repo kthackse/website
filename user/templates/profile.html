@@ -158,32 +158,26 @@
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
-                    {% if user.type == 1 %}
+                    {% if user.type == 1 or user.type == 2 %}
                         <div class="section-intro text-center">
-                            <h2>Organiser information</h2>
+                            {% if user.type == 1 %}
+                                <h2>Organiser information</h2>
+                            {% else %}
+                                <h2>Volunteer information</h2>
+                            {% endif %}
                         </div>
                         <div class="row">
                             <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
                                 <h3>Departments</h3>
-                                <ul>
-                                    {% for department in user.departments %}
-                                        <li>{{ department }}</li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        </div>
-                    {% elif user.type == 2 %}
-                        <div class="section-intro text-center">
-                            <h2>Volunteer information</h2>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
-                                <h3>Departments</h3>
-                                <ul>
-                                    {% for department in user.departments %}
-                                        <li>{{ department }}</li>
-                                    {% endfor %}
-                                </ul>
+                                {% if not user.departments %}
+                                    <p>You are not linked to any department at this moment.</p>
+                                {% else %}
+                                    <ul>
+                                        {% for department in user.departments %}
+                                            <li>{{ department }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
                             </div>
                         </div>
                     {% endif %}

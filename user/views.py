@@ -4,7 +4,11 @@ from io import StringIO, BytesIO
 
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponseNotFound, StreamingHttpResponse
+from django.http import (
+    HttpResponseRedirect,
+    HttpResponseNotFound,
+    StreamingHttpResponse,
+)
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
@@ -35,7 +39,9 @@ def login(request):
                     return HttpResponseRedirect(reverse("app_dashboard"))
                 return HttpResponseRedirect(next_page)
             else:
-                messages.error(request, "Login failed, the email or password are invalid!")
+                messages.error(
+                    request, "Login failed, the email or password are invalid!"
+                )
     else:
         form = forms.LoginForm()
 
@@ -66,7 +72,11 @@ def signup(request):
             country = form.cleaned_data["country"]
 
             if User.objects.filter(email=email).first() is not None:
-                messages.add_message(request, messages.ERROR, "Signup failed, an account with this email already exists!")
+                messages.add_message(
+                    request,
+                    messages.ERROR,
+                    "Signup failed, an account with this email already exists!",
+                )
             else:
                 user = User.objects.create_participant(
                     email=email,
@@ -82,10 +92,17 @@ def signup(request):
                 user = auth.authenticate(email=email, password=password)
                 send_verify(user)
                 auth.login(request, user)
-                messages.success(request, "Thank-you for registering, remember to confirm your email!")
+                messages.success(
+                    request,
+                    "Thank-you for registering, remember to confirm your email!",
+                )
                 return HttpResponseRedirect(reverse("app_home"))
         else:
-            messages.add_message(request, messages.ERROR, "Signup failed, some fields might be wrong or empty!")
+            messages.add_message(
+                request,
+                messages.ERROR,
+                "Signup failed, some fields might be wrong or empty!",
+            )
     else:
         form = forms.RegisterForm()
 
@@ -147,7 +164,9 @@ def profile(request):
                 request.user.email_verified = False
                 request.user.email = email
                 send_verify(request.user)
-                messages.success(request, "The email has been changed, you need to verify it again!")
+                messages.success(
+                    request, "The email has been changed, you need to verify it again!"
+                )
             if "picture" in request.FILES:
                 picture = request.FILES["picture"]
                 UserChange(
@@ -300,7 +319,9 @@ def verify_key(request, verification_key):
     if request.user.email_verified:
         messages.success(request, "Thank-you, your email has been verified!")
     else:
-        messages.error(request, "We couldn't verify your email as the verification key expired.")
+        messages.error(
+            request, "We couldn't verify your email as the verification key expired."
+        )
     return HttpResponseRedirect(reverse("user_verify"))
 
 
@@ -314,7 +335,9 @@ def send_verification(request):
 @login_verified_required
 def download_personal_data(request):
     with StringIO() as csvfile:
-        csvwriter = csv.writer(csvfile, delimiter=";", quotechar="|", quoting=csv.QUOTE_MINIMAL)
+        csvwriter = csv.writer(
+            csvfile, delimiter=";", quotechar="|", quoting=csv.QUOTE_MINIMAL
+        )
         csvwriter.writerow(["ID", request.user.id])
         csvwriter.writerow(["First name", request.user.name])
         csvwriter.writerow(["Last name", request.user.surname])
@@ -323,12 +346,26 @@ def download_personal_data(request):
         csvwriter.writerow(["Last login", request.user.last_login])
         csvwriter.writerow(["Type", UserType(request.user.type).name.upper()])
         if request.user.is_organiser or request.user.is_volunteer:
-            csvwriter.writerow(["Departments", ", ".join([str(d) for d in request.user.departments.all()])])
+            csvwriter.writerow(
+                [
+                    "Departments",
+                    ", ".join([str(d) for d in request.user.departments.all()]),
+                ]
+            )
         if request.user.is_sponsor or request.user.is_recruiter:
             csvwriter.writerow(["Company", request.user.company])
-        csvwriter.writerow(["Events", ", ".join([str(e) for e in request.user.events.all()])])
-        csvwriter.writerow(["Picture public to participants", request.user.picture_public_participants])
-        csvwriter.writerow(["Picture public to sponsors and recruiters", request.user.picture_public_sponsors_and_recruiters])
+        csvwriter.writerow(
+            ["Events", ", ".join([str(e) for e in request.user.events.all()])]
+        )
+        csvwriter.writerow(
+            ["Picture public to participants", request.user.picture_public_participants]
+        )
+        csvwriter.writerow(
+            [
+                "Picture public to sponsors and recruiters",
+                request.user.picture_public_sponsors_and_recruiters,
+            ]
+        )
         csvwriter.writerow(["Sex", SexType(request.user.sex).name.upper()])
         csvwriter.writerow(["Birthday", request.user.birthday])
         csvwriter.writerow(["Phone", request.user.phone])
@@ -343,7 +380,13 @@ def download_personal_data(request):
             response = StreamingHttpResponse(mf.getvalue(), "rb")
             response["Content-Type"] = "application/zip"
             response["Content-Disposition"] = (
-                    'attachment; filename="' + HACKATHON_NAME.lower() + "_personaldata_" + str(request.user.id) + "_" + str(timezone.now().timestamp()) + '.zip"'
+                'attachment; filename="'
+                + HACKATHON_NAME.lower()
+                + "_personaldata_"
+                + str(request.user.id)
+                + "_"
+                + str(int(timezone.now().timestamp()))
+                + '.zip"'
             )
 
         return response
