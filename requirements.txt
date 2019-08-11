@@ -1,7 +1,7 @@
 Babel==2.7.0
 bleach~=3.1.0
 bleach-whitelist~=0.0.10
-CairoSVG>=2.0.0
+CairoSVG~=2.4.0
 celery~=4.3.0
 Django==2.2.4
 django-bootstrap4~=0.0.8
@@ -17,7 +17,7 @@ phonenumbers==8.10.14
 pyyaml~=5.1.1
 psycopg2-binary~=2.8.3
 pytz==2019.1
-setuptools==39.1.0
+setuptools>=41.0.1
 sendgrid-django~=4.2.0
 sentry-sdk==0.10.2
 sqlparse==0.3.0
