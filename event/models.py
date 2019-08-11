@@ -446,7 +446,7 @@ class Invoice(models.Model):
         invoice_svg = invoice_svg.replace(
             "{{company_address_1}}",
             (
-                self.company_event.company.address_1.upper()
+                self.company_event.company.address_1
                 if self.company_event.company.address_1
                 else "Address: UNKNOWN"
             ),
@@ -454,7 +454,7 @@ class Invoice(models.Model):
         invoice_svg = invoice_svg.replace(
             "{{company_address_2}}",
             (
-                self.company_event.company.address_2.upper()
+                self.company_event.company.address_2
                 if self.company_event.company.address_2
                 else self.company_event.event.city
             ),
