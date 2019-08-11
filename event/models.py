@@ -565,10 +565,6 @@ class Invoice(models.Model):
             messages["responsible_event"] = "An event responsible must be an organiser"
         if not self.responsible_company.is_sponsor:
             messages["responsible_company"] = "A company responsible must be a sponsor"
-        if self.responsible_event.company.id != self.company_event.company.id:
-            messages[
-                "responsible_company"
-            ] = "The company responsible and company event must be the same"
         if messages:
             raise ValidationError(messages)
 
