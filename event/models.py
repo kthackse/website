@@ -435,7 +435,7 @@ class Invoice(models.Model):
             + self.company_event.event.country.upper(),
         )
         invoice_svg = invoice_svg.replace(
-            "{{company_name}}", self.company_event.company.name
+            "{{company_name}}", self.company_event.company.name.upper()
         )
         invoice_svg = invoice_svg.replace(
             "{{date_today}}", str(timezone.now().strftime("%B %d, %Y")).upper()
