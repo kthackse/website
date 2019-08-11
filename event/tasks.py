@@ -56,7 +56,7 @@ def send_invoice(invoice: Invoice, request = None):
         method="email", type="sponsorship", task="invoice", format="subject"
     ).format(event_name=str(invoice.company_event.event))
     body = render_to_string(template, context)
-    attachments = [(invoice.invoice.name, invoice.invoice, "application/pdf")]
+    attachments = [(invoice.invoice.name, invoice.invoice.read(), "application/pdf")]
 
     send_email(
         subject=subject,
