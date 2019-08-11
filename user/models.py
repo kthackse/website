@@ -161,6 +161,10 @@ class User(AbstractBaseUser):
         )
 
     @property
+    def is_volunteer(self):
+        return self.type == UserType.VOLUNTEER.value
+
+    @property
     def is_participant(self):
         return self.type == UserType.PARTICIPANT.value
 
@@ -179,10 +183,6 @@ class User(AbstractBaseUser):
     @property
     def is_media(self):
         return self.type == UserType.MEDIA.value
-
-    @property
-    def is_director(self):
-        return DepartmentType.DIRECTOR.value in [d.type for d in self.departments.all()]
 
     @property
     def is_underage(self):

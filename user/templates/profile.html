@@ -136,38 +136,59 @@
                 </form>
             </div>
         </div>
-        {% if user.type == 1 %}
-            <div class="container container-bottom">
-              <div class="section-intro text-center">
-                <h2>Organiser information</h2>
-              </div>
-              <div class="row">
-                <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
-                    <h3>Departments</h3>
-                      <ul>
-                          {% for department in user.departments %}
-                            <li>{{ department }}</li>
-                          {% endfor %}
-                      </ul>
+        <div class="container container-bottom">
+            <div class="row">
+                <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                    <div class="section-intro text-center">
+                        <h2>Your account</h2>
+                    </div>
+                    <div class="row section-intro-top">
+                        <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                            <h5>Download your information</h5>
+                            <p>You can request to download a copy of all your information to save it or transfer it to another service according to GDPR.</p>
+                            <a href="{% url "user_downloadpersonaldata" %}" class="link-button text-center">Download my information</a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                            <h5>Deletion of your account</h5>
+                            <p>You can completely delete your data and account if you wish to, however, you won't be able to restore your account in the future. Please be advised your data might continue to be stored in our system after you remove your account.</p>
+                            <a href="" class="link-button">Delete my account</a>
+                        </div>
+                    </div>
                 </div>
-              </div>
-            </div>
-        {% elif user.type == 2 %}
-            <div class="container container-bottom">
-              <div class="section-intro text-center">
-                <h2>Volunteer information</h2>
-              </div>
-              <div class="row">
-                <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
-                    <h3>Departments</h3>
-                      <ul>
-                          {% for department in user.departments %}
-                            <li>{{ department }}</li>
-                          {% endfor %}
-                      </ul>
+                <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                    {% if user.type == 1 %}
+                        <div class="section-intro text-center">
+                            <h2>Organiser information</h2>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                                <h3>Departments</h3>
+                                <ul>
+                                    {% for department in user.departments %}
+                                        <li>{{ department }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    {% elif user.type == 2 %}
+                        <div class="section-intro text-center">
+                            <h2>Volunteer information</h2>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                                <h3>Departments</h3>
+                                <ul>
+                                    {% for department in user.departments %}
+                                        <li>{{ department }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
-              </div>
             </div>
-        {% endif %}
+        </div>
     {% endif %}
 {% endblock %}

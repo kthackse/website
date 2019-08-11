@@ -1399,6 +1399,10 @@ h3, .h3 {
   margin-top: 25px;
 }
 
+.section-intro-top {
+  margin-bottom: 35px;
+}
+
 /* section intro end
 	============================================================================================ */
 .service-card {

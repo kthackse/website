@@ -10,5 +10,6 @@ urlpatterns = [
     url(r'^profile/(?P<id>[\w-]+)$', views.profile_other, name='user_profileother'),
     url(r'^verify/$', views.verify, name='user_verify'),
     url(r'^verify/(?P<verification_key>.+)$', views.verify_key, name='user_verifykey'),
-    url(r'^sendverification/$', views.send_verification, name='user_sendverification'),
+    url(r'^send-verification/$', views.send_verification, name='user_sendverification'),
+    url(r'^download-personal-data/$', views.download_personal_data, name='user_downloadpersonaldata'),
 ]

@@ -1,13 +1,19 @@
+import csv
+import zipfile
+from io import StringIO, BytesIO
+
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, HttpResponseNotFound
+from django.http import HttpResponseRedirect, HttpResponseNotFound, StreamingHttpResponse
 from django.shortcuts import render
 from django.urls import reverse
+from django.utils import timezone
 
 from app.settings import SIGNUP_DISABLED
 from app.utils import login_verified_required
+from app.variables import HACKATHON_NAME
 from user import forms
-from user.enums import SexType, UserType
+from user.enums import SexType, UserType, DepartmentType
 from user.models import User, UserChange
 from user.utils import send_verify
 
@@ -303,3 +309,41 @@ def send_verification(request):
     send_verify(request.user)
     messages.success(request, "The email verification has been sent again!")
     return HttpResponseRedirect(reverse("user_verify"))
+
+
+@login_verified_required
+def download_personal_data(request):
+    with StringIO() as csvfile:
+        csvwriter = csv.writer(csvfile, delimiter=";", quotechar="|", quoting=csv.QUOTE_MINIMAL)
+        csvwriter.writerow(["ID", request.user.id])
+        csvwriter.writerow(["First name", request.user.name])
+        csvwriter.writerow(["Last name", request.user.surname])
+        csvwriter.writerow(["Email", request.user.email])
+        csvwriter.writerow(["Email verified", request.user.email_verified])
+        csvwriter.writerow(["Last login", request.user.last_login])
+        csvwriter.writerow(["Type", UserType(request.user.type).name.upper()])
+        if request.user.is_organiser or request.user.is_volunteer:
+            csvwriter.writerow(["Departments", ", ".join([str(d) for d in request.user.departments.all()])])
+        if request.user.is_sponsor or request.user.is_recruiter:
+            csvwriter.writerow(["Company", request.user.company])
+        csvwriter.writerow(["Events", ", ".join([str(e) for e in request.user.events.all()])])
+        csvwriter.writerow(["Picture public to participants", request.user.picture_public_participants])
+        csvwriter.writerow(["Picture public to sponsors and recruiters", request.user.picture_public_sponsors_and_recruiters])
+        csvwriter.writerow(["Sex", SexType(request.user.sex).name.upper()])
+        csvwriter.writerow(["Birthday", request.user.birthday])
+        csvwriter.writerow(["Phone", request.user.phone])
+        csvwriter.writerow(["City", request.user.city])
+        csvwriter.writerow(["Country", request.user.country])
+
+        mf = BytesIO()
+        with zipfile.ZipFile(mf, mode="w", compression=zipfile.ZIP_DEFLATED) as zf:
+            zf.writestr("profile.csv", csvfile.getvalue())
+            zf.writestr("profile.png", request.user.picture.read())
+
+            response = StreamingHttpResponse(mf.getvalue(), "rb")
+            response["Content-Type"] = "application/zip"
+            response["Content-Disposition"] = (
+                    'attachment; filename="' + HACKATHON_NAME.lower() + "_personaldata_" + str(request.user.id) + "_" + str(timezone.now().timestamp()) + '.zip"'
+            )
+
+        return response
