@@ -89,3 +89,7 @@ def get_partners_in_event(event_id):
 
 def get_invoice_by_invoice(invoice):
     return Invoice.objects.filter(invoice=invoice).first()
+
+
+def get_applications_by_user(user_id):
+    return Application.objects.filter(user_id=user_id)

@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^verify/(?P<verification_key>.+)$', views.verify_key, name='user_verifykey'),
     url(r'^send-verification/$', views.send_verification, name='user_sendverification'),
     url(r'^download-personal-data/$', views.download_personal_data, name='user_downloadpersonaldata'),
+    url(r'^deactivate/$', views.deactivate, name='user_deactivate'),
 ]

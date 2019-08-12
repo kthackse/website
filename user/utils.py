@@ -21,13 +21,14 @@ def get_user_by_picture(picture):
         user_id = UUID(picture[:36])
         return User.objects.filter(
             id=user_id,
+            is_active=True,
         ).first()
     except ValueError:
         return None
 
 
 def get_organisers(event_id):
-    return User.objects.filter(events__in=[event_id]).order_by("name")
+    return User.objects.filter(events__in=[event_id], is_active=True).order_by("name")
 
 
 def generate_verify_key(user: User):

@@ -16,6 +16,7 @@ from django.utils import timezone
 from app.settings import SIGNUP_DISABLED
 from app.utils import login_verified_required
 from app.variables import HACKATHON_NAME
+from event.utils import get_applications_by_user
 from user import forms
 from user.enums import SexType, UserType, DepartmentType
 from user.models import User, UserChange
@@ -33,7 +34,7 @@ def login(request):
             email = form.cleaned_data["email"]
             password = form.cleaned_data["password"]
             user = auth.authenticate(email=email, password=password)
-            if user and user.is_active:
+            if user:
                 auth.login(request, user)
                 if next_page == "/":
                     return HttpResponseRedirect(reverse("app_dashboard"))
@@ -71,12 +72,20 @@ def signup(request):
             city = form.cleaned_data["city"]
             country = form.cleaned_data["country"]
 
-            if User.objects.filter(email=email).first() is not None:
-                messages.add_message(
-                    request,
-                    messages.ERROR,
-                    "Signup failed, an account with this email already exists!",
-                )
+            existing_user = User.objects.filter(email=email).first()
+            if existing_user:
+                if existing_user.is_active:
+                    messages.add_message(
+                        request,
+                        messages.ERROR,
+                        "Signup failed, an account with this email already exists!",
+                    )
+                else:
+                    messages.add_message(
+                        request,
+                        messages.ERROR,
+                        "Signup failed, a deactivated account with this email still exists, contact us for more information.",
+                    )
             else:
                 user = User.objects.create_participant(
                     email=email,
@@ -252,6 +261,8 @@ def profile(request):
 
     user_data = request.user.get_dict()
     form = forms.ProfileForm(user_data)
+    if request.user.is_participant:
+        user_data["applications"] = get_applications_by_user(request.user.id)
     return render(
         request,
         "profile.html",
@@ -373,20 +384,31 @@ def download_personal_data(request):
         csvwriter.writerow(["Country", request.user.country])
 
         mf = BytesIO()
-        with zipfile.ZipFile(mf, mode="w", compression=zipfile.ZIP_DEFLATED) as zf:
-            zf.writestr("profile.csv", csvfile.getvalue())
-            zf.writestr("profile.png", request.user.picture.read())
+        zf = zipfile.ZipFile(mf, mode="w", compression=zipfile.ZIP_DEFLATED)
+        zf.writestr("profile.csv", csvfile.getvalue())
+        zf.writestr("profile.png", request.user.picture.read())
+        zf.close()
 
-            response = StreamingHttpResponse(mf.getvalue(), "rb")
-            response["Content-Type"] = "application/zip"
-            response["Content-Disposition"] = (
-                'attachment; filename="'
-                + HACKATHON_NAME.lower()
-                + "_personaldata_"
-                + str(request.user.id)
-                + "_"
-                + str(int(timezone.now().timestamp()))
-                + '.zip"'
-            )
+        response = StreamingHttpResponse(mf.getvalue(), "rb")
+        response["Content-Type"] = "application/zip"
+        response["Content-Disposition"] = (
+            'attachment; filename="'
+            + HACKATHON_NAME.lower()
+            + "_personaldata_"
+            + str(request.user.id)
+            + "_"
+            + str(int(timezone.now().timestamp()))
+            + '.zip"'
+        )
 
         return response
+
+
+@login_verified_required
+def deactivate(request):
+    request.user.mark_as_inactive()
+    messages.success(
+        request, "Your account has been deactivated, we are sorry to hear that."
+    )
+    auth.logout(request)
+    return HttpResponseRedirect(reverse("app_home"))

@@ -101,7 +101,7 @@ def send_email(
 def login_verified_required(function):
     def wrapper(request, *args, **kw):
         if request.user.id:
-            if request.user.email_verified:
+            if request.user.is_active and request.user.email_verified:
                 return function(request, *args, **kw)
             else:
                 return HttpResponseRedirect(reverse("user_verify"))

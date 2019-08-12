@@ -2,6 +2,7 @@
 {% load bootstrap4 %}
 {% load i18n %}
 {% load user_tags %}
+{% load event_tags %}
 
 {% block head_title %}{% if other %}{{ form.name.value }} {{ form.surname.value | ownership }} profile{% else %}{% trans "Your profile" %}{% endif %}{% endblock %}
 
@@ -151,14 +152,32 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
-                            <h5>Deletion of your account</h5>
-                            <p>You can completely delete your data and account if you wish to, however, you won't be able to restore your account in the future. Please be advised your data might continue to be stored in our system after you remove your account.</p>
-                            <a href="" class="link-button">Delete my account</a>
+                            <h5>Deactivation of your account</h5>
+                            <p>You can completely deactivate your account if you wish to, however, you won't be able to restore it in the future. Please be advised your data might continue to be stored in our system after you proceed.</p>
+                            <a href="{% url "user_deactivate" %}" class="link-button">Deactivate my account</a>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
-                    {% if user.type == 1 or user.type == 2 %}
+                    {% if user.type == 0 %}
+                        <div class="section-intro text-center">
+                            <h2>Your past applications</h2>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                                {% if not user.applications %}
+                                    <p>You haven't applied to any event yet.</p>
+                                {% else %}
+                                    <ul>
+                                        {% for application in user.applications %}
+                                            <!-- TODO: Add link here -->
+                                            <li>{{ application.event }} ({{ application.status | application_status | lower }})</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% elif user.type == 1 or user.type == 2 %}
                         <div class="section-intro text-center">
                             {% if user.type == 1 %}
                                 <h2>Organiser information</h2>

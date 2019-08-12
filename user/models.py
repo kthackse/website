@@ -105,6 +105,7 @@ class User(AbstractBaseUser):
         default=UserType.PARTICIPANT.value,
     )
     is_admin = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
     departments = models.ManyToManyField("Department", blank=True)
     company = models.ForeignKey(
         "Company", on_delete=models.PROTECT, null=True, blank=True
@@ -239,6 +240,10 @@ class User(AbstractBaseUser):
         if timezone.now() <= self.verify_expiration and self.verify_key == verify_key:
             self.email_verified = True
             self.save()
+
+    def mark_as_inactive(self):
+        self.is_active = False
+        self.save()
 
     def clean(self):
         messages = dict()
