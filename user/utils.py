@@ -4,6 +4,7 @@ from uuid import UUID
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 
+from user.enums import UserType
 from user.models import User
 from user.tasks import send_verify_email
 
@@ -28,7 +29,7 @@ def get_user_by_picture(picture):
 
 
 def get_organisers(event_id):
-    return User.objects.filter(events__in=[event_id], is_active=True).order_by("name")
+    return User.objects.filter(events__in=[event_id], is_active=True, type=UserType.ORGANISER.value).order_by("name")
 
 
 def generate_verify_key(user: User):

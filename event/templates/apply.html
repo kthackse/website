@@ -8,14 +8,14 @@
 {% block content %}
     <div class="container">
       <div class="section-intro text-center">
-          <h2>{{ event.name }} {{ event.starts_at | date:"Y" }} application</h2>
+          <h2>Your application for {{ event.name }} {{ event.starts_at | date:"Y" }}</h2>
           <h3>Current status: {{ status }}</h3>
       </div>
       <div class="row">
           {% if application %}
               {% if application.status == 0 %}
                   <div class="col-md-12 col-lg-12 mb-12 mb-lg-0 box-warning box-bottom2">
-                    Your application hasn't been sent and won't be reviewed until you tap the <a class="button button-inline" href="#apply">apply button</a> at the bottom of this page.
+                    Your application hasn't been sent and won't be reviewed until you tap the <a class="link-button-inline" href="#apply">apply button</a> at the bottom of this page.
                   </div>
             {% endif %}
           {% else %}

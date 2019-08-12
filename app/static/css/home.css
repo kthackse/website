@@ -92,7 +92,6 @@ body {
     display: inline-block;
     border: 1px solid #ffffff !important;
     color: #fff !important;
-    border-radius: 30px;
     padding: 8px 25px !important;
     -webkit-transition: all 0.3s ease 0s;
     -moz-transition: all 0.3s ease 0s;
@@ -201,7 +200,6 @@ body {
     display: inline-block;
     border: none;
     color: #fff !important;
-    border-radius: 30px;
     padding: 9px 25px !important;
     margin-top: -1px;
     -webkit-transition: all 0.3s ease 0s;

@@ -62,7 +62,7 @@ body {
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.5;
-    color: rgba(238, 238, 238, 0.95);
+    color: #111111;
     text-align: left;
     background-color: #fff
 }
@@ -1907,8 +1907,7 @@ pre code {
     color: #495057;
     background-color: #fff;
     background-clip: padding-box;
-    border: 1px solid #ced4da;
-    border-radius: .25rem;
+    border: 2px solid #cccccc !important;
     transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out
 }
 
@@ -1952,7 +1951,7 @@ pre code {
 }
 
 .form-control::placeholder {
-    color: #6c757d;
+    color: #999999;
     opacity: 1
 }
 
@@ -2356,7 +2355,6 @@ textarea.form-control {
     padding: .375rem .75rem;
     font-size: 1rem;
     line-height: 1.5;
-    border-radius: .25rem;
     transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out
 }
 
@@ -2395,8 +2393,8 @@ a.btn.disabled, fieldset:disabled a.btn {
 
 .btn-primary:hover {
     color: #fff;
-    background-color: rgba(0, 57, 132, 1);
-    border-color: rgba(0, 57, 132, 1)
+    background-color: rgba(30, 92, 177, 1);
+    border-color: rgba(30, 92, 177, 1)
 }
 
 .btn-primary.focus, .btn-primary:focus {

@@ -21,7 +21,8 @@ body {
 
 body .content{
   padding-top: 160px;
-  padding-bottom: 230px;
+  /* padding-bottom: 230px; */
+  padding-bottom: 250px;
 }
 
 @media (max-width: 768px) {
@@ -88,7 +89,6 @@ footer {
 
 .panel-body img {
   width: 100%;
-  border-radius: 4px;
   margin-bottom: 15px;
 }
 
@@ -144,13 +144,17 @@ form {
 }
 
 form input,select,textarea {
-  color: #eeeeee !important;
+  color: #555555 !important;
   border: none !important;
 }
 
 
-form input[type=text],input[type=email],input[type=password],input[type=date],select,textarea {
-  background-color: rgba(255, 255, 255, 0.1) !important;
+form input[type=text],form input[type=email],form input[type=password],form input[type=date],form select,form textarea {
+  background-color: #fafafa !important;
+}
+
+.container-home form input[type=text],.container-home form input[type=email],.container-home form input[type=password],.container-home form input[type=date],.container-home form select,.container-home form textarea {
+    background-color: rgba(250, 250, 250, 0.15) !important;
 }
 
 form .is-valid {
@@ -162,7 +166,7 @@ form .is-valid:focus {
 }
 
 .form-extra span {
-  color: #aaa;
+  color: #555555;
 }
 
 .box-top {
@@ -346,7 +350,6 @@ form .is-valid:focus {
   background-color: rgba(240, 240, 240, 0.9);
   color: #333333;
   padding: 0.5rem 1.5rem;
-  border-radius: 30px;
   display: none;
 }
 
@@ -377,6 +380,23 @@ form .is-valid:focus {
     -webkit-filter: blur(5px);
 }
 
+.page-background {
+    background-size: cover;
+    background-position: center;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: block;
+    z-index: -100;
+    position: fixed;
+    opacity: 0;
+}
+
 .background-color {
     background-color: #003984;
 }
@@ -394,7 +414,6 @@ td {
     display: inline-block;
     border: none;
     color: #fff !important;
-    border-radius: 30px;
     padding: 9px 25px !important;
     margin-top: -1px;
     -webkit-transition: all 0.3s ease 0s;
@@ -415,7 +434,7 @@ td {
 }
 
 .link-button:hover {
-    background-color: #00295e !important;
+    background-color: rgba(30, 92, 177, 1) !important;
     color: #fff !important;
 }
 
@@ -442,12 +461,48 @@ td {
     color: #fff !important;
 }
 
+.link-button-inline {
+    display: inline-block;
+    border: none;
+    color: #fff !important;
+    padding: 5px 14px !important;
+    margin-top: -1px;
+    -webkit-transition: all 0.3s ease 0s;
+    -moz-transition: all 0.3s ease 0s;
+    -o-transition: all 0.3s ease 0s;
+    transition: all 0.3s ease 0s;
+    background-color: rgba(0, 57, 132, 1);
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 400 !important;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+@media (min-width: 600px) {
+    .link-button-inline {
+        padding: 5px 14px !important;
+        margin-top: -1px;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+}
+
+.link-button-inline:hover {
+    background-color: rgba(30, 92, 177, 1) !important;
+    color: #fff !important;
+}
+
+footer p, footer small {
+    color: #eeeeee;
+}
+
 /* HOME */
 
 /* global style start
 	============================================================================================ */
 body {
-  background-color: #111111;
+  background-color: #f5f5f5;
   font-family: "Avenir", sans-serif;
   font-size: 15px;
   font-weight: 400;
@@ -478,8 +533,18 @@ h4,
 h5,
 h6 {
   font-family: "Avenir", sans-serif;
-  color: #eeeeee;
+  color: #003984;
   line-height: 1.25;
+}
+
+.container-home h1,
+.container-home h2,
+.container-home h3,
+.container-home h4,
+.container-home h5,
+.container-home h6,
+.container-home p {
+  color: #fff;
 }
 
 h1,
@@ -594,7 +659,7 @@ h3, .h3 {
   transition: background 0.4s, all 0.3s linear;
   background-color: rgba(0, 57, 132, 1);
   /*background-color: rgba(43, 43, 43, 0.75);*/
-  box-shadow: 0 -5px 50px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 -5px 50px rgba(0, 0, 0, 0.1); */
 }
 
 .header-area .navbar-right {
@@ -2915,7 +2980,7 @@ h3, .h3 {
 }
 
 .comment-form .form-control::placeholder {
-  color: #777777;
+  color: #555555;
 }
 
 .comment-form textarea {
@@ -2946,6 +3011,10 @@ h3, .h3 {
   /* Firefox 18- */
   font-size: 13px;
   color: #777;
+}
+
+.profile-picture {
+    background-color: #cccccc;
 }
 
 /*============ End Blog Single Styles  =============*/
