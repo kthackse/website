@@ -726,7 +726,7 @@ h3, .h3 {
   color: #f4f4f4;
   text-transform: capitalize;
   font-weight: 500;
-  padding: 33px 0;
+  padding: 33px 14px;
   display: inline-block;
 }
 
@@ -734,8 +734,12 @@ h3, .h3 {
   display: none;
 }
 
+.header-area .navbar .nav .nav-item .nav-profile {
+    margin-left: 14px;
+}
+
 .header-area .navbar .nav .nav-item:hover .nav-link, .header-area .navbar .nav .nav-item.active .nav-link {
-  color: #d4d4d4;
+  background-color: #1e5cb1;
   opacity: 1;
 }
 
@@ -928,6 +932,10 @@ h3, .h3 {
   font-size: 12px;
 }
 
+.header-area .navbar .nav .nav-item {
+    margin: 0;
+}
+
 /* header style end
 	============================================================================================ */
 @media (max-width: 1619px) {
@@ -943,9 +951,6 @@ h3, .h3 {
 @media (max-width: 1199px) {
   /* Main Menu Area css
 	============================================================================================ */
-  .header-area .navbar .nav .nav-item {
-    margin-right: 28px;
-  }
   /* End Main Menu Area css
 	============================================================================================ */
   /* Home Banner Area css

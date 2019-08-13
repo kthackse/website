@@ -92,7 +92,7 @@ body {
     display: inline-block;
     border: 1px solid #ffffff !important;
     color: #fff !important;
-    padding: 8px 25px !important;
+    padding: 8px 14px !important;
     -webkit-transition: all 0.3s ease 0s;
     -moz-transition: all 0.3s ease 0s;
     -o-transition: all 0.3s ease 0s;
@@ -101,7 +101,7 @@ body {
 
 @media (min-width: 600px) {
     .home-button {
-        padding: 6px 24px !important;
+        padding: 6px 12px !important;
     }
 }
 

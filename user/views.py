@@ -4,6 +4,7 @@ from io import StringIO, BytesIO
 
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
+from django.db import IntegrityError
 from django.http import (
     HttpResponseRedirect,
     HttpResponseNotFound,
@@ -141,91 +142,102 @@ def profile(request):
     if request.method == "POST":
         form = forms.ProfileForm(request.POST, request.FILES)
         if form.is_valid():
-            name = form.cleaned_data["name"]
-            if request.user.name != name:
-                UserChange(
-                    user=request.user,
-                    changed_by=request.user,
-                    field="name",
-                    value_previous=request.user.name,
-                    value_current=name,
-                ).save()
-                request.user.name = name
-            surname = form.cleaned_data["surname"]
-            if request.user.surname != surname:
-                UserChange(
-                    user=request.user,
-                    changed_by=request.user,
-                    field="surname",
-                    value_previous=request.user.surname,
-                    value_current=surname,
-                ).save()
-                request.user.surname = surname
-            email = form.cleaned_data["email"]
-            if request.user.email != email:
-                UserChange(
-                    user=request.user,
-                    changed_by=request.user,
-                    field="email",
-                    value_previous=request.user.email,
-                    value_current=email,
-                ).save()
-                request.user.email_verified = False
-                request.user.email = email
-                send_verify(request.user)
-                messages.success(
-                    request, "The email has been changed, you need to verify it again!"
-                )
-            if "picture" in request.FILES:
-                picture = request.FILES["picture"]
-                UserChange(
-                    user=request.user,
-                    changed_by=request.user,
-                    field="picture",
-                    value_previous=request.user.picture,
-                    value_current=picture,
-                ).save()
-                request.user.picture.delete_sized_images()
-                request.user.picture = picture
-            picture_public_participants = form.cleaned_data[
-                "picture_public_participants"
-            ]
-            if request.user.picture_public_participants != picture_public_participants:
-                UserChange(
-                    user=request.user,
-                    changed_by=request.user,
-                    field="picture_public_participants",
-                    value_previous=request.user.picture_public_participants,
-                    value_current=picture_public_participants,
-                ).save()
-                request.user.picture_public_participants = picture_public_participants
-            picture_public_sponsors_and_recruiters = form.cleaned_data[
-                "picture_public_sponsors_and_recruiters"
-            ]
-            if (
-                request.user.picture_public_sponsors_and_recruiters
-                != picture_public_sponsors_and_recruiters
-            ):
-                UserChange(
-                    user=request.user,
-                    changed_by=request.user,
-                    field="picture_public_sponsors_and_recruiters",
-                    value_previous=request.user.picture_public_sponsors_and_recruiters,
-                    value_current=picture_public_sponsors_and_recruiters,
-                ).save()
-                request.user.picture_public_sponsors_and_recruiters = (
-                    picture_public_sponsors_and_recruiters
-                )
-            phone = form.cleaned_data["phone"]
-            if request.user.phone != phone:
-                UserChange(
-                    user=request.user,
-                    changed_by=request.user,
-                    field="phone",
-                    value_previous=request.user.phone,
-                    value_current=phone,
-                ).save()
-                request.user.phone = phone
+            try:
+                name = form.cleaned_data["name"]
+                if request.user.name != name:
+                    UserChange(
+                        user=request.user,
+                        changed_by=request.user,
+                        field="name",
+                        value_previous=request.user.name,
+                        value_current=name,
+                    ).save()
+                    request.user.name = name
+                surname = form.cleaned_data["surname"]
+                if request.user.surname != surname:
+                    UserChange(
+                        user=request.user,
+                        changed_by=request.user,
+                        field="surname",
+                        value_previous=request.user.surname,
+                        value_current=surname,
+                    ).save()
+                    request.user.surname = surname
+                email = form.cleaned_data["email"]
+                if request.user.email != email:
+                    UserChange(
+                        user=request.user,
+                        changed_by=request.user,
+                        field="email",
+                        value_previous=request.user.email,
+                        value_current=email,
+                    ).save()
+                    request.user.email_verified = False
+                    request.user.email = email
+                    send_verify(request.user)
+                    messages.success(
+                        request, "The email has been changed, you need to verify it again!"
+                    )
+                if "picture" in request.FILES:
+                    picture = request.FILES["picture"]
+                    UserChange(
+                        user=request.user,
+                        changed_by=request.user,
+                        field="picture",
+                        value_previous=request.user.picture,
+                        value_current=picture,
+                    ).save()
+                    request.user.picture.delete_sized_images()
+                    request.user.picture = picture
+                picture_public_participants = form.cleaned_data[
+                    "picture_public_participants"
+                ]
+                if request.user.picture_public_participants != picture_public_participants:
+                    UserChange(
+                        user=request.user,
+                        changed_by=request.user,
+                        field="picture_public_participants",
+                        value_previous=request.user.picture_public_participants,
+                        value_current=picture_public_participants,
+                    ).save()
+                    request.user.picture_public_participants = picture_public_participants
+                picture_public_sponsors_and_recruiters = form.cleaned_data[
+                    "picture_public_sponsors_and_recruiters"
+                ]
+                if (
+                    request.user.picture_public_sponsors_and_recruiters
+                    != picture_public_sponsors_and_recruiters
+                ):
+                    UserChange(
+                        user=request.user,
+                        changed_by=request.user,
+                        field="picture_public_sponsors_and_recruiters",
+                        value_previous=request.user.picture_public_sponsors_and_recruiters,
+                        value_current=picture_public_sponsors_and_recruiters,
+                    ).save()
+                    request.user.picture_public_sponsors_and_recruiters = (
+                        picture_public_sponsors_and_recruiters
+                    )
+                phone = form.cleaned_data["phone"]
+                if request.user.phone != phone:
+                    UserChange(
+                        user=request.user,
+                        changed_by=request.user,
+                        field="phone",
+                        value_previous=request.user.phone,
+                        value_current=phone,
+                    ).save()
+                    request.user.phone = phone
+                    city = form.cleaned_data["city"]
+                    if request.user.city != city:
+                        UserChange(
+                            user=request.user,
+                            changed_by=request.user,
+                            field="city",
+                            value_previous=request.user.city,
+                            value_current=city,
+                        ).save()
+                        request.user.city = city
                 city = form.cleaned_data["city"]
                 if request.user.city != city:
                     UserChange(
@@ -236,28 +248,20 @@ def profile(request):
                         value_current=city,
                     ).save()
                     request.user.city = city
-            city = form.cleaned_data["city"]
-            if request.user.city != city:
-                UserChange(
-                    user=request.user,
-                    changed_by=request.user,
-                    field="city",
-                    value_previous=request.user.city,
-                    value_current=city,
-                ).save()
-                request.user.city = city
-            country = form.cleaned_data["country"]
-            if request.user.country != country:
-                UserChange(
-                    user=request.user,
-                    changed_by=request.user,
-                    field="country",
-                    value_previous=request.user.country,
-                    value_current=country,
-                ).save()
-                request.user.country = country
-            request.user.save()
-            messages.success(request, "Profile updated successfully!")
+                country = form.cleaned_data["country"]
+                if request.user.country != country:
+                    UserChange(
+                        user=request.user,
+                        changed_by=request.user,
+                        field="country",
+                        value_previous=request.user.country,
+                        value_current=country,
+                    ).save()
+                    request.user.country = country
+                request.user.save()
+                messages.success(request, "Profile updated successfully!")
+            except IntegrityError:
+                messages.error(request, "The email you entered is already in use!")
 
     user_data = request.user.get_dict()
     form = forms.ProfileForm(user_data)
