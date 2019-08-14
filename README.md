@@ -30,6 +30,7 @@
 - Application voting and comment for organisers.
 - Dubious event application management.
 - Reimbursement management.
+- Invoice generation and automatic sending from SVG template.
 
 ### Jobs
 
