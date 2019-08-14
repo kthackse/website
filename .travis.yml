@@ -9,6 +9,6 @@ before_script:
   - ./cc-test-reporter before-build
 script:
   - black --check app --check event --check job --check page --check user
-  - pytest --cov=app --cov=event --cov=job --cov=page --cov=user
+  - pytest --cov=app --cov=event --cov=job --cov=page --cov=user --cov-report xml
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
