@@ -29,7 +29,10 @@ def test_verification():
     verify_key = generate_verify_key(user)
     user.update_verify(verify_key=verify_key)
 
-    with mock.patch('django.utils.timezone.now', return_value=timezone.now()+timezone.timedelta(hours=2)):
+    with mock.patch(
+        "django.utils.timezone.now",
+        return_value=timezone.now() + timezone.timedelta(hours=2),
+    ):
         # Can't verify user as the key has expired
         user.verify(verify_key=verify_key)
         assert not user.email_verified
