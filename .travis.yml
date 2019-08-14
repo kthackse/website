@@ -3,6 +3,10 @@ python:
   - "3.6"
   - "3.7"
 install: "pip install -r requirements.txt -r requirements-dev.txt"
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
 script:
   - black --check app
   - black --check event
@@ -11,3 +15,5 @@ script:
   - black --check user
   - export DJANGO_SETTINGS_MODULE=app.settings
   - pytest
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
