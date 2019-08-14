@@ -1,5 +1,5 @@
 black==19.3b0
-pytest-cov~=2.7.1pytest
+pytest-cov~=2.7.1
 factory-boy~=2.12.0
 pytest~=5.0.1
 pytest-django~=3.5.1
