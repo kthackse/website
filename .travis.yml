@@ -13,7 +13,6 @@ script:
   - black --check job
   - black --check page
   - black --check user
-  - export DJANGO_SETTINGS_MODULE=app.settings
   - pytest
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
