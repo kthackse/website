@@ -8,11 +8,7 @@ before_script:
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 script:
-  - black --check app
-  - black --check event
-  - black --check job
-  - black --check page
-  - black --check user
-  - pytest
+  - black --check app --check event --check job --check page --check user
+  - pytest --cov=app --cov=event --cov=job --cov=page --cov=user
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
