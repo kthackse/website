@@ -5,18 +5,13 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('event', '0007_auto_20190802_1052'),
-    ]
+    dependencies = [("event", "0007_auto_20190802_1052")]
 
     operations = [
         migrations.AddField(
-            model_name='companyevent',
-            name='public',
+            model_name="companyevent",
+            name="public",
             field=models.BooleanField(default=False),
         ),
-        migrations.AlterUniqueTogether(
-            name='companyevent',
-            unique_together=set(),
-        ),
+        migrations.AlterUniqueTogether(name="companyevent", unique_together=set()),
     ]

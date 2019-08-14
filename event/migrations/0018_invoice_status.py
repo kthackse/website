@@ -5,14 +5,14 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('event', '0017_invoice_description'),
-    ]
+    dependencies = [("event", "0017_invoice_description")]
 
     operations = [
         migrations.AddField(
-            model_name='invoice',
-            name='status',
-            field=models.PositiveSmallIntegerField(choices=[(0, 'DRAFT'), (1, 'SENT')], default=0),
-        ),
+            model_name="invoice",
+            name="status",
+            field=models.PositiveSmallIntegerField(
+                choices=[(0, "DRAFT"), (1, "SENT")], default=0
+            ),
+        )
     ]

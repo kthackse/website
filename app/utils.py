@@ -11,8 +11,13 @@ from django.shortcuts import redirect
 from django.template.defaultfilters import first
 from django.urls import reverse
 
-from app.variables import HACKATHON_ORGANIZER_EMAIL_REGEX, HACKATHON_EMAIL_PREFIX, HACKATHON_EMAIL_NOREPLY, \
-    HACKATHON_EMAIL_CONTACT, HACKATHON_NAME
+from app.variables import (
+    HACKATHON_ORGANIZER_EMAIL_REGEX,
+    HACKATHON_EMAIL_PREFIX,
+    HACKATHON_EMAIL_NOREPLY,
+    HACKATHON_EMAIL_CONTACT,
+    HACKATHON_NAME,
+)
 from user.enums import DepartmentType
 
 
@@ -39,11 +44,18 @@ def get_substitutions_templates():
 def variables_processor(request):
     c = get_substitutions_templates()
     from event.utils import get_next_or_past_event
+
     event = get_next_or_past_event()
     if event:
         c["event"] = event
-        c["background_video"] = (event.background.name[-4:] == ".mp4")
-        c["background_image"] = (event.background.name[-4:] in [".png", ".jpg", ".jpeg", ".gif", ".svg"])
+        c["background_video"] = event.background.name[-4:] == ".mp4"
+        c["background_image"] = event.background.name[-4:] in [
+            ".png",
+            ".jpg",
+            ".jpeg",
+            ".gif",
+            ".svg",
+        ]
     return c
 
 
@@ -107,6 +119,7 @@ def login_verified_required(function):
                 return HttpResponseRedirect(reverse("user_verify"))
         else:
             return HttpResponseRedirect(reverse("user_login"))
+
     return wrapper
 
 
@@ -133,7 +146,17 @@ def require_department(departments: List[DepartmentType], **decokwargs):
                 messages.error(request, "You need to be logged in!")
                 return redirect(request.path)
 
-            if request.user.is_admin or request.user.is_director or any([department.value in request.user.departments.all().values_list("type", flat=True) for department in departments]):
+            if (
+                request.user.is_admin
+                or request.user.is_director
+                or any(
+                    [
+                        department.value
+                        in request.user.departments.all().values_list("type", flat=True)
+                        for department in departments
+                    ]
+                )
+            ):
                 return view_func(*args, **kwargs)
 
             messages.error(

@@ -7,20 +7,22 @@ import versatileimagefield.fields
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('user', '0003_user_events'),
-    ]
+    dependencies = [("user", "0003_user_events")]
 
     operations = [
         migrations.AddField(
-            model_name='company',
-            name='logo',
-            field=versatileimagefield.fields.VersatileImageField(default='', upload_to=user.models.path_and_rename_company, verbose_name='Image'),
+            model_name="company",
+            name="logo",
+            field=versatileimagefield.fields.VersatileImageField(
+                default="",
+                upload_to=user.models.path_and_rename_company,
+                verbose_name="Image",
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='company',
-            name='website',
+            model_name="company",
+            name="website",
             field=models.URLField(blank=True, null=True),
         ),
     ]

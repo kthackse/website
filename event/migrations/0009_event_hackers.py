@@ -5,14 +5,10 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('event', '0008_auto_20190802_1149'),
-    ]
+    dependencies = [("event", "0008_auto_20190802_1149")]
 
     operations = [
         migrations.AddField(
-            model_name='event',
-            name='hackers',
-            field=models.IntegerField(default=200),
-        ),
+            model_name="event", name="hackers", field=models.IntegerField(default=200)
+        )
     ]

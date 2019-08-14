@@ -5,14 +5,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('event', '0010_event_companies_open'),
-    ]
+    dependencies = [("event", "0010_event_companies_open")]
 
     operations = [
         migrations.AddField(
-            model_name='event',
-            name='subscribe_public',
+            model_name="event",
+            name="subscribe_public",
             field=models.BooleanField(default=True),
-        ),
+        )
     ]

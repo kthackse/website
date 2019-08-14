@@ -20,7 +20,8 @@ from event.enums import (
     ReimbursementStatus,
     SubscriberStatus,
     CompanyTier,
-    InvoiceStatus)
+    InvoiceStatus,
+)
 from user.enums import UserType
 
 from djmoney.models.fields import MoneyField
@@ -412,7 +413,11 @@ class Invoice(models.Model):
         default=InvoiceStatus.DRAFT.value,
     )
     sent_by = models.ForeignKey(
-        "user.User", on_delete=models.PROTECT, related_name="sent_by", blank=True, null=True
+        "user.User",
+        on_delete=models.PROTECT,
+        related_name="sent_by",
+        blank=True,
+        null=True,
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

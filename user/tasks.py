@@ -13,13 +13,12 @@ def send_verify_email(user: User, verify_key: str):
     context["user"] = user
     context["verify_key"] = verify_key
     context["event"] = get_next_or_past_event()
-    template = get_notification_template(method="email", type="signup", task="verify", format="html")
-    subject = get_notification_template(method="email", type="signup", task="verify", format="subject")
+    template = get_notification_template(
+        method="email", type="signup", task="verify", format="html"
+    )
+    subject = get_notification_template(
+        method="email", type="signup", task="verify", format="subject"
+    )
     body = render_to_string(template, context)
 
-    send_email(
-        subject=subject,
-        body=body,
-        to=user.email,
-        tags=[MailTag.VERIFY],
-    )
+    send_email(subject=subject, body=body, to=user.email, tags=[MailTag.VERIFY])

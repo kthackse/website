@@ -56,7 +56,11 @@ def add_subscriber(email, event, request=None):
     try:
         validate_email(email)
     except ValidationError:
-        messages.add_message(request, messages.ERROR, "We are sorry, but we couldn't subscribe the email!")
+        messages.add_message(
+            request,
+            messages.ERROR,
+            "We are sorry, but we couldn't subscribe the email!",
+        )
         return None
     subscriber = Subscriber.objects.filter(email=email).first()
     if not subscriber:
@@ -65,7 +69,9 @@ def add_subscriber(email, event, request=None):
         subscriber.events.add(event)
         send_subscriber_new(subscriber, event=event)
         if request:
-            messages.success(request, "Thank-you for subscribing, remember to verify your email!")
+            messages.success(
+                request, "Thank-you for subscribing, remember to verify your email!"
+            )
         return subscriber
     elif subscriber.status == SubscriberStatus.UNSUBSCRIBED.value:
         subscriber.status = SubscriberStatus.SUBSCRIBED.value
@@ -75,16 +81,24 @@ def add_subscriber(email, event, request=None):
             messages.success(request, "Thank-you for subscribing again!")
         return subscriber
     if request:
-        messages.add_message(request, messages.ERROR, "We are sorry, but we couldn't subscribe the email!")
+        messages.add_message(
+            request,
+            messages.ERROR,
+            "We are sorry, but we couldn't subscribe the email!",
+        )
     return None
 
 
 def get_sponsors_in_event(event_id):
-    return CompanyEvent.objects.filter(event_id=event_id, tier__lt=CompanyTier.PARTNER.value, public=True)
+    return CompanyEvent.objects.filter(
+        event_id=event_id, tier__lt=CompanyTier.PARTNER.value, public=True
+    )
 
 
 def get_partners_in_event(event_id):
-    return CompanyEvent.objects.filter(event_id=event_id, tier=CompanyTier.PARTNER.value, public=True)
+    return CompanyEvent.objects.filter(
+        event_id=event_id, tier=CompanyTier.PARTNER.value, public=True
+    )
 
 
 def get_invoice_by_invoice(invoice):

@@ -29,10 +29,25 @@ class GroupAdmin(admin.ModelAdmin):
 
 @admin.register(UserChange)
 class UserChangeAdmin(admin.ModelAdmin):
-    search_fields = ("id", "user", "changed_by", "field", "value_previous", "value_current")
-    list_display = ("id", "user", "changed_by", "field", "value_previous", "value_current", "created_at",)
+    search_fields = (
+        "id",
+        "user",
+        "changed_by",
+        "field",
+        "value_previous",
+        "value_current",
+    )
+    list_display = (
+        "id",
+        "user",
+        "changed_by",
+        "field",
+        "value_previous",
+        "value_current",
+        "created_at",
+    )
     list_filter = ("field",)
-    ordering = ("-created_at", "user", "changed_by", "field",)
+    ordering = ("-created_at", "user", "changed_by", "field")
 
 
 admin.site.unregister(Group)

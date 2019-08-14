@@ -6,15 +6,15 @@ import event.models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('event', '0001_initial'),
-    ]
+    dependencies = [("event", "0001_initial")]
 
     operations = [
         migrations.AddField(
-            model_name='event',
-            name='background',
-            field=models.FileField(default='', upload_to=event.models.path_and_rename_background),
+            model_name="event",
+            name="background",
+            field=models.FileField(
+                default="", upload_to=event.models.path_and_rename_background
+            ),
             preserve_default=False,
-        ),
+        )
     ]

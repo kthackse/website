@@ -35,14 +35,26 @@ def apply(request, code):
         if current_application:
             current_data["application"] = current_application
             current_data["tshirt_int"] = int(current_application.tshirt)
-            if current_application.status in [ApplicationStatus.DRAFT.value, ApplicationStatus.PENDING.value, ApplicationStatus.CANCELLED.value, ApplicationStatus.INVITED.value, ApplicationStatus.CONFIRMED.value, ApplicationStatus.ATTENDED.value]:
-                current_data["status"] = ApplicationStatus(current_application.status).name.upper()
+            if current_application.status in [
+                ApplicationStatus.DRAFT.value,
+                ApplicationStatus.PENDING.value,
+                ApplicationStatus.CANCELLED.value,
+                ApplicationStatus.INVITED.value,
+                ApplicationStatus.CONFIRMED.value,
+                ApplicationStatus.ATTENDED.value,
+            ]:
+                current_data["status"] = ApplicationStatus(
+                    current_application.status
+                ).name.upper()
             else:
                 current_data["status"] = "PENDING"
         if (
             request.method == "POST"
             and not current_application
-            or (current_application and current_application.status == ApplicationStatus.DRAFT.value)
+            or (
+                current_application
+                and current_application.status == ApplicationStatus.DRAFT.value
+            )
         ):
             required_fields = [
                 "university",
@@ -55,7 +67,10 @@ def apply(request, code):
             ]
             all_filled = True
             for required_field in required_fields:
-                if required_field not in request.POST or not request.POST[required_field]:
+                if (
+                    required_field not in request.POST
+                    or not request.POST[required_field]
+                ):
                     all_filled = False
             all_filled &= "resume" in request.FILES if not current_application else True
             if all_filled:
@@ -150,26 +165,44 @@ def applications(request, code):
 
 
 def subscribe(request, id):
-    subscriber = Subscriber.objects.filter(id=id, status__in=[SubscriberStatus.PENDING.value, SubscriberStatus.UNSUBSCRIBED.value]).first()
+    subscriber = Subscriber.objects.filter(
+        id=id,
+        status__in=[
+            SubscriberStatus.PENDING.value,
+            SubscriberStatus.UNSUBSCRIBED.value,
+        ],
+    ).first()
     if subscriber:
         subscriber.status = SubscriberStatus.SUBSCRIBED.value
         subscriber.save()
         messages.add_message(request, messages.INFO, "Your email has been verified!")
     else:
-        subscriber = Subscriber.objects.filter(id=id, status=SubscriberStatus.SUBSCRIBED.value).first()
+        subscriber = Subscriber.objects.filter(
+            id=id, status=SubscriberStatus.SUBSCRIBED.value
+        ).first()
         if subscriber:
-            messages.add_message(request, messages.INFO, "Your email has already been verified before!")
+            messages.add_message(
+                request, messages.INFO, "Your email has already been verified before!"
+            )
         else:
-            messages.add_message(request, messages.ERROR, "We are sorry, but we couldn't verify your email!")
+            messages.add_message(
+                request,
+                messages.ERROR,
+                "We are sorry, but we couldn't verify your email!",
+            )
     return HttpResponseRedirect(reverse("app_home"))
 
 
 def unsubscribe(request, id):
-    subscriber = Subscriber.objects.filter(id=id, status=SubscriberStatus.SUBSCRIBED.value).first()
+    subscriber = Subscriber.objects.filter(
+        id=id, status=SubscriberStatus.SUBSCRIBED.value
+    ).first()
     if subscriber:
         subscriber.status = SubscriberStatus.UNSUBSCRIBED.value
         subscriber.save()
         messages.add_message(request, messages.INFO, "You have been unsubscribed!")
     else:
-        messages.add_message(request, messages.ERROR, "We are sorry, but we couldn't verify your email!")
+        messages.add_message(
+            request, messages.ERROR, "We are sorry, but we couldn't verify your email!"
+        )
     return HttpResponseRedirect(reverse("app_home"))

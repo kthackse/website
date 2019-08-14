@@ -5,14 +5,26 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('user', '0006_add_company_information'),
-    ]
+    dependencies = [("user", "0006_add_company_information")]
 
     operations = [
         migrations.AlterField(
-            model_name='department',
-            name='type',
-            field=models.PositiveSmallIntegerField(choices=[(0, 'ADMIN'), (1, 'DIRECTOR'), (2, 'DESIGN'), (3, 'FINANCE'), (4, 'SPONSORSHIP'), (5, 'HACKERXPERIENCE'), (6, 'LOGISTICS'), (7, 'MARKETING'), (8, 'PHOTOGRAPHY'), (9, 'STAFF'), (10, 'WEBDEV')]),
-        ),
+            model_name="department",
+            name="type",
+            field=models.PositiveSmallIntegerField(
+                choices=[
+                    (0, "ADMIN"),
+                    (1, "DIRECTOR"),
+                    (2, "DESIGN"),
+                    (3, "FINANCE"),
+                    (4, "SPONSORSHIP"),
+                    (5, "HACKERXPERIENCE"),
+                    (6, "LOGISTICS"),
+                    (7, "MARKETING"),
+                    (8, "PHOTOGRAPHY"),
+                    (9, "STAFF"),
+                    (10, "WEBDEV"),
+                ]
+            ),
+        )
     ]

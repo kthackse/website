@@ -5,14 +5,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('event', '0016_invoice_code_invoice_company'),
-    ]
+    dependencies = [("event", "0016_invoice_code_invoice_company")]
 
     operations = [
         migrations.AddField(
-            model_name='invoice',
-            name='description',
+            model_name="invoice",
+            name="description",
             field=models.CharField(blank=True, max_length=255, null=True),
-        ),
+        )
     ]

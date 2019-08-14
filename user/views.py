@@ -176,7 +176,8 @@ def profile(request):
                     request.user.email = email
                     send_verify(request.user)
                     messages.success(
-                        request, "The email has been changed, you need to verify it again!"
+                        request,
+                        "The email has been changed, you need to verify it again!",
                     )
                 if "picture" in request.FILES:
                     picture = request.FILES["picture"]
@@ -192,7 +193,10 @@ def profile(request):
                 picture_public_participants = form.cleaned_data[
                     "picture_public_participants"
                 ]
-                if request.user.picture_public_participants != picture_public_participants:
+                if (
+                    request.user.picture_public_participants
+                    != picture_public_participants
+                ):
                     UserChange(
                         user=request.user,
                         changed_by=request.user,
@@ -200,7 +204,9 @@ def profile(request):
                         value_previous=request.user.picture_public_participants,
                         value_current=picture_public_participants,
                     ).save()
-                    request.user.picture_public_participants = picture_public_participants
+                    request.user.picture_public_participants = (
+                        picture_public_participants
+                    )
                 picture_public_sponsors_and_recruiters = form.cleaned_data[
                     "picture_public_sponsors_and_recruiters"
                 ]

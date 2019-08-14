@@ -5,14 +5,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('event', '0013_remove_subscriber_user'),
-    ]
+    dependencies = [("event", "0013_remove_subscriber_user")]
 
     operations = [
         migrations.AddField(
-            model_name='subscriber',
-            name='events',
-            field=models.ManyToManyField(to='event.Event'),
-        ),
+            model_name="subscriber",
+            name="events",
+            field=models.ManyToManyField(to="event.Event"),
+        )
     ]

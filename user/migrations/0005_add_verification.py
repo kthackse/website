@@ -6,19 +6,17 @@ import django.utils.timezone
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('user', '0004_auto_20190802_1046'),
-    ]
+    dependencies = [("user", "0004_auto_20190802_1046")]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='verify_expiration',
+            model_name="user",
+            name="verify_expiration",
             field=models.DateTimeField(default=django.utils.timezone.now),
         ),
         migrations.AddField(
-            model_name='user',
-            name='verify_key',
+            model_name="user",
+            name="verify_key",
             field=models.CharField(blank=True, max_length=127, null=True),
         ),
     ]

@@ -8,29 +8,39 @@ import uuid
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('event', '0002_event_background'),
-    ]
+    dependencies = [("event", "0002_event_background")]
 
     operations = [
         migrations.AlterField(
-            model_name='event',
-            name='background',
-            field=models.FileField(blank=True, null=True, upload_to=event.models.path_and_rename_background),
+            model_name="event",
+            name="background",
+            field=models.FileField(
+                blank=True, null=True, upload_to=event.models.path_and_rename_background
+            ),
         ),
         migrations.CreateModel(
-            name='FAQItem',
+            name="FAQItem",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('title', models.CharField(max_length=255)),
-                ('description', models.TextField(max_length=2500)),
-                ('active', models.BooleanField(default=False)),
-                ('order', models.IntegerField(default=0)),
-                ('event', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='event.Event')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("title", models.CharField(max_length=255)),
+                ("description", models.TextField(max_length=2500)),
+                ("active", models.BooleanField(default=False)),
+                ("order", models.IntegerField(default=0)),
+                (
+                    "event",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT, to="event.Event"
+                    ),
+                ),
             ],
-            options={
-                'verbose_name': 'FAQ item',
-                'verbose_name_plural': 'FAQ items',
-            },
+            options={"verbose_name": "FAQ item", "verbose_name_plural": "FAQ items"},
         ),
     ]

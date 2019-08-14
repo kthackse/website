@@ -6,14 +6,14 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('event', '0004_event_dates_public'),
-        ('user', '0002_user_is_admin'),
+        ("event", "0004_event_dates_public"),
+        ("user", "0002_user_is_admin"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='events',
-            field=models.ManyToManyField(blank=True, to='event.Event'),
-        ),
+            model_name="user",
+            name="events",
+            field=models.ManyToManyField(blank=True, to="event.Event"),
+        )
     ]

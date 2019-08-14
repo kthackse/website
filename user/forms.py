@@ -22,7 +22,7 @@ class RegisterForm(LoginForm):
         label=mark_safe(
             'I\'ve read, understand and accept the <a href="../../page/legal/terms-and-conditions" target="_blank">'
             'Terms & Conditions</a> and the <a href="../../page/legal/privacy-and-cookies" target="_blank">'
-            'Privacy and Cookies Policy</a>'
+            "Privacy and Cookies Policy</a>"
         )
     )
     phone = forms.CharField(label="Phone", max_length=225)
@@ -31,7 +31,19 @@ class RegisterForm(LoginForm):
     city = forms.CharField(label="City", max_length=225)
     country = forms.CharField(label="Country", max_length=225)
 
-    field_order = ["name", "surname", "email", "password", "password2", "phone", "birthday", "sex", "city", "country", "terms"]
+    field_order = [
+        "name",
+        "surname",
+        "email",
+        "password",
+        "password2",
+        "phone",
+        "birthday",
+        "sex",
+        "city",
+        "country",
+        "terms",
+    ]
 
     def clean_password2(self):
         # Check that the two password entries match

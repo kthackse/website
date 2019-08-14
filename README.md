@@ -42,7 +42,7 @@ Current maintainer: [@oriolclosa](https://github.com/oriolclosa).
 
 ## Project setup
 
-Requirements: Python 3, Cairo graphics, virtualenv and pip.
+Requirements: Python 3.6 or greater, Cairo graphics, virtualenv and pip.
 
 - `git clone https://github.com/kthackse/website && cd website`.
 - `virtualenv env --python=python3`.
