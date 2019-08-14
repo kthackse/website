@@ -2,6 +2,7 @@
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/7f4f5aad1aea61832fae/maintainability)](https://codeclimate.com/github/kthackse/website/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/7f4f5aad1aea61832fae/test_coverage)](https://codeclimate.com/github/kthackse/website/test_coverage)
+[![Build Status](https://travis-ci.com/kthackse/website.svg?branch=master)](https://travis-ci.com/kthackse/website)
 
 Current maintainer: [@oriolclosa](https://github.com/oriolclosa).
 
