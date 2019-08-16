@@ -27,7 +27,9 @@ class CategoryFactory(factory.DjangoModelFactory):
 
 class PageFactory(factory.DjangoModelFactory):
     title = factory.Faker("sentence").generate({}).replace(".", "")
-    code = factory.LazyAttribute(lambda u: "{0}".format(u.title).replace(" ", "-").lower())
+    code = factory.LazyAttribute(
+        lambda u: "{0}".format(u.title).replace(" ", "-").lower()
+    )
     content_plain = factory.Faker("paragraph")
 
     category = factory.SubFactory(CategoryFactory)

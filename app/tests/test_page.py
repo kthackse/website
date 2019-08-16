@@ -20,7 +20,9 @@ def test_public():
     client = Client()
 
     # Page is not available as it's not published
-    request = client.get(reverse("page_page", kwargs=dict(category=page.category.code, code=page.code)))
+    request = client.get(
+        reverse("page_page", kwargs=dict(category=page.category.code, code=page.code))
+    )
     assert isinstance(request, HttpResponseNotFound)
 
     # Page is now published
@@ -28,7 +30,9 @@ def test_public():
     page.save()
 
     # Page is now available as it has been published
-    request = client.get(reverse("page_page", kwargs=dict(category=page.category.code, code=page.code)))
+    request = client.get(
+        reverse("page_page", kwargs=dict(category=page.category.code, code=page.code))
+    )
     assert isinstance(request, HttpResponse)
     assert request.status_code == 200
     content = request.content.decode("utf-8")
@@ -41,16 +45,22 @@ def test_public():
     page.save()
 
     # Page is not available as it's not public
-    request = client.get(reverse("page_page", kwargs=dict(category=page.category.code, code=page.code)))
+    request = client.get(
+        reverse("page_page", kwargs=dict(category=page.category.code, code=page.code))
+    )
     assert isinstance(request, HttpResponseNotFound)
 
     # Create a user and login
     password = factory.Faker("word")
-    user = VerifiedUserFactory(password=factory.PostGenerationMethodCall('set_password', password))
+    user = VerifiedUserFactory(
+        password=factory.PostGenerationMethodCall("set_password", password)
+    )
     client.login(username=user.email, password=password)
 
     # Page is now available after login
-    request = client.get(reverse("page_page", kwargs=dict(category=page.category.code, code=page.code)))
+    request = client.get(
+        reverse("page_page", kwargs=dict(category=page.category.code, code=page.code))
+    )
     assert isinstance(request, HttpResponse)
     assert request.status_code == 200
     content = request.content.decode("utf-8")

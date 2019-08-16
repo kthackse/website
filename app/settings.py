@@ -247,4 +247,4 @@ GO_ID = os.environ.get("GO_ID", None)
 
 # Faker locale
 
-factory.Faker._DEFAULT_LOCALE = 'sv_SE'
+factory.Faker._DEFAULT_LOCALE = "sv_SE"
