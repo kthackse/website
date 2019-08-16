@@ -20,9 +20,7 @@ def test_home():
     client = Client()
 
     # Home page doesn't contain any events
-    request = client.get(
-        reverse("app_home")
-    )
+    request = client.get(reverse("app_home"))
     assert isinstance(request, HttpResponse)
     assert request.status_code == 200
     content = request.content.decode("utf-8")
@@ -45,9 +43,7 @@ def test_home():
     assert get_next_or_past_event()
 
     # Home page contains next event information
-    request = client.get(
-        reverse("app_home")
-    )
+    request = client.get(reverse("app_home"))
     assert isinstance(request, HttpResponse)
     assert request.status_code == 200
     content = request.content.decode("utf-8")
@@ -60,49 +56,41 @@ def test_home():
     event.save()
 
     # Home page contains next event dates
-    request = client.get(
-        reverse("app_home")
-    )
+    request = client.get(reverse("app_home"))
     assert isinstance(request, HttpResponse)
     assert request.status_code == 200
     content = request.content.decode("utf-8")
-    assert str(event.starts_at.day+1) in content
-    assert str(event.ends_at.day+1) in content
+    assert str(event.starts_at.day + 1) in content
+    assert str(event.ends_at.day + 1) in content
 
     # Hide the subscribe form
     event.subscribe_public = False
     event.save()
 
     # Home page does no longer contain the subscribe form
-    request = client.get(
-        reverse("app_home")
-    )
+    request = client.get(reverse("app_home"))
     assert isinstance(request, HttpResponse)
     assert request.status_code == 200
     content = request.content.decode("utf-8")
     assert not "Subscribe" in content
 
     with mock.patch(
-            "django.utils.timezone.now",
-            return_value=timezone.now() + timezone.timedelta(days=6),
+        "django.utils.timezone.now",
+        return_value=timezone.now() + timezone.timedelta(days=6),
     ):
         # Applications are now open on the home page
-        request = client.get(
-            reverse("app_home")
-        )
+        request = client.get(reverse("app_home"))
         assert isinstance(request, HttpResponse)
         assert request.status_code == 200
         content = request.content.decode("utf-8")
         assert "Apply now" in content
 
     with mock.patch(
-            "django.utils.timezone.now",
-            return_value=timezone.now() + timezone.timedelta(days=9),
+        "django.utils.timezone.now",
+        return_value=timezone.now() + timezone.timedelta(days=9),
     ):
         # Applications have now been closed on the home page
-        request = client.get(
-            reverse("app_home")
-        )
+        request = client.get(reverse("app_home"))
         assert isinstance(request, HttpResponse)
         assert request.status_code == 200
         content = request.content.decode("utf-8")
