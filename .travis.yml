@@ -7,6 +7,7 @@ before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
+  - python manage.py collectstatic
 script:
   - black --check app --check event --check job --check page --check user
   - pytest --cov=app --cov=event --cov=job --cov=page --cov=user --cov-report xml
