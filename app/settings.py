@@ -1,5 +1,6 @@
 import os
 
+import factory
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
@@ -243,3 +244,7 @@ SIGNUP_DISABLED = os.environ.get("SIGNUP_DISABLED", "false").lower() == "true"
 # Google Analytics
 
 GO_ID = os.environ.get("GO_ID", None)
+
+# Faker locale
+
+factory.Faker._DEFAULT_LOCALE = 'sv_SE'
