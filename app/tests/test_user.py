@@ -195,3 +195,16 @@ def test_privacy():
     # Picture no longer available as it's not available to sponsors or recruiters
     request = client.get(user.picture.url)
     assert not isinstance(request, StreamingHttpResponse)
+
+    # Logout, create another user as organiser and login
+    client.logout()
+    password4 = factory.Faker("word")
+    user4 = VerifiedUserFactory(
+        password=factory.PostGenerationMethodCall("set_password", password4),
+        type=UserType.ORGANISER.value
+    )
+    client.login(username=user4.email, password=password4)
+
+    # Picture still available as the user is an organiser
+    request = client.get(user.picture.url)
+    assert isinstance(request, StreamingHttpResponse)
