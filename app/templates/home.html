@@ -87,9 +87,9 @@
                                 <p class="home-button">Applications <b>closed</b></p>
                                 <div class="col-md-12 text-center home-links">
                                     {% if request.user.is_authenticated %}
-                                        <p>Hej {{ request.user.name }}, go to the <b><a class="home-button2" href="/dashboard">dashboard</a></b>?</p>
+                                        <p>Hej {{ request.user.name }}, go to the <b><a class="home-button2" href="{% url "app_dashboard" %}">dashboard</a></b>?</p>
                                     {% else %}
-                                        <p>You can <b><a class="home-button2" href="/user/signup">register</a></b> for next time</p>
+                                        <p>You can <b><a class="home-button2" href="{% url "user_signup" %}">register</a></b> for next time</p>
                                     {% endif %}
                                 </div>
                             {% endif %}
@@ -207,9 +207,9 @@
                             <p class="home-button">No events <b>at the moment</b></p>
                             <div class="col-md-12 text-center home-links">
                                 {% if request.user.is_authenticated %}
-                                    <p>Hej {{ request.user.name }}, go to the <b><a class="home-button2" href="/dashboard">dashboard</a></b>?</p>
+                                    <p>Hej {{ request.user.name }}, go to the <b><a class="home-button2" href="{% url "app_dashboard" %}">dashboard</a></b>?</p>
                                 {% else %}
-                                    <p>Meanwhile you can <b><a class="home-button2" href="/user/login">login</a></b> or <b><a class="home-button2" href="/user/signup">register</a></b></p>
+                                    <p>Meanwhile you can <b><a class="home-button2" href="{% url "user_login" %}">login</a></b> or <b><a class="home-button2" href="{% url "user_signup" %}">register</a></b></p>
                                 {% endif %}
                             </div>
                         </div>

@@ -1,5 +1,9 @@
 import factory
+from django.utils import timezone
 
+from app.variables import HACKATHON_NAME
+from event.enums import EventType
+from event.models import Event
 from page.models import Page, Category
 from user.models import User
 
@@ -7,7 +11,7 @@ from user.models import User
 class UserFactory(factory.DjangoModelFactory):
     name = factory.Faker("first_name")
     surname = factory.Faker("last_name")
-    email = factory.LazyAttribute(lambda u: "{0}@not-kthack.com".format(u.name).lower())
+    email = factory.LazyAttribute(lambda u: "{0}.{1}@not-kthack.com".format(u.name, u.surname).lower())
 
     class Meta:
         model = User
@@ -36,3 +40,17 @@ class PageFactory(factory.DjangoModelFactory):
 
     class Meta:
         model = Page
+
+
+class EventFactory(factory.DjangoModelFactory):
+    name = HACKATHON_NAME
+    code = factory.LazyAttribute(lambda u: "{0}".format(u.name).lower())
+    description = factory.Faker("paragraph")
+    type = EventType.HACKATHON.value
+    starts_at = timezone.now() + timezone.timedelta(hours=10*24)
+    ends_at = factory.LazyAttribute(lambda u: u.starts_at + timezone.timedelta(hours=2*24))
+    application_available = factory.LazyAttribute(lambda u: u.starts_at - timezone.timedelta(hours=5*24))
+    application_deadline = factory.LazyAttribute(lambda u: u.starts_at - timezone.timedelta(hours=2*24))
+
+    class Meta:
+        model = Event
