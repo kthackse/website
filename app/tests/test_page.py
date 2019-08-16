@@ -10,6 +10,7 @@ from app.variables import HACKATHON_APP_NAME
 
 @pytest.mark.django_db
 def test_public():
+    # Create a page
     page = PageFactory()
 
     # Page public and unpublished by default

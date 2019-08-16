@@ -137,6 +137,9 @@ def logout(request):
     return HttpResponseRedirect(reverse("user_login"))
 
 
+# TODO: Signup test with check for autotype as organiser depending on email
+
+
 @login_required
 def profile(request):
     if request.method == "POST":
