@@ -45,16 +45,11 @@ def test_verification():
     assert not user.email_verified
 
     # User is required to be verified
-    request = client.get(
-        reverse("app_dashboard")
-    )
+    request = client.get(reverse("app_dashboard"))
     assert isinstance(request, HttpResponseRedirect)
     assert request.status_code == 302
     assert request.url == reverse("user_verify")
-    request = client.get(
-        reverse("app_dashboard"),
-        follow=True
-    )
+    request = client.get(reverse("app_dashboard"), follow=True)
     assert isinstance(request, HttpResponse)
     assert request.status_code == 200
     content = request.content.decode("utf-8")
@@ -63,9 +58,7 @@ def test_verification():
     assert reverse("user_sendverification") in content
 
     # Profile page is available without verification
-    request = client.get(
-        reverse("user_profile")
-    )
+    request = client.get(reverse("user_profile"))
     assert isinstance(request, HttpResponse)
     assert request.status_code == 200
     content = request.content.decode("utf-8")
@@ -76,9 +69,7 @@ def test_verification():
     assert reverse("user_deactivate") in content
 
     # However, another user profile page is not available
-    request = client.get(
-        reverse("user_profileother", kwargs=dict(id=user.id))
-    )
+    request = client.get(reverse("user_profileother", kwargs=dict(id=user.id)))
     assert isinstance(request, HttpResponseRedirect)
     assert request.status_code == 302
     assert request.url == reverse("user_verify")
@@ -112,9 +103,7 @@ def test_verification():
     assert user.email_verified
 
     # Dashboard is now available
-    request = client.get(
-        reverse("app_dashboard")
-    )
+    request = client.get(reverse("app_dashboard"))
     assert isinstance(request, HttpResponse)
     assert request.status_code == 200
     content = request.content.decode("utf-8")
@@ -168,7 +157,9 @@ def test_privacy():
     assert isinstance(request, StreamingHttpResponse)
 
     user.picture.delete_sized_images()
-    user.picture.save("new_profile.png", ContentFile(open("app/static/favicon.png", "rb").read()))
+    user.picture.save(
+        "new_profile.png", ContentFile(open("app/static/favicon.png", "rb").read())
+    )
     user.save()
 
     # Picture no longer available as it has changed and not available to participants
@@ -180,7 +171,7 @@ def test_privacy():
     password3 = factory.Faker("word")
     user3 = VerifiedUserFactory(
         password=factory.PostGenerationMethodCall("set_password", password3),
-        type=UserType.SPONSOR.value
+        type=UserType.SPONSOR.value,
     )
     client.login(username=user3.email, password=password3)
 
@@ -201,7 +192,7 @@ def test_privacy():
     password4 = factory.Faker("word")
     user4 = VerifiedUserFactory(
         password=factory.PostGenerationMethodCall("set_password", password4),
-        type=UserType.ORGANISER.value
+        type=UserType.ORGANISER.value,
     )
     client.login(username=user4.email, password=password4)
 
