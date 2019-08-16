@@ -55,7 +55,14 @@
                             {% if event %}
                                 <a class="navbar-brand" href="/">
                                     <img src="/files/{{ event.logo }}">
-                                    <!-- <b>{{ event.name }}</b> {{ event.starts_at | date:"Y" }} -->
+                                    <div style="display: inline-block; line-height: 110%; margin-top: 20px;">
+                                        <div>
+                                            <b>{{ event.name }}</b> {{ event.starts_at | date:"Y" }}
+                                        </div>
+                                        <div style="font-size: 14px; line-height: 125%;">
+                                            {{ event.city }}, {{ event.country }}
+                                        </div>
+                                    </div>
                                 </a>
                             {% else %}
                                 <a class="navbar-brand" href="/"><b>{{ hk_name }}</b></a>

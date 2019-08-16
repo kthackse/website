@@ -402,6 +402,7 @@ def download_personal_data(request):
         zf.writestr("profile.png", request.user.picture.read())
         zf.close()
 
+        # TODO: Fix wrong formatted zip
         response = StreamingHttpResponse(mf.getvalue(), "rb")
         response["Content-Type"] = "application/zip"
         response["Content-Disposition"] = (
