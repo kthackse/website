@@ -1,14 +1,14 @@
 # KTHack website
 
+![Website preview](app/static/img/preview.png)
+
 [![Maintainability](https://api.codeclimate.com/v1/badges/7f4f5aad1aea61832fae/maintainability)](https://codeclimate.com/github/kthackse/website/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/7f4f5aad1aea61832fae/test_coverage)](https://codeclimate.com/github/kthackse/website/test_coverage)
+[![Build Status](https://travis-ci.com/kthackse/website.svg?branch=master)](https://travis-ci.com/kthackse/website)
 
-Current maintainer: [@oriolclosa](https://github.com/oriolclosa).
+:computer: Website and management system for KTHack, heavily inspired by [HackUPC registration](https://github.com/hackupc/registration)
 
-*Heavily inspired by [HackUPC registration](https://github.com/hackupc/registration).*
-
-
-![Website preview](app/static/img/preview.png)
+:raising_hand: Current maintainer: [@oriolclosa](https://github.com/oriolclosa)
 
 ## Features
 
@@ -30,6 +30,7 @@ Current maintainer: [@oriolclosa](https://github.com/oriolclosa).
 - Application voting and comment for organisers.
 - Dubious event application management.
 - Reimbursement management.
+- Invoice generation and automatic sending from SVG template.
 
 ### Jobs
 
