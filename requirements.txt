@@ -18,6 +18,7 @@ phonenumbers==8.10.14
 pyyaml~=5.1.1
 psycopg2-binary~=2.8.3
 pytz==2019.1
+requests~=2.22.0
 setuptools>=41.0.1
 sendgrid-django~=4.2.0
 sentry-sdk==0.10.2
