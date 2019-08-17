@@ -202,6 +202,8 @@ The local server updates automatically once a change has been spotted, there's n
 - **GO_ID**: Google Analytics ID.
 - **GH_KEY**: GitHub webhook key.
 - **GH_BRANCH**: GitHub current branch, defaults to `master`.
+- **SL_ID**: Slack app client ID.
+- **SL_SECRET**: Slack app client secret.
 - **SL_INURL**: Internal organisation Slack webhook URL for deployments.
 
 ## Management guide
