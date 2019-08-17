@@ -115,9 +115,3 @@ def get_invoice_by_invoice(invoice):
 
 def get_applications_by_user(user_id):
     return Application.objects.filter(user_id=user_id)
-
-
-def get_schedule_items(event_id):
-    return ScheduleEvent.objects.filter(event_id=event_id).order_by(
-        "-starts_at", "-ends_at"
-    )

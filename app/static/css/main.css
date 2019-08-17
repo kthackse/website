@@ -272,15 +272,15 @@ form .is-valid:focus {
 
 .schedule-event h5 {
     float: right;
+    margin-bottom: 0;
 }
 
 .schedule-event-time, .schedule-event-item {
     display: inline-block;
+    vertical-align: top;
 }
 
 .schedule-event-item {
-    position: absolute;
-    top: 0;
     margin-left: 1rem;
 }
 
@@ -292,6 +292,7 @@ form .is-valid:focus {
 
 .schedule-event-item p {
     line-height: 100%;
+    margin-bottom: 0;
 }
 
 .application-event {

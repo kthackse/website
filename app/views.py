@@ -201,8 +201,8 @@ def deploy(request):
     return response(request, code=204)
 
 
-def response(request, *args, code: int, **kwargs):
-    response_result = render(request, "response.html", dict(code=code))
+def response(request, *args, code: int, message: str = None, **kwargs):
+    response_result = render(request, "response.html", dict(code=code, message=message))
     response_result.status_code = code
     return response_result
 

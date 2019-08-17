@@ -15,7 +15,7 @@
             {% for schedule_item in schedule %}
                 <div class="row {% if now >= schedule_item.time_from and now < schedule_item.time_to %}schedule-event-active {% elif now > schedule_item.time_from %}schedule-event-passed {% endif %}schedule-event">
                 {% for schedule_item_inner in schedule_item.schedule %}
-                    <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                    <div class="col-md-12 col-lg-12 mb-12" style="margin: 0.5rem 0;">
                         <div class="schedule-event-time">
                             <h3 style="margin-right: 4px;">{{ schedule_item_inner.starts_at | display_clock }}</h3>
                             <h3>{{ schedule_item_inner.starts_at | date:"H:i" }}</h3>
