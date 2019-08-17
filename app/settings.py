@@ -255,3 +255,7 @@ if DEBUG:
 
 GH_KEY = os.environ.get("GH_KEY", None)
 GH_BRANCH = os.environ.get("GH_BRANCH", "master")
+
+# Slack integration
+
+SL_INURL = os.environ.get("SL_INURL", None)

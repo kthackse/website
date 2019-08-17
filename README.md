@@ -167,6 +167,13 @@ server {
 - Upload the fonts used in the SVGs to `~/.local/share/fonts/`.
 - `fc-cache -f -v`.
 
+#### Slack bot
+
+- Create a Slack bot on `https://api.slack.com/apps/new`.
+- Activate incoming webhooks and add a webhook URL to the `#webdev-activity` channel.
+- Add the bot to your workspace.
+- Set the client ID and secret in `server.sh`.
+
 ## Project update
 
 ### Local server
@@ -195,6 +202,7 @@ The local server updates automatically once a change has been spotted, there's n
 - **GO_ID**: Google Analytics ID.
 - **GH_KEY**: GitHub webhook key.
 - **GH_BRANCH**: GitHub current branch, defaults to `master`.
+- **SL_INURL**: Internal organisation Slack webhook URL for deployments.
 
 ## Management guide
 

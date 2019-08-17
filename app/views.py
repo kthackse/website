@@ -22,6 +22,7 @@ from django.views.decorators.http import require_POST
 
 from app import settings
 from app.settings import GH_KEY, GH_BRANCH
+from app.slack import send_deploy_message
 from app.utils import login_verified_required
 from event.enums import CompanyTier
 from event.utils import (
@@ -44,21 +45,21 @@ def files(request, file_):
         if path in ["user/picture", "__sized__/user/picture"]:
             user = get_user_by_picture(picture=file_name)
             if file_name in ["profile.png", "profile-crop-c0-5__0-5-500x500.png"] or (
-                user
-                and (
-                    request.user.type
-                    in [
-                        UserType.ORGANISER.value,
-                        UserType.VOLUNTEER.value,
-                        UserType.MENTOR.value,
-                    ]
-                    or user.picture_public_participants
-                    and request.user.type == UserType.PARTICIPANT.value
-                    or user.picture_public_sponsors_and_recruiters
-                    and request.user.type
-                    in [UserType.SPONSOR.value, UserType.RECRUITER.value]
-                    or user == request.user
-                )
+                    user
+                    and (
+                            request.user.type
+                            in [
+                                UserType.ORGANISER.value,
+                                UserType.VOLUNTEER.value,
+                                UserType.MENTOR.value,
+                            ]
+                            or user.picture_public_participants
+                            and request.user.type == UserType.PARTICIPANT.value
+                            or user.picture_public_sponsors_and_recruiters
+                            and request.user.type
+                            in [UserType.SPONSOR.value, UserType.RECRUITER.value]
+                            or user == request.user
+                    )
             ):
                 if file_[:7] != "/files/":
                     file_ = "/files/" + file_
@@ -68,12 +69,12 @@ def files(request, file_):
         elif path[: path.rfind("/")] in ["/files/event/resume", "event/resume"]:
             application = get_application_by_resume(resume=file_)
             if application and (
-                request.user.type
-                in [UserType.ORGANISER.value, UserType.VOLUNTEER.value]
-                or application.resume_available
-                and request.user.type
-                in [UserType.SPONSOR.value, UserType.RECRUITER.value]
-                or application.user == request.user
+                    request.user.type
+                    in [UserType.ORGANISER.value, UserType.VOLUNTEER.value]
+                    or application.resume_available
+                    and request.user.type
+                    in [UserType.SPONSOR.value, UserType.RECRUITER.value]
+                    or application.user == request.user
             ):
                 if file_[:7] != "/files/":
                     file_ = "/files/" + file_
@@ -83,8 +84,8 @@ def files(request, file_):
         elif path in ["/files/invoice", "invoice"]:
             invoice = get_invoice_by_invoice(invoice=file_)
             if invoice and (
-                request.user.is_sponsorship
-                or request.user.company == invoice.company_event.company
+                    request.user.is_sponsorship
+                    or request.user.company == invoice.company_event.company
             ):
                 if file_[:7] != "/files/":
                     file_ = "/files/" + file_
@@ -194,9 +195,13 @@ def deploy(request):
         data = json.loads(request.body.decode("utf-8"))
         # Deploy if push to the current branch
         if data["ref"] == "refs/heads/" + GH_BRANCH:
-            subprocess.call(
-                os.path.join(os.path.dirname(os.path.abspath(__file__)), "../deploy.sh")
-            )
+            try:
+                subprocess.call(
+                    os.path.join(os.path.dirname(os.path.abspath(__file__)), "../deploy.sh")
+                )
+                send_deploy_message(data, succedded=True)
+            except OSError:
+                send_deploy_message(data, succedded=False)
             return response(request, code=200)
     return response(request, code=204)
 
