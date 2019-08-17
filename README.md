@@ -117,6 +117,8 @@ server {
     listen [::]:80;
 
     server_name kthack.com www.kthack.com;
+    
+    proxy_set_header X-Real-IP $remote_addr;
 
     location = /favicon.ico {
         access_log off;
@@ -181,6 +183,7 @@ The local server updates automatically once a change has been spotted, there's n
 - **SE_URL**: Sentry post URL.
 - **SE_ENV**: Sentry environment.
 - **GO_ID**: Google Analytics ID.
+- **GH_KEY**: GitHub webhook key.
 
 ## Management guide
 

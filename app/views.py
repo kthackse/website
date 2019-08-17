@@ -1,5 +1,9 @@
+import hmac
 import os
+from _sha1 import sha1
+from ipaddress import ip_address, ip_network
 
+import requests
 from django.contrib import messages
 from django.http import (
     HttpResponseRedirect,
@@ -10,9 +14,12 @@ from django.http import (
 from django.shortcuts import render
 from django.template import TemplateDoesNotExist
 from django.urls import reverse
+from django.utils.encoding import force_bytes
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 from app import settings
+from app.settings import GH_KEY
 from app.utils import login_verified_required
 from event.enums import CompanyTier
 from event.utils import (
@@ -155,6 +162,36 @@ def redirect_to(request):
         return reverse("app_home")
 
 
+@require_POST
 @csrf_exempt
 def deploy(request):
-    return HttpResponse("pong")
+    forwarded_for = u"{}".format(request.META.get("HTTP_X_FORWARDED_FOR"))
+    client_ip_address = ip_address(forwarded_for)
+    whitelist = requests.get("https://api.github.com/meta").json()["hooks"]
+
+    for valid_ip in whitelist:
+        if client_ip_address in ip_network(valid_ip):
+            break
+    else:
+        return response(request, code=500)
+
+    header_signature = request.META.get("HTTP_X_HUB_SIGNATURE")
+    if header_signature is None:
+        return response(request, code=500)
+
+    sha_name, signature = header_signature.split("=")
+    if sha_name != "sha1":
+        return response(request, code=501)
+
+    mac = hmac.new(force_bytes(GH_KEY), msg=force_bytes(request.body), digestmod=sha1)
+    if not hmac.compare_digest(force_bytes(mac.hexdigest()), force_bytes(signature)):
+        return response(request, code=500)
+
+    event = request.META.get("HTTP_X_GITHUB_EVENT")
+    if event == "push":
+        return HttpResponse("Push made and working")
+    return response(request, code=204)
+
+
+def response(request, *args, code: int, **kwargs):
+    return None

@@ -1,6 +1,5 @@
 import os
 
-import factory
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
@@ -247,4 +246,11 @@ GO_ID = os.environ.get("GO_ID", None)
 
 # Faker locale
 
-factory.Faker._DEFAULT_LOCALE = "sv_SE"
+if DEBUG:
+    import factory
+
+    factory.Faker._DEFAULT_LOCALE = "sv_SE"
+
+# GitHub webhook endpoint availability
+
+GH_KEY = os.environ.get("GH_KEY", None)

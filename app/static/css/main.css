@@ -314,7 +314,6 @@ form .is-valid:focus {
     display: inline-block;
     border: none;
     color: #fff !important;
-    border-radius: 30px;
     padding: 9px 25px !important;
     margin-top: -1px;
     -webkit-transition: all 0.3s ease 0s;
