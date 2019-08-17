@@ -11,4 +11,21 @@
         <h2>{{ code | response_title }}</h2>
       </div>
     </div>
+    <div class="row">
+        <div class="col-md-12 col-lg-12 mb-12 mb-lg-0 text-center pb-25px">
+            {% if code == 403 %}
+                {% if request.user.is_autehnticated %}
+                    <p>You shall not pass! You don't have enough superpowers to view this page, contact {{ hk_email_webdev | urlize }} if you think it's an error.</p>
+                {% else %}
+                    <p>You shall not pass! Looks like you are not logged in, you can do so <a href="{% url "user_login" %}?next={{ request.get_full_path }}">here</a>.</p>
+                {% endif %}
+            {% elif code == 404 %}
+                <p>The page you were looking for doesn't appear to exist!</p>
+            {% elif code == 500 %}
+                <p>This is embarrassing, out server failed! Contact us at {{ hk_email_webdev | urlize }} and tell us what happened so we can fix this!</p>
+            {% else %}
+                <p>There has been an error, please contact {{ hk_email_webdev | urlize }} and tell us what happened.</p>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}
