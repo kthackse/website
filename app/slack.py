@@ -32,7 +32,7 @@ def send_deploy_message(deploy_data, succedded=True):
             + deploy_data["head_commit"]["author"]["name"]
             + "\n"
         )
-        text += deploy_data["head_commit"]["message"] + "\n"
+        text += "_" + deploy_data["head_commit"]["message"] + "_\n"
         response = requests.post(SL_INURL, json={"text": text})
         return response.status_code == 200
     return False
