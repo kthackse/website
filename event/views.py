@@ -1,5 +1,6 @@
 import math
 import datetime
+import os
 
 import pytz
 from django.contrib import messages
@@ -221,7 +222,11 @@ def live(request, code):
         current_data["event"] = current_event
         try:
             schedule_file = open(
-                "docs/event/schedule/" + current_event.code + ".md", "r"
+                os.path.join(
+                    os.path.dirname(os.path.abspath(__file__)),
+                    "../docs/event/schedule/" + current_event.code + ".md",
+                ),
+                "r",
             )
             current_line = 0
             schedule = list()
