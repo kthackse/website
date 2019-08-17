@@ -244,7 +244,9 @@ def live(request, code):
                                 schedule_line, "%H:%M"
                             )
                         else:
-                            current_ends_at = datetime.datetime.strptime(schedule_line, "%H:%M")
+                            current_ends_at = datetime.datetime.strptime(
+                                schedule_line, "%H:%M"
+                            )
                     except ValueError:
                         pass
                     if schedule_line[:2] == "##":
@@ -307,12 +309,13 @@ def live(request, code):
                 schedule=[
                     schedule_item
                     for schedule_item in schedule
-                    if hour[0] <= schedule_item["starts_at"].replace(tzinfo=pytz.UTC) < hour[1]
+                    if hour[0]
+                    <= schedule_item["starts_at"].replace(tzinfo=pytz.UTC)
+                    < hour[1]
                 ],
             )
             for hour in hours
         ]
-        # TODO: Remove extra 3 days
-        current_data["now"] = (datetime.datetime.now() + datetime.timedelta(hours=24*3)).replace(tzinfo=pytz.UTC)
+        current_data["now"] = datetime.datetime.now().replace(tzinfo=pytz.UTC)
         return render(request, "live.html", current_data)
     return response(request, code=404)

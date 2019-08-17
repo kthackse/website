@@ -3,7 +3,7 @@
 {% load i18n %}
 {% load event_tags %}
 
-{% block head_title %}{{ event.name }} {{ event.starts_at | date:"Y" }}  {% trans "live" %}{% endblock %}
+{% block head_title %}{{ event.name }} {{ event.starts_at | date:"Y" }}  {% trans "live schedule" %}{% endblock %}
 
 {% block background %}
     <div class="live-event"></div>
@@ -12,6 +12,9 @@
 {% block body %}
     {% if event %}
         <div class="container">
+            <div class="section-intro text-center">
+                <h2>{{ event.name }} {{ event.starts_at | date:"Y" }} live schedule</h2>
+            </div>
             {% for schedule_item in schedule %}
                 <div class="row {% if now >= schedule_item.time_from and now < schedule_item.time_to %}schedule-event-active {% elif now > schedule_item.time_from %}schedule-event-passed {% endif %}schedule-event">
                 {% for schedule_item_inner in schedule_item.schedule %}
