@@ -5,10 +5,12 @@ from django.http import (
     HttpResponseRedirect,
     StreamingHttpResponse,
     HttpResponseNotFound,
+    HttpResponse,
 )
 from django.shortcuts import render
 from django.template import TemplateDoesNotExist
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 
 from app import settings
 from app.utils import login_verified_required
@@ -151,3 +153,8 @@ def redirect_to(request):
         return request.headers["Referer"]
     except KeyError:
         return reverse("app_home")
+
+
+@csrf_exempt
+def deploy(request):
+    return HttpResponse("pong")
