@@ -217,7 +217,7 @@ def unsubscribe(request, id):
 
 def live(request, code):
     current_data = dict()
-    current_event = get_event(code=code)
+    current_event = get_event(code=code, application_status=None)
     if current_event:
         current_data["event"] = current_event
         try:
