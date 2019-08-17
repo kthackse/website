@@ -37,3 +37,10 @@ def file_name(value):
 @register.filter
 def display_departments(departments):
     return " / ".join([d.name for d in departments])
+
+
+@register.filter
+def response_title(code):
+    if float(code) / 100.0 == 2.0:
+        return "Success " + str(code)
+    return "Error " + str(code)

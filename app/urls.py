@@ -17,3 +17,8 @@ urlpatterns = [
 
 if GH_KEY:
     urlpatterns += [url(r"^deploy/", views.deploy, name="app_deploy")]
+
+handler400 = "app.views.response_400"
+handler403 = "app.views.response_403"
+handler404 = "app.views.response_404"
+handler500 = "app.views.response_500"

@@ -1,4 +1,5 @@
 import hmac
+import json
 import os
 from _sha1 import sha1
 from ipaddress import ip_address, ip_network
@@ -11,7 +12,7 @@ from django.http import (
     HttpResponseNotFound,
     HttpResponse,
 )
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
 from django.template import TemplateDoesNotExist
 from django.urls import reverse
 from django.utils.encoding import force_bytes
@@ -152,7 +153,7 @@ def home(request):
 @login_verified_required
 def dashboard(request):
     events = get_next_events()
-    return render(request, "dashboard.html", {"events": events})
+    return render(request, "dashboard.html", dict(events=events))
 
 
 def redirect_to(request):
@@ -162,7 +163,7 @@ def redirect_to(request):
         return reverse("app_home")
 
 
-@require_POST
+# @require_POST
 @csrf_exempt
 def deploy(request):
     forwarded_for = u"{}".format(request.META.get("HTTP_X_FORWARDED_FOR"))
@@ -189,9 +190,35 @@ def deploy(request):
 
     event = request.META.get("HTTP_X_GITHUB_EVENT")
     if event == "push":
-        return HttpResponse("Push made and working")
+        data = json.loads(request.body.decode("utf-8"))
+        # Deploy to production
+        if data["ref"] == "refs/heads/master":
+            print("Deploy to beta")
+            return response(request, code=200)
+        # Deploy to beta
+        elif data["ref"] == "refs/heads/beta":
+            print("Deploy to beta")
+            return response(request, code=200)
     return response(request, code=204)
 
 
 def response(request, *args, code: int, **kwargs):
-    return None
+    response_result = render(request, "response.html", dict(code=code))
+    response_result.status_code = code
+    return response_result
+
+
+def response_400(request, *args, **kwargs):
+    return response(request, *args, code=404, *kwargs)
+
+
+def response_403(request, *args, **kwargs):
+    return response(request, *args, code=404, *kwargs)
+
+
+def response_404(request, *args, **kwargs):
+    return response(request, *args, code=404, *kwargs)
+
+
+def response_500(request, *args, **kwargs):
+    return response(request, *args, code=404, *kwargs)

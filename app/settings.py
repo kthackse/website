@@ -253,4 +253,4 @@ if DEBUG:
 
 # GitHub webhook endpoint availability
 
-GH_KEY = os.environ.get("GH_KEY", None)
+GH_KEY = os.environ.get("GH_KEY", "holita")
