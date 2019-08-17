@@ -145,6 +145,16 @@ class ScheduleEvent(models.Model):
     starts_at = models.DateTimeField()
     ends_at = models.DateTimeField(blank=True, null=True)
 
+    def __str__(self):
+        return (
+            str(self.event)
+            + ": "
+            + self.name
+            + " ("
+            + self.starts_at.strftime("%Y-%m-%d %H:%M")
+            + ")"
+        )
+
     def clean(self):
         messages = dict()
         if self.starts_at < self.event.starts_at:

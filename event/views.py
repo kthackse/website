@@ -1,3 +1,7 @@
+import math
+import datetime
+
+import pytz
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponseNotFound, HttpResponseRedirect
@@ -6,6 +10,8 @@ from django.urls import reverse
 from django.utils import timezone
 
 from app.utils import login_verified_required
+from app.variables import HACKATHON_TIMEZONE
+from app.views import response
 from event.enums import DietType, TshirtSize, ApplicationStatus, SubscriberStatus
 from event.models import Application, Subscriber
 from event.utils import get_event, get_application, get_applications
@@ -206,3 +212,110 @@ def unsubscribe(request, id):
             request, messages.ERROR, "We are sorry, but we couldn't verify your email!"
         )
     return HttpResponseRedirect(reverse("app_home"))
+
+
+def live(request, code):
+    current_data = dict()
+    current_event = get_event(code=code)
+    if current_event:
+        current_data["event"] = current_event
+        try:
+            schedule_file = open(
+                "docs/event/schedule/" + current_event.code + ".md", "r"
+            )
+            current_line = 0
+            schedule = list()
+            current_day = None
+            current_starts_at = None
+            current_ends_at = None
+            current_title = None
+            for schedule_line in schedule_file.readlines():
+                schedule_line = schedule_line.replace("\n", "")
+                if schedule_line:
+                    try:
+                        current_day = datetime.datetime.strptime(
+                            schedule_line[1:].lstrip(), "%Y-%m-%d"
+                        )
+                    except ValueError:
+                        pass
+                    try:
+                        if not current_starts_at:
+                            current_starts_at = datetime.datetime.strptime(
+                                schedule_line, "%H:%M"
+                            )
+                        else:
+                            current_ends_at = datetime.datetime.strptime(
+                                schedule_line, "%H:%M"
+                            )
+                    except ValueError:
+                        pass
+                    if schedule_line[:2] == "##":
+                        current_title = schedule_line[2:].lstrip()
+                    elif schedule_line[0] == ">":
+                        current_description = schedule_line[1:].lstrip()
+                        if current_title and current_starts_at:
+                            schedule_item = dict(
+                                name=current_title,
+                                description=current_description,
+                                starts_at=timezone.datetime(
+                                    day=current_day.day,
+                                    month=current_day.month,
+                                    year=current_day.year,
+                                    hour=current_starts_at.hour,
+                                    minute=current_starts_at.minute,
+                                    tzinfo=pytz.timezone(HACKATHON_TIMEZONE),
+                                ),
+                            )
+                            if current_ends_at:
+                                schedule_item["ends_at"] = timezone.datetime(
+                                    day=current_day.day,
+                                    month=current_day.month,
+                                    year=current_day.year,
+                                    hour=current_ends_at.hour,
+                                    minute=current_ends_at.minute,
+                                    tzinfo=pytz.timezone(HACKATHON_TIMEZONE),
+                                )
+                            list.append(schedule, schedule_item)
+                            current_title = None
+                            current_starts_at = None
+                            current_ends_at = None
+                        else:
+                            return response(
+                                request,
+                                code=500,
+                                message="The schedule file for the event is wrongly formatted on line "
+                                + str(current_line)
+                                + ".",
+                            )
+                    current_line += 1
+        except FileNotFoundError:
+            return response(request, code=404)
+        starts_at = current_event.starts_at.replace(minute=0, second=0)
+        ends_at = current_event.ends_at
+        if ends_at.minute > 0 or ends_at.second > 0:
+            ends_at += timezone.timedelta(hours=1)
+        ends_at = ends_at.replace(minute=0, second=0)
+        hours = [
+            (
+                starts_at + timezone.timedelta(hours=h),
+                starts_at + timezone.timedelta(hours=h + 1),
+            )
+            for h in range(math.ceil((ends_at - starts_at).total_seconds() / 3600.0))
+        ]
+        current_data["schedule"] = [
+            dict(
+                time_from=hour[0],
+                time_to=hour[1],
+                schedule=[
+                    schedule_item
+                    for schedule_item in schedule
+                    if hour[0]
+                    <= schedule_item["starts_at"].replace(tzinfo=pytz.UTC)
+                    < hour[1]
+                ],
+            )
+            for hour in hours
+        ]
+        current_data["now"] = datetime.datetime.now().replace(tzinfo=pytz.UTC)
+        return render(request, "live.html", current_data)
+    return response(request, code=404)

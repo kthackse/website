@@ -3,7 +3,15 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 
 from event.enums import EventApplicationStatus, CompanyTier, SubscriberStatus
-from event.models import Event, Application, FAQItem, Subscriber, CompanyEvent, Invoice
+from event.models import (
+    Event,
+    Application,
+    FAQItem,
+    Subscriber,
+    CompanyEvent,
+    Invoice,
+    ScheduleEvent,
+)
 from event.tasks import send_subscriber_new, send_subscriber_resubscribed
 
 from django.core.validators import validate_email
