@@ -34,6 +34,7 @@ def send_deploy_message(deploy_data, succedded=True):
         )
         text += deploy_data["head_commit"]["message"] + "\n"
         response = requests.post(SL_INURL, data=dict(text=text))
+        # Add comment to trigger this fail on next debug
         fail = 10 / 0
         return response.status_code == 200
     return False
