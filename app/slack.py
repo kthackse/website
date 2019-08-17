@@ -24,15 +24,15 @@ def send_deploy_message(deploy_data, succedded=True):
                 + "> failed*\n"
             )
         text += (
-            "Commit <"
+            "_Commit <"
             + deploy_data["head_commit"]["url"]
             + "|"
             + deploy_data["head_commit"]["id"][:7]
             + "> by "
             + deploy_data["head_commit"]["author"]["name"]
-            + "\n"
+            + "_\n"
         )
-        text += "_" + deploy_data["head_commit"]["message"] + "_\n"
+        text += deploy_data["head_commit"]["message"] + "\n"
         response = requests.post(SL_INURL, json={"text": text})
         return response.status_code == 200
     return False
