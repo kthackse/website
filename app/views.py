@@ -1,6 +1,7 @@
 import hmac
 import json
 import os
+import subprocess
 from _sha1 import sha1
 from ipaddress import ip_address, ip_network
 
@@ -20,7 +21,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
 from app import settings
-from app.settings import GH_KEY
+from app.settings import GH_KEY, GH_BRANCH
 from app.utils import login_verified_required
 from event.enums import CompanyTier
 from event.utils import (
@@ -163,7 +164,7 @@ def redirect_to(request):
         return reverse("app_home")
 
 
-# @require_POST
+@require_POST
 @csrf_exempt
 def deploy(request):
     forwarded_for = u"{}".format(request.META.get("HTTP_X_FORWARDED_FOR"))
@@ -191,13 +192,11 @@ def deploy(request):
     event = request.META.get("HTTP_X_GITHUB_EVENT")
     if event == "push":
         data = json.loads(request.body.decode("utf-8"))
-        # Deploy to production
-        if data["ref"] == "refs/heads/master":
-            print("Deploy to beta")
-            return response(request, code=200)
-        # Deploy to beta
-        elif data["ref"] == "refs/heads/beta":
-            print("Deploy to beta")
+        # Deploy if push to the current branch
+        if data["ref"] == "refs/heads/" + GH_BRANCH:
+            subprocess.call(
+                os.path.join(os.path.dirname(os.path.abspath(__file__)), "../deploy.sh")
+            )
             return response(request, code=200)
     return response(request, code=204)
 

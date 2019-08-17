@@ -86,6 +86,16 @@ ALTER ROLE [DATABASE_USER] SET timezone TO 'UTC';
 - `chmod +x restart.sh`.
 - `./restart.sh`.
 
+##### Autodeploy
+- `cp deploy.sh.template deploy.sh`.
+- Edit the `deploy.sh` file with the correct value for the service name.
+- `chmod +x deploy.sh`.
+- Add the following to `/etc/sudoers`.
+```
+[USER] cms051=/usr/bin/systemctl restart mykthack.service
+```
+- Replace `[USER]` with your username.
+
 #### Gunicorn server
 
 - `sudo vim /etc/systemd/system/mykthack.service`.
@@ -184,6 +194,7 @@ The local server updates automatically once a change has been spotted, there's n
 - **SE_ENV**: Sentry environment.
 - **GO_ID**: Google Analytics ID.
 - **GH_KEY**: GitHub webhook key.
+- **GH_BRANCH**: GitHub current branch, defaults to `master`.
 
 ## Management guide
 
