@@ -172,7 +172,7 @@ server {
 - Create a Slack bot on `https://api.slack.com/apps/new`.
 - Activate incoming webhooks and add a webhook URL to the `#webdev-activity` channel.
 - Add the bot to your workspace.
-- Set the client ID and secret in `server.sh`.
+- Set the client ID, client secret and internal Slack webhook URL in `server.sh`.
 
 ## Project update
 
