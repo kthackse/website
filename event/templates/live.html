@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+{% load i18n %}
+
+{% block head_title %}{{ event.name }} {{ event.starts_at | date:"Y" }}  {% trans "live" %}{% endblock %}
+
+{% block background %}
+    {% if background_video %}
+        <video autoplay muted loop id="home-video">
+            <source src="files/{{ event.background }}" type="video/mp4">
+        </video>
+    {% else %}
+        {% if background_image %}
+            <div class="home-background" style="background-image: url('/files/{{ event.background }}')"></div>
+        {% else %}
+            <div class="home-background background-color"></div>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    {% if event %}
+        <div class="container">
+            Holita
+        </div>
+    {% endif %}
+{% endblock %}

@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from app.utils import login_verified_required
+from app.views import response
 from event.enums import DietType, TshirtSize, ApplicationStatus, SubscriberStatus
 from event.models import Application, Subscriber
 from event.utils import get_event, get_application, get_applications
@@ -206,3 +207,12 @@ def unsubscribe(request, id):
             request, messages.ERROR, "We are sorry, but we couldn't verify your email!"
         )
     return HttpResponseRedirect(reverse("app_home"))
+
+
+def live(request, code):
+    current_data = dict()
+    current_event = get_event(code=code)
+    if current_event:
+        current_data["event"] = current_event
+        return render(request, "live.html", current_data)
+    return response(request, code=404)
