@@ -43,11 +43,13 @@ def get_substitutions_templates():
 
 def variables_processor(request):
     c = get_substitutions_templates()
-    from event.utils import get_next_or_past_event
+    from event.utils import get_next_or_past_event, get_application
 
     event = get_next_or_past_event()
+    application = get_application(event.id, request.user.id)
     if event:
         c["event"] = event
+        c["application"] = event
         c["background_video"] = event.background.name[-4:] == ".mp4"
         c["background_image"] = event.background.name[-4:] in [
             ".png",

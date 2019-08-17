@@ -115,9 +115,31 @@ a:focus {
 }
 
 .dashboard-event {
-  margin-bottom: 1.5rem;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
+    width: 100%;
+    padding-top: 160px;
+    padding-bottom: 75px;
+    background-color: #003984;
+    background-size: cover;
+    margin: 0 auto;
+}
+
+.dashboard-event h3 {
+    font-size: 32px;
+    margin-bottom: 1rem;
+}
+
+.dashboard-event h5 {
+    color: #333;
+    font-weight: 200;
+    margin-bottom: 1.5rem;
+}
+
+.dashboard-event a {
+    margin-bottom: 0.25rem;
+}
+
+.dashboard-event .row {
+    background-color: #fff;
 }
 
 .header-profile {
@@ -423,6 +445,8 @@ td {
     text-transform: uppercase;
     font-size: 13px;
     font-weight: 400 !important;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 @media (min-width: 600px) {
@@ -447,6 +471,8 @@ td {
     -moz-transition: all 0.3s ease 0s;
     -o-transition: all 0.3s ease 0s;
     transition: all 0.3s ease 0s;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 @media (min-width: 600px) {
@@ -457,6 +483,36 @@ td {
 
 .link-button2:hover {
     background-color: rgba(255, 255, 255, 0.1) !important;
+    color: #fff !important;
+}
+
+.link-button3 {
+    display: inline-block;
+    border: none;
+    color: #fff !important;
+    padding: 9px 25px !important;
+    margin-top: -1px;
+    -webkit-transition: all 0.3s ease 0s;
+    -moz-transition: all 0.3s ease 0s;
+    -o-transition: all 0.3s ease 0s;
+    transition: all 0.3s ease 0s;
+    background-color: rgba(30, 92, 177, 1);
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 400 !important;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+@media (min-width: 600px) {
+    .link-button3 {
+        padding: 9px 24px !important;
+        margin-top: -1px;
+    }
+}
+
+.link-button3:hover {
+    background-color: rgba(0, 57, 132, 1) !important;
     color: #fff !important;
 }
 
@@ -1470,6 +1526,16 @@ h3, .h3 {
 
 .section-intro-top {
   margin-bottom: 35px;
+}
+
+.section-event {
+  max-width: 640px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.section-event p {
+  margin-bottom: 0;
 }
 
 /* section intro end

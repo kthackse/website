@@ -103,8 +103,10 @@
             </header>
         {% endblock %}
         <!-- Add error/info messages display -->
+        {% block pre_body %}
+        {% endblock %}
         {% block body_plain %}
-            <div class="content container">
+            <div id="container-main" class="content container">
                 <div class="content-inside">
                     {% block body %}
                         <div class="margin-top">

@@ -154,8 +154,7 @@ def home(request):
 
 @login_verified_required
 def dashboard(request):
-    events = get_next_events()
-    return render(request, "dashboard.html", dict(events=events))
+    return render(request, "dashboard.html")
 
 
 def redirect_to(request):
