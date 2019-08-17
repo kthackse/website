@@ -37,9 +37,9 @@ def get_next_events(published=True):
     return Event.objects.filter(published=published).order_by("starts_at")
 
 
-def get_event(code, published=True):
+def get_event(code, published=True, application_status=EventApplicationStatus.OPEN):
     event = Event.objects.filter(code=code, published=published).first()
-    if event.application_status == EventApplicationStatus.OPEN:
+    if not application_status or event.application_status == application_status:
         return event
     return None
 
