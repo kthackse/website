@@ -196,12 +196,13 @@ def deploy(request):
         # Deploy if push to the current branch
         if data["ref"] == "refs/heads/" + GH_BRANCH:
             try:
-                subprocess.call(
+                result1 = subprocess.call(
                     os.path.join(
                         os.path.dirname(os.path.abspath(__file__)), "../deploy.sh"
                     )
                 )
-                send_deploy_message(data, succedded=True)
+                result2 = send_deploy_message(data, succedded=True)
+                return HttpResponse(str(result1) + "\n\n" + str(result2))
             except OSError:
                 send_deploy_message(data, succedded=False)
             return response(request, code=200)
