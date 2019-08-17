@@ -90,9 +90,9 @@ ALTER ROLE [DATABASE_USER] SET timezone TO 'UTC';
 - `cp deploy.sh.template deploy.sh`.
 - Edit the `deploy.sh` file with the correct value for the service name.
 - `chmod +x deploy.sh`.
-- Add the following to `/etc/sudoers`.
+- Add the following at the **bottom** of `/etc/sudoers`.
 ```
-[USER] cms051=/usr/bin/systemctl restart mykthack.service
+[USER] ALL=NOPASSWD: /bin/systemctl restart mykthack.service
 ```
 - Replace `[USER]` with your username.
 
