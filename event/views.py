@@ -1,3 +1,5 @@
+import math
+
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponseNotFound, HttpResponseRedirect
@@ -9,7 +11,7 @@ from app.utils import login_verified_required
 from app.views import response
 from event.enums import DietType, TshirtSize, ApplicationStatus, SubscriberStatus
 from event.models import Application, Subscriber
-from event.utils import get_event, get_application, get_applications
+from event.utils import get_event, get_application, get_applications, get_schedule_items
 from user.utils import is_participant, is_organiser
 
 
@@ -214,5 +216,39 @@ def live(request, code):
     current_event = get_event(code=code)
     if current_event:
         current_data["event"] = current_event
+        try:
+            schedule_file = open("docs/event/schedule/" + current_event.code + ".md", "r")
+            schedule = list()
+            current_day = None
+            for schedule_line in schedule_file.readlines():
+                print(schedule_line)
+        except FileNotFoundError:
+            return response(request, code=404)
+        starts_at = current_event.starts_at.replace(minute=0, second=0)
+        ends_at = current_event.ends_at
+        if ends_at.minute > 0 or ends_at.second > 0:
+            ends_at += timezone.timedelta(hours=1)
+        ends_at = ends_at.replace(minute=0, second=0)
+        hours = [
+            (
+                starts_at + timezone.timedelta(hours=h),
+                starts_at + timezone.timedelta(hours=h + 1),
+            )
+            for h in range(math.ceil((ends_at - starts_at).total_seconds() / 3600.0))
+        ]
+        schedule = get_schedule_items(event_id=current_event.id)
+        current_data["schedule"] = [
+            dict(
+                time_from=hour[0],
+                time_to=hour[1],
+                schedule=[
+                    schedule_item
+                    for schedule_item in schedule
+                    if hour[0] <= schedule_item.starts_at < hour[1]
+                ],
+            )
+            for hour in hours
+        ]
+        current_data["now"] = timezone.now() + timezone.timedelta(hours=24 * 3 + 2)
         return render(request, "live.html", current_data)
     return response(request, code=404)

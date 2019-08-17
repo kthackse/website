@@ -1,27 +1,39 @@
 {% extends "base.html" %}
 {% load bootstrap4 %}
 {% load i18n %}
+{% load event_tags %}
 
 {% block head_title %}{{ event.name }} {{ event.starts_at | date:"Y" }}  {% trans "live" %}{% endblock %}
 
 {% block background %}
-    {% if background_video %}
-        <video autoplay muted loop id="home-video">
-            <source src="files/{{ event.background }}" type="video/mp4">
-        </video>
-    {% else %}
-        {% if background_image %}
-            <div class="home-background" style="background-image: url('/files/{{ event.background }}')"></div>
-        {% else %}
-            <div class="home-background background-color"></div>
-        {% endif %}
-    {% endif %}
+    <div class="live-event"></div>
 {% endblock %}
 
 {% block body %}
     {% if event %}
         <div class="container">
-            Holita
+            {% for schedule_item in schedule %}
+                <div class="row {% if now >= schedule_item.time_from and now < schedule_item.time_to %}schedule-event-active {% elif now > schedule_item.time_from %}schedule-event-passed {% endif %}schedule-event">
+                {% for schedule_item_inner in schedule_item.schedule %}
+                    <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                        <div class="schedule-event-time">
+                            <h3 style="margin-right: 4px;">{{ schedule_item_inner.starts_at | display_clock }}</h3>
+                            <h3>{{ schedule_item_inner.starts_at | date:"H:i" }}</h3>
+                            {% if schedule_item_inner.ends_at %}
+                                <br>
+                                <h5>{{ schedule_item_inner.ends_at | date:"H:i" }}</h5>
+                            {% endif %}
+                        </div>
+                        <div class="schedule-event-item">
+                            <h3>{{ schedule_item_inner.name }}</h3>
+                            {% if schedule_item_inner.description %}
+                                <p>{{ schedule_item_inner.description }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+            {% endfor %}
         </div>
     {% endif %}
 {% endblock %}
