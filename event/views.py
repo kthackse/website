@@ -326,5 +326,6 @@ def live(request, code):
         if now > current_event.ends_at:
             now = current_ends_at
         current_data["now"] = now.replace(tzinfo=None)
+        current_data["now_tz"] = now.replace(tzinfo=pytz.timezone(HACKATHON_TIMEZONE))
         return render(request, "live.html", current_data)
     return response(request, code=404)
