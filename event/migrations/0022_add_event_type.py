@@ -5,14 +5,14 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('event', '0021_add_coding_times'),
-    ]
+    dependencies = [("event", "0021_add_coding_times")]
 
     operations = [
         migrations.AlterField(
-            model_name='event',
-            name='type',
-            field=models.PositiveSmallIntegerField(choices=[(0, 'HACKATHON'), (1, 'OTHER')]),
-        ),
+            model_name="event",
+            name="type",
+            field=models.PositiveSmallIntegerField(
+                choices=[(0, "HACKATHON"), (1, "OTHER")]
+            ),
+        )
     ]
