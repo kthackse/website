@@ -296,6 +296,7 @@ def live(request, code):
         ends_at = ends_at.replace(minute=0, second=0).replace(tzinfo=None)
         hours = [
             (
+                # TODO: Fix timezone
                 starts_at + timezone.timedelta(hours=h + 2),
                 starts_at + timezone.timedelta(hours=h + 3),
             )
@@ -320,9 +321,10 @@ def live(request, code):
             if hour[0].date() not in [d.date() for d in days]:
                 list.append(days, hour[0].replace(tzinfo=None))
         current_data["days"] = days
-        now = timezone.now()
+        # TODO: Fix timezone
+        now = timezone.now() + timezone.timedelta(hours=2)
         if now > current_event.ends_at:
             now = current_ends_at
-        current_data["now"] = now
+        current_data["now"] = now.replace(tzinfo=None)
         return render(request, "live.html", current_data)
     return response(request, code=404)

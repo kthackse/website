@@ -5,7 +5,7 @@
 {% load event_tags %}
 {% load static %}
 
-{% block head_title %}{{ event.name }} {{ event.starts_at | date:"Y" }}  {% trans "live schedule" %}{% endblock %}
+{% block head_title %}{% trans "Live schedule" %}{% endblock %}
 
 {% block navbar %}
 {% endblock %}
@@ -83,16 +83,25 @@
             if (current !== null) {
                 var distanceTop = parseInt(current.getBoundingClientRect().top);
                 var distanceContainer = parseInt(document.getElementById("live-schedule").style.top);
-                if (distanceTop > 100 && distanceTop !== distanceContainer) {
-                    document.getElementById("live-schedule").style.top = (-distanceTop+100) + "px";
+                var diff = 100;
+
+                var result,
+                el = document.body.appendChild(document.createElement("div")),
+                styleProp = 'margin-top',
+                style;
+                el.id = 'live-schedule';
+                style = el.currentStyle || window.getComputedStyle(el, null);
+                result = style[styleProp] || "unknown";
+                document.body.removeChild(el);
+
+                diff += parseInt(result);
+
+                if (distanceTop > diff && distanceTop !== distanceContainer) {
+                    document.getElementById("live-schedule").style.top = (-distanceTop+diff) + "px";
                 }
             }
 
             var today = new Date();
-            /* TODO: Set correctly timezone through a tag */
-            var timeZone = 2;
-            let date = new Date();
-            today = date.setTime(today.getTime() + timeZone * 60 * 60 * 1000);
             var dd = String(today.getDate()).padStart(2, '0');
             var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
             var yyyy = today.getFullYear();
@@ -100,7 +109,6 @@
 
             today = yyyy + mm + dd + hh;
             var currentId = "schedule-item-" + today;
-            console.log(currentId);
 
             var currentActive = document.getElementsByClassName("schedule-event-active")[0];
             if (currentActive !== undefined){
