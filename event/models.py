@@ -168,11 +168,17 @@ class Event(models.Model):
             messages[
                 "application_deadline"
             ] = "The application deadline can't be before applications open"
-        if self.coding_starts_at and not self.starts_at <= self.coding_starts_at <= self.ends_at:
+        if (
+            self.coding_starts_at
+            and not self.starts_at <= self.coding_starts_at <= self.ends_at
+        ):
             messages[
                 "coding_starts_at"
             ] = "The end time for coding needs to be within the times of the event"
-        if self.coding_ends_at and not self.starts_at <= self.coding_ends_at <= self.ends_at:
+        if (
+            self.coding_ends_at
+            and not self.starts_at <= self.coding_ends_at <= self.ends_at
+        ):
             messages[
                 "coding_ends_at"
             ] = "The start time for coding needs to be within the times of the event"

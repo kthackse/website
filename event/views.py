@@ -287,7 +287,9 @@ def live(request, code):
                     current_line += 1
         else:
             return response(request, code=404)
-        starts_at = current_event.starts_at.replace(minute=0, second=0).replace(tzinfo=None)
+        starts_at = current_event.starts_at.replace(minute=0, second=0).replace(
+            tzinfo=None
+        )
         ends_at = current_event.ends_at
         if ends_at.minute > 0 or ends_at.second > 0:
             ends_at += timezone.timedelta(hours=1)
@@ -308,8 +310,7 @@ def live(request, code):
                     for schedule_item in schedule
                     if hour[0]
                     # TODO: Fix timezone
-                    <= schedule_item["starts_at"]
-                    < hour[1]
+                    <= schedule_item["starts_at"] < hour[1]
                 ],
             )
             for hour in hours

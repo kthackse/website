@@ -5,19 +5,17 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('event', '0020_remove_schedule_as_model'),
-    ]
+    dependencies = [("event", "0020_remove_schedule_as_model")]
 
     operations = [
         migrations.AddField(
-            model_name='event',
-            name='coding_ends_at',
+            model_name="event",
+            name="coding_ends_at",
             field=models.DateTimeField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='event',
-            name='coding_starts_at',
+            model_name="event",
+            name="coding_starts_at",
             field=models.DateTimeField(blank=True, null=True),
         ),
     ]
