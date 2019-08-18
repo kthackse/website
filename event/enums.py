@@ -3,6 +3,7 @@ import enum
 
 class EventType(enum.IntEnum):
     HACKATHON = 0
+    OTHER = 1
 
 
 class EventApplicationStatus(enum.IntEnum):
