@@ -11,6 +11,42 @@ body {
     padding-bottom: 100px !important;
 }
 
+@media (max-width: 768px) {
+    body .content {
+        padding: 125px 35px 25px 35px !important;
+    }
+    #live-bar{
+        position: fixed !important;
+        width: 100% !important;
+        z-index: 25 !important;
+        text-align: center !important;
+        background-color: #f3f3f3;
+        padding-top: 25px;
+        padding-bottom: 22.5px;
+    }
+    #live-back{
+        display: none !important;
+    }
+    h2 {
+        font-size: 24px !important;
+    }
+    h3 {
+        font-size: 20px !important;
+    }
+    h4 {
+        font-size: 18px !important;
+    }
+    h5 {
+        font-size: 16px !important;
+    }
+    .schedule-event-item {
+        max-width: 65%;
+    }
+    #live-schedule {
+        margin-top: 25px;
+    }
+}
+
 .content-inside {
     position: relative;
 }
@@ -40,6 +76,6 @@ body {
 
 #live-schedule {
     position: absolute;
-    display: contents;
+    display: block;
     top: 0;
 }
