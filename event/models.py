@@ -116,7 +116,11 @@ class Event(models.Model):
     def schedule(self):
         if self.schedule_markdown_url:
             try:
-                return urllib.request.urlopen(self.schedule_markdown_url).read().decode("utf-8")
+                return (
+                    urllib.request.urlopen(self.schedule_markdown_url)
+                    .read()
+                    .decode("utf-8")
+                )
             except URLError:
                 return None
         return None
