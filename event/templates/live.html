@@ -19,7 +19,7 @@
 {% block body %}
     <div id="live-bar">
         <h3>Remaining time</h3>
-        <h1 id="live-time">{% if now < event.hacking_starts_at %}{{ event.duration | timedelta_display }}{% else %}{{ event.hacking_ends_at | time_left | timedelta_display }}{% endif %}</h1>
+        <h1 id="live-time">{% if now_tz < event.hacking_starts_at %}{{ event.duration | timedelta_display }}{% else %}{{ event.hacking_ends_at | time_left | timedelta_display }}{% endif %}</h1>
         <a id="live-back" class="link-button-inline" href="{% if request.user.is_autehnticated %}{% url "app_dashboard" %}{% else %}{% url "app_home" %}{% endif %}"><i style="padding-right: 10px;" class="fas fa-long-arrow-alt-left"></i>Go back</a>
     </div>
     <!-- TODO: Autoscroll -->
