@@ -220,22 +220,14 @@ def live(request, code):
     current_event = get_event(code=code, application_status=None)
     if current_event:
         current_data["event"] = current_event
-        try:
-            schedule_file = open(
-                os.path.join(
-                    os.path.dirname(os.path.abspath(__file__)),
-                    "../docs/event/schedule/" + current_event.code + ".md",
-                ),
-                "r",
-            )
+        if current_event.schedule:
             current_line = 0
             schedule = list()
             current_day = None
             current_starts_at = None
             current_ends_at = None
             current_title = None
-            for schedule_line in schedule_file.readlines():
-                schedule_line = schedule_line.replace("\n", "")
+            for schedule_line in current_event.schedule.split("\n"):
                 if schedule_line:
                     try:
                         current_day = datetime.datetime.strptime(
@@ -293,7 +285,7 @@ def live(request, code):
                                 + ".",
                             )
                     current_line += 1
-        except FileNotFoundError:
+        else:
             return response(request, code=404)
         starts_at = current_event.starts_at.replace(minute=0, second=0)
         ends_at = current_event.ends_at
@@ -321,6 +313,11 @@ def live(request, code):
             )
             for hour in hours
         ]
+        days = []
+        for hour in hours:
+            if hour[0].date() not in [d.date() for d in days]:
+                list.append(days, hour[0])
+        current_data["days"] = days
         current_data["now"] = datetime.datetime.now().replace(tzinfo=pytz.UTC)
         return render(request, "live.html", current_data)
     return response(request, code=404)

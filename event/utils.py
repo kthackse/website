@@ -10,7 +10,6 @@ from event.models import (
     Subscriber,
     CompanyEvent,
     Invoice,
-    ScheduleEvent,
 )
 from event.tasks import send_subscriber_new, send_subscriber_resubscribed
 
