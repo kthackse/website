@@ -5,17 +5,13 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('event', '0019_invoice_sent_by'),
-    ]
+    dependencies = [("event", "0019_invoice_sent_by")]
 
     operations = [
         migrations.AddField(
-            model_name='event',
-            name='schedule_markdown_url',
+            model_name="event",
+            name="schedule_markdown_url",
             field=models.CharField(blank=True, max_length=255, null=True),
         ),
-        migrations.DeleteModel(
-            name='ScheduleEvent',
-        ),
+        migrations.DeleteModel(name="ScheduleEvent"),
     ]
