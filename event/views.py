@@ -227,7 +227,7 @@ def live(request, code):
             current_starts_at = None
             current_ends_at = None
             current_title = None
-            for schedule_line in current_event.schedule.split("\n"):
+            for schedule_line in current_event.schedule.replace("\r", "").split("\n"):
                 if schedule_line:
                     try:
                         current_day = datetime.datetime.strptime(
@@ -260,7 +260,7 @@ def live(request, code):
                                     year=current_day.year,
                                     hour=current_starts_at.hour,
                                     minute=current_starts_at.minute,
-                                    tzinfo=pytz.timezone(HACKATHON_TIMEZONE),
+                                    tzinfo=None,
                                 ),
                             )
                             if current_ends_at:
@@ -270,7 +270,7 @@ def live(request, code):
                                     year=current_day.year,
                                     hour=current_ends_at.hour,
                                     minute=current_ends_at.minute,
-                                    tzinfo=pytz.timezone(HACKATHON_TIMEZONE),
+                                    tzinfo=None,
                                 )
                             list.append(schedule, schedule_item)
                             current_title = None
@@ -287,27 +287,28 @@ def live(request, code):
                     current_line += 1
         else:
             return response(request, code=404)
-        starts_at = current_event.starts_at.replace(minute=0, second=0)
+        starts_at = current_event.starts_at.replace(minute=0, second=0).replace(tzinfo=None)
         ends_at = current_event.ends_at
         if ends_at.minute > 0 or ends_at.second > 0:
             ends_at += timezone.timedelta(hours=1)
-        ends_at = ends_at.replace(minute=0, second=0)
+        ends_at = ends_at.replace(minute=0, second=0).replace(tzinfo=None)
         hours = [
             (
-                starts_at + timezone.timedelta(hours=h),
-                starts_at + timezone.timedelta(hours=h + 1),
+                starts_at + timezone.timedelta(hours=h + 2),
+                starts_at + timezone.timedelta(hours=h + 3),
             )
             for h in range(math.ceil((ends_at - starts_at).total_seconds() / 3600.0))
         ]
         current_data["schedule"] = [
             dict(
-                time_from=hour[0],
-                time_to=hour[1],
+                time_from=hour[0].replace(tzinfo=None),
+                time_to=hour[1].replace(tzinfo=None),
                 schedule=[
                     schedule_item
                     for schedule_item in schedule
                     if hour[0]
-                    <= schedule_item["starts_at"].replace(tzinfo=pytz.UTC)
+                    # TODO: Fix timezone
+                    <= schedule_item["starts_at"]
                     < hour[1]
                 ],
             )
@@ -316,8 +317,11 @@ def live(request, code):
         days = []
         for hour in hours:
             if hour[0].date() not in [d.date() for d in days]:
-                list.append(days, hour[0])
+                list.append(days, hour[0].replace(tzinfo=None))
         current_data["days"] = days
-        current_data["now"] = datetime.datetime.now().replace(tzinfo=pytz.UTC)
+        now = timezone.now()
+        if now > current_event.ends_at:
+            now = current_ends_at
+        current_data["now"] = now
         return render(request, "live.html", current_data)
     return response(request, code=404)

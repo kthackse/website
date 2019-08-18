@@ -19,16 +19,16 @@
 {% block body %}
     <div id="live-bar">
         <h3>Remaining time</h3>
-        <h1 id="live-time">{{ event.ends_at | time_left | timedelta_display }}</h1>
+        <h1 id="live-time">{% if now < event.hacking_starts_at %}{{ event.duration | timedelta_display }}{% else %}{{ event.hacking_ends_at | time_left | timedelta_display }}{% endif %}</h1>
         <a id="live-back" class="link-button-inline" href="{% if request.user.is_autehnticated %}{% url "app_dashboard" %}{% else %}{% url "app_home" %}{% endif %}"><i style="padding-right: 10px;" class="fas fa-long-arrow-alt-left"></i>Go back</a>
     </div>
     <!-- TODO: Autoscroll -->
-    <div class="container">
+    <div class="container" id="live-schedule" style="position: absolute; top: 0;">
         <!--<div class="section-intro text-center">
             <h2>{{ event.name }} {{ event.starts_at | date:"Y" }} live schedule</h2>
         </div>-->
         {% for schedule_item in schedule %}
-            <div class="row {% if now >= schedule_item.time_from and now < schedule_item.time_to %}schedule-event-active {% elif now > schedule_item.time_from %}schedule-event-passed {% endif %}schedule-event">
+            <div id="schedule-item-{{ schedule_item.time_from | date:"YmdH" }}" class="row {% if now >= schedule_item.time_from and now < schedule_item.time_to %}schedule-event-active {% elif now > schedule_item.time_to %}schedule-event-passed {% endif %}schedule-event">
             {% if schedule_item.time_from in days %}
                 <div class="col-md-12 col-lg-12 mb-12" style="margin: 0.5rem 0;">
                     <h2>{{ schedule_item.time_from | date:"l d" }}</h2>
@@ -60,21 +60,52 @@
     <script src="{% static "js/live.js" %}"></script>
 
     <script>
-        var countDownDate = new Date("{{ event.ends_at | date:"Y-m-d H:i:s" }}").getTime();
+        var dateTo = new Date("{{ event.hacking_ends_at | date:"Y-m-d H:i:s" }}").getTime();
+        var dateFrom = new Date("{{ event.hacking_starts_at | date:"Y-m-d H:i:s" }}").getTime();
         var x = setInterval(function() {
             var now = new Date().getTime();
-            var distance = countDownDate - now;
+            var distance = dateTo - now;
 
             var days = Math.floor(distance / (1000 * 60 * 60 * 24));
             var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            document.getElementById("live-time").innerHTML = ("0" + (days * 24 + hours)).slice(-2) + ":" + ("0" + minutes).slice(-2) + ":" + ("0" + seconds).slice(-2);
-
             if (distance < 0) {
                 clearInterval(x);
                 document.getElementById("live-time").innerHTML = "00:00:00";
+            }
+            else if (now >= dateFrom) {
+                document.getElementById("live-time").innerHTML = ("0" + (days * 24 + hours)).slice(-2) + ":" + ("0" + minutes).slice(-2) + ":" + ("0" + seconds).slice(-2);
+            }
+
+            var current = document.getElementsByClassName("schedule-event-active")[0];
+            if (current !== null) {
+                var distanceTop = parseInt(current.getBoundingClientRect().top);
+                var distanceContainer = parseInt(document.getElementById("live-schedule").style.top);
+                if (distanceTop > 100 && distanceTop !== distanceContainer) {
+                    document.getElementById("live-schedule").style.top = (-distanceTop+100) + "px";
+                }
+            }
+
+            var today = new Date();
+            /* TODO: Set correctly timezone through a tag */
+            var timeZone = 2;
+            let date = new Date();
+            today = date.setTime(today.getTime() + timeZone * 60 * 60 * 1000);
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            var yyyy = today.getFullYear();
+            var hh = today.getHours();
+
+            today = yyyy + mm + dd + hh;
+            var currentId = "schedule-item-" + today;
+            console.log(currentId);
+
+            var currentActive = document.getElementsByClassName("schedule-event-active")[0];
+            if (currentActive !== undefined){
+                document.getElementById(currentId).classList.add("schedule-event-active");
+                currentActive.classList.remove("schedule-event-active");
             }
         }, 100);
     </script>

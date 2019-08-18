@@ -37,3 +37,9 @@ body {
 #live-back{
     margin: 0;
 }
+
+#live-schedule {
+    position: absolute;
+    display: contents;
+    top: 0;
+}
