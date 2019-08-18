@@ -1,3 +1,4 @@
+import math
 import os
 
 from django import template
@@ -17,6 +18,14 @@ def settings_value(name):
 @register.filter
 def time_left(time: timezone.datetime):
     return time - timezone.now()
+
+
+@register.filter
+def timedelta_display(time: timezone.timedelta):
+    seconds = time.total_seconds()
+    m, s = divmod(seconds, 60)
+    h, m = divmod(m, 60)
+    return "{:02d}:{:02d}:{:02d}".format(math.floor(h), math.floor(m), math.floor(s))
 
 
 @register.filter

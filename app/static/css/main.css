@@ -265,6 +265,11 @@ form .is-valid:focus {
     opacity: 0.25;
 }
 
+.schedule-event h2 {
+    line-height: 100%;
+    margin-bottom: 0;
+}
+
 .schedule-event h3 {
     margin-bottom: 0;
     display: inline-block;
