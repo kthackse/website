@@ -82,6 +82,7 @@
                                     <p class="home-button">Applications <b style="white-space: nowrap;">will open soon</b></p>
                                 {% endif %}
                             {% elif event.application_status == 1 %}
+                                <!-- TODO: Check if user logged in and participant -->
                                 <a class="home-button" href="event/{{ event.code }}/apply">Apply now to {{ event.name }} {{ event.starts_at | date:"Y" }} <i style="padding-left: 10px;" class="fas fa-long-arrow-alt-right"></i></a>
                             {% else %}
                                 <p class="home-button">Applications <b>closed</b></p>
