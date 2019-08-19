@@ -28,9 +28,8 @@
         <!--<div class="section-intro text-center">
             <h2>{{ event.name }} {{ event.starts_at | date:"Y" }} live schedule</h2>
         </div>-->
-        <div id="schedule-item-2019081916" class="schedule-event-active"></div>
         {% for schedule_item in schedule %}
-            <div id="schedule-item-{{ schedule_item.time_from | date:"YmdH" }}" class="row {% if now_tz >= schedule_item.time_from and now_tz < schedule_item.time_to %}schedule-event {% elif now_tz > schedule_item.time_to %}schedule-event-passed {% endif %}schedule-event">
+            <div id="schedule-item-{{ schedule_item.time_from | date:"YmdH" }}" class="row {% if now_tz >= schedule_item.time_from and now_tz < schedule_item.time_to %}schedule-event-active {% elif now_tz > schedule_item.time_to %}schedule-event-passed {% endif %}schedule-event">
             {% if schedule_item.time_from in days %}
                 <div class="col-md-12 col-lg-12 mb-12" style="margin: 0.5rem 0;">
                     <h2>{{ schedule_item.time_from | date:"l d" }}</h2>
@@ -95,29 +94,30 @@
 
             var currentActive = document.getElementsByClassName("schedule-event-active")[0];
             if (currentActive !== null && currentActive !== undefined){
+                if (currentActive.id !== currentId) {
+                    currentActive.classList.add("schedule-event-passed");
+                }
                 currentActive.classList.remove("schedule-event-active");
-            }
-            document.getElementById(currentId).classList.add("schedule-event-active");
+                document.getElementById(currentId).classList.add("schedule-event-active");
+                var current = document.getElementById(currentId);
+                if (current !== null && current!== undefined) {
+                    var distanceTop = Math.abs(parseInt(current.getBoundingClientRect().top));
+                    var diff = 100;
 
-            var current = document.getElementById(currentId);
-            if (current !== null && current!== undefined) {
-                var distanceTop = parseInt(current.getBoundingClientRect().top);
-                var distanceContainer = parseInt(document.getElementById("live-schedule").style.top);
-                var diff = 100;
+                    var result,
+                    el = document.body.appendChild(document.createElement("div")),
+                    styleProp = 'margin-top',
+                    style;
+                    el.id = 'live-schedule';
+                    style = el.currentStyle || window.getComputedStyle(el, null);
+                    result = style[styleProp] || "unknown";
+                    document.body.removeChild(el);
 
-                var result,
-                el = document.body.appendChild(document.createElement("div")),
-                styleProp = 'margin-top',
-                style;
-                el.id = 'live-schedule';
-                style = el.currentStyle || window.getComputedStyle(el, null);
-                result = style[styleProp] || "unknown";
-                document.body.removeChild(el);
+                    diff += parseInt(result);
 
-                diff += parseInt(result);
-
-                if (distanceTop > diff && distanceTop !== distanceContainer) {
-                    document.getElementById("live-schedule").style.top = (-distanceTop+diff) + "px";
+                    if(distanceTop > diff) {
+                        document.getElementById("live-schedule").style.top = (-distanceTop + diff) + "px";
+                    }
                 }
             }
         }, 100);
