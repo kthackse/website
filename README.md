@@ -90,9 +90,9 @@ ALTER ROLE [DATABASE_USER] SET timezone TO 'UTC';
 - `cp deploy.sh.template deploy.sh`.
 - Edit the `deploy.sh` file with the correct value for the service name.
 - `chmod +x deploy.sh`.
-- Add the following to `/etc/sudoers`.
+- Add the following at the **bottom** of `/etc/sudoers`.
 ```
-[USER] cms051=/usr/bin/systemctl restart mykthack.service
+[USER] ALL=NOPASSWD: /bin/systemctl restart mykthack.service
 ```
 - Replace `[USER]` with your username.
 
@@ -151,6 +151,12 @@ server {
 }
 ```
 - Replace `[PROJECT_FOLDER]` with the full project location.
+- In case this is not the production site, add the following to the `location /` directive.
+```
+auth_basic "Protected website";
+auth_basic_user_file /etc/nginx/.htpasswd;
+```
+- Also, if you followed the previous step, run `sudo sh -c "echo -n '[USERNAME]:' >> /etc/nginx/.htpasswd"` and `sudo sh -c "openssl passwd -apr1 >> /etc/nginx/.htpasswd"` replacing `[USER]` with a username.
 - `sudo ln -s /etc/nginx/sites-available/kthack.com /etc/nginx/sites-enabled/`.
 - `sudo nginx -t`.
 - `sudo nginx -s reload`.
@@ -166,6 +172,13 @@ server {
 
 - Upload the fonts used in the SVGs to `~/.local/share/fonts/`.
 - `fc-cache -f -v`.
+
+#### Slack bot
+
+- Create a Slack bot on `https://api.slack.com/apps/new`.
+- Activate incoming webhooks and add a webhook URL to the `#webdev-activity` channel.
+- Add the bot to your workspace.
+- Set the client ID, client secret and internal Slack webhook URL in `server.sh`.
 
 ## Project update
 
@@ -195,6 +208,9 @@ The local server updates automatically once a change has been spotted, there's n
 - **GO_ID**: Google Analytics ID.
 - **GH_KEY**: GitHub webhook key.
 - **GH_BRANCH**: GitHub current branch, defaults to `master`.
+- **SL_ID**: Slack app client ID.
+- **SL_SECRET**: Slack app client secret.
+- **SL_INURL**: Internal organisation Slack webhook URL for deployments.
 
 ## Management guide
 

@@ -27,5 +27,6 @@ export SIGNUP_DISABLED="False"
 
 # Github webhook key
 export GH_KEY="[VARIABLE]"
+export GH_BRANCH="[VARIABLE]"
 
 ./env/bin/gunicorn --workers 2 --log-file=gunicorn.log --bind unix:mykthack.sock app.wsgi:application
