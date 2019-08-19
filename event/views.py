@@ -322,10 +322,10 @@ def live(request, code):
                 list.append(days, hour[0].replace(tzinfo=None))
         current_data["days"] = days
         # TODO: Fix timezone
-        now = timezone.now() + timezone.timedelta(hours=2)
+        now = timezone.now()
         if now > current_event.ends_at:
-            now = current_ends_at
-        current_data["now"] = now.replace(tzinfo=None)
-        current_data["now_tz"] = now.replace(tzinfo=pytz.timezone(HACKATHON_TIMEZONE))
+            now = current_event.ends_at
+        current_data["now"] = now
+        current_data["now_tz"] = now.replace(tzinfo=None) + timezone.timedelta(hours=2)
         return render(request, "live.html", current_data)
     return response(request, code=404)
