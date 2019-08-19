@@ -19,7 +19,7 @@
 {% block body %}
     <div id="live-bar">
         <h3>Remaining time</h3>
-        <h1 id="live-time">{% if now_tz < event.hacking_starts_at %}{{ event.duration | timedelta_display }}{% else %}{{ event.hacking_ends_at | time_left | timedelta_display }}{% endif %}</h1>
+        <h1 id="live-time">{% if now < event.hacking_starts_at %}{{ event.duration | timedelta_display }}{% else %}{{ event.hacking_ends_at | time_left | timedelta_display }}{% endif %}</h1>
         <!-- TODO: Temporarily hide back button -->
         <!--<a id="live-back" class="link-button-inline" href="{% if request.user.is_autehnticated %}{% url "app_dashboard" %}{% else %}{% url "app_home" %}{% endif %}"><i style="padding-right: 10px;" class="fas fa-long-arrow-alt-left"></i>Go back</a>-->
     </div>
@@ -29,7 +29,7 @@
             <h2>{{ event.name }} {{ event.starts_at | date:"Y" }} live schedule</h2>
         </div>-->
         {% for schedule_item in schedule %}
-            <div id="schedule-item-{{ schedule_item.time_from | date:"YmdH" }}" class="row {% if now >= schedule_item.time_from and now < schedule_item.time_to %}schedule-event-active {% elif now > schedule_item.time_to %}schedule-event-passed {% endif %}schedule-event">
+            <div id="schedule-item-{{ schedule_item.time_from | date:"YmdH" }}" class="row {% if now_tz >= schedule_item.time_from and now_tz < schedule_item.time_to %}schedule-event-active {% elif now_tz > schedule_item.time_to %}schedule-event-passed {% endif %}schedule-event">
             {% if schedule_item.time_from in days %}
                 <div class="col-md-12 col-lg-12 mb-12" style="margin: 0.5rem 0;">
                     <h2>{{ schedule_item.time_from | date:"l d" }}</h2>
@@ -78,6 +78,9 @@
             }
             else if (now >= dateFrom) {
                 document.getElementById("live-time").innerHTML = ("0" + (days * 24 + hours)).slice(-2) + ":" + ("0" + minutes).slice(-2) + ":" + ("0" + seconds).slice(-2);
+            }
+            else {
+                document.getElementById("live-time").innerHTML = "{{ event.duration | timedelta_display }}";
             }
 
             var current = document.getElementsByClassName("schedule-event-active")[0];
