@@ -28,8 +28,9 @@
         <!--<div class="section-intro text-center">
             <h2>{{ event.name }} {{ event.starts_at | date:"Y" }} live schedule</h2>
         </div>-->
+        <div id="schedule-item-2019081916" class="schedule-event-active"></div>
         {% for schedule_item in schedule %}
-            <div id="schedule-item-{{ schedule_item.time_from | date:"YmdH" }}" class="row {% if now_tz >= schedule_item.time_from and now_tz < schedule_item.time_to %}schedule-event-active {% elif now_tz > schedule_item.time_to %}schedule-event-passed {% endif %}schedule-event">
+            <div id="schedule-item-{{ schedule_item.time_from | date:"YmdH" }}" class="row {% if now_tz >= schedule_item.time_from and now_tz < schedule_item.time_to %}schedule-event {% elif now_tz > schedule_item.time_to %}schedule-event-passed {% endif %}schedule-event">
             {% if schedule_item.time_from in days %}
                 <div class="col-md-12 col-lg-12 mb-12" style="margin: 0.5rem 0;">
                     <h2>{{ schedule_item.time_from | date:"l d" }}</h2>
@@ -83,7 +84,22 @@
                 document.getElementById("live-time").innerHTML = "{{ event.duration | timedelta_display }}";
             }
 
-            var current = document.getElementsByClassName("schedule-event-active")[0];
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            var yyyy = today.getFullYear();
+            var hh = today.getHours();
+
+            today = yyyy + mm + dd + hh;
+            var currentId = "schedule-item-" + today;
+
+            var currentActive = document.getElementsByClassName("schedule-event-active")[0];
+            if (currentActive !== null && currentActive !== undefined){
+                currentActive.classList.remove("schedule-event-active");
+            }
+            document.getElementById(currentId).classList.add("schedule-event-active");
+
+            var current = document.getElementById(currentId);
             if (current !== null && current!== undefined) {
                 var distanceTop = parseInt(current.getBoundingClientRect().top);
                 var distanceContainer = parseInt(document.getElementById("live-schedule").style.top);
@@ -104,21 +120,6 @@
                     document.getElementById("live-schedule").style.top = (-distanceTop+diff) + "px";
                 }
             }
-
-            var today = new Date();
-            var dd = String(today.getDate()).padStart(2, '0');
-            var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-            var yyyy = today.getFullYear();
-            var hh = today.getHours();
-
-            today = yyyy + mm + dd + hh;
-            var currentId = "schedule-item-" + today;
-
-            var currentActive = document.getElementsByClassName("schedule-event-active")[0];
-            if (currentActive !== null && currentActive !== undefined){
-                currentActive.classList.remove("schedule-event-active");
-            }
-            document.getElementById(currentId).classList.add("schedule-event-active");
         }, 100);
     </script>
 {% endblock %}
