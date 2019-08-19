@@ -87,7 +87,7 @@
             var dd = String(today.getDate()).padStart(2, '0');
             var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
             var yyyy = today.getFullYear();
-            var hh = today.getHours();
+            var hh = String(today.getHours()).padStart(2, '0');
 
             today = yyyy + mm + dd + hh;
             var currentId = "schedule-item-" + today;
@@ -102,6 +102,7 @@
                 var current = document.getElementById(currentId);
                 if (current !== null && current!== undefined) {
                     var distanceTop = Math.abs(parseInt(current.getBoundingClientRect().top));
+                    var currentDistanceTop = Math.abs(parseInt(document.getElementById("live-schedule").style.top));
                     var diff = 100;
 
                     var result,
@@ -116,7 +117,7 @@
                     diff += parseInt(result);
 
                     if(distanceTop > diff) {
-                        document.getElementById("live-schedule").style.top = (-distanceTop + diff) + "px";
+                        document.getElementById("live-schedule").style.top = (-(currentDistanceTop+distanceTop) + diff) + "px";
                     }
                 }
             }
