@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "phonenumber_field",
     "djmoney",
     "bootstrap4",
+    "corsheaders",
     "django_markup",
     "versatileimagefield",
     "user",
@@ -56,6 +57,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
 ]
 
 ROOT_URLCONF = "app.urls"
@@ -255,3 +258,10 @@ if DEBUG:
 
 GH_KEY = os.environ.get("GH_KEY", None)
 GH_BRANCH = os.environ.get("GH_BRANCH", "master")
+
+# Set CORS allowed hosts
+
+CORS_ORIGIN_WHITELIST = []
+for host in ALLOWED_HOSTS:
+    list.append(CORS_ORIGIN_WHITELIST, "http://" + host)
+    list.append(CORS_ORIGIN_WHITELIST, "https://" + host)

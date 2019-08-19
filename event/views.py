@@ -324,7 +324,7 @@ def live(request, code):
         # TODO: Fix timezone
         now = timezone.now() + timezone.timedelta(hours=2)
         if now > current_event.ends_at:
-            now = current_ends_at
+            now = current_event.ends_at
         current_data["now"] = now.replace(tzinfo=None)
         current_data["now_tz"] = now.replace(tzinfo=pytz.timezone(HACKATHON_TIMEZONE))
         return render(request, "live.html", current_data)
