@@ -19,7 +19,7 @@
 {% block body %}
     <div id="live-bar">
         <h3>Remaining time</h3>
-        <h1 id="live-time">{% if now < event.hacking_starts_at %}{{ event.duration | timedelta_display }}{% else %}{{ event.hacking_ends_at | time_left | timedelta_display }}{% endif %}</h1>
+        <h1 id="live-time">{% if now < event.hacking_starts_at %}{{ event.duration | timedelta_display }}{% elif now >= event.hacking_ends_at %}00:00:00{% else %}{{ event.hacking_ends_at | time_left | timedelta_display }}{% endif %}</h1>
         <!-- TODO: Temporarily hide back button -->
         <!--<a id="live-back" class="link-button-inline" href="{% if request.user.is_autehnticated %}{% url "app_dashboard" %}{% else %}{% url "app_home" %}{% endif %}"><i style="padding-right: 10px;" class="fas fa-long-arrow-alt-left"></i>Go back</a>-->
     </div>
@@ -64,6 +64,65 @@
         var dateTo = new Date("{{ event.hacking_ends_at | date:"Y-m-d H:i:s" }}").getTime();
         var dateFrom = new Date("{{ event.hacking_starts_at | date:"Y-m-d H:i:s" }}").getTime();
         var x = setInterval(function() {
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            var yyyy = today.getFullYear();
+            var hh = String(today.getHours()).padStart(2, '0');
+
+            today = yyyy + mm + dd + hh;
+            var currentId = "schedule-item-" + today;
+
+            var currentActive = document.getElementsByClassName("schedule-event-active")[0];
+            if (currentActive === null || currentActive === undefined) {
+                /* TODO: Fix timezone */
+                var dateTo2 = new Date("{{ event.hacking_ends_at | date:"Y-m-d H:i:s" }}");
+                dateTo2.setTime(dateTo2.getTime() - 3600 * 1000);
+                var dd2 = String(dateTo2.getDate()).padStart(2, '0');
+                var mm2 = String(dateTo2.getMonth() + 1).padStart(2, '0'); //January is 0!
+                var yyyy2 = dateTo2.getFullYear();
+                var hh2 = String(dateTo2.getHours()).padStart(2, '0');
+
+                var today2 = yyyy2 + mm2 + dd2 + hh2;
+                currentId = "schedule-item-" + today2;
+                console.log(currentId);
+                currentActive = document.getElementById(currentId);
+                currentActive.classList.add("schedule-event-passed");
+            }
+            if (currentActive.id !== currentId) {
+                currentActive.classList.add("schedule-event-passed");
+            }
+            currentActive.classList.remove("schedule-event-active");
+            var current = document.getElementById(currentId);
+            if (current === null || current === undefined) {
+                if (currentActive === null || currentActive === undefined) {
+                }
+                else {
+                    current = currentActive;
+                    currentId = currentActive.id;
+
+                }
+            }
+            document.getElementById(currentId).classList.add("schedule-event-active");
+            var distanceTop = Math.abs(parseInt(current.getBoundingClientRect().top));
+            var currentDistanceTop = Math.abs(parseInt(document.getElementById("live-schedule").style.top));
+            var diff = 100;
+
+            var result,
+            el = document.body.appendChild(document.createElement("div")),
+            styleProp = 'margin-top',
+            style;
+            el.id = 'live-schedule';
+            style = el.currentStyle || window.getComputedStyle(el, null);
+            result = style[styleProp] || "unknown";
+            document.body.removeChild(el);
+
+            diff += parseInt(result);
+
+            if(distanceTop > diff) {
+                document.getElementById("live-schedule").style.top = (-(currentDistanceTop+distanceTop) + diff) + "px";
+            }
+
             var now = new Date().getTime();
             var distance = dateTo - now;
 
@@ -81,45 +140,6 @@
             }
             else {
                 document.getElementById("live-time").innerHTML = "{{ event.duration | timedelta_display }}";
-            }
-
-            var today = new Date();
-            var dd = String(today.getDate()).padStart(2, '0');
-            var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-            var yyyy = today.getFullYear();
-            var hh = String(today.getHours()).padStart(2, '0');
-
-            today = yyyy + mm + dd + hh;
-            var currentId = "schedule-item-" + today;
-
-            var currentActive = document.getElementsByClassName("schedule-event-active")[0];
-            if (currentActive !== null && currentActive !== undefined){
-                if (currentActive.id !== currentId) {
-                    currentActive.classList.add("schedule-event-passed");
-                }
-                currentActive.classList.remove("schedule-event-active");
-                document.getElementById(currentId).classList.add("schedule-event-active");
-                var current = document.getElementById(currentId);
-                if (current !== null && current!== undefined) {
-                    var distanceTop = Math.abs(parseInt(current.getBoundingClientRect().top));
-                    var currentDistanceTop = Math.abs(parseInt(document.getElementById("live-schedule").style.top));
-                    var diff = 100;
-
-                    var result,
-                    el = document.body.appendChild(document.createElement("div")),
-                    styleProp = 'margin-top',
-                    style;
-                    el.id = 'live-schedule';
-                    style = el.currentStyle || window.getComputedStyle(el, null);
-                    result = style[styleProp] || "unknown";
-                    document.body.removeChild(el);
-
-                    diff += parseInt(result);
-
-                    if(distanceTop > diff) {
-                        document.getElementById("live-schedule").style.top = (-(currentDistanceTop+distanceTop) + diff) + "px";
-                    }
-                }
             }
         }, 100);
     </script>
