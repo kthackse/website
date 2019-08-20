@@ -77,7 +77,7 @@
             if (currentActive === null || currentActive === undefined) {
                 /* TODO: Fix timezone */
                 var dateTo2 = new Date("{{ event.hacking_ends_at | date:"Y-m-d H:i:s" }}");
-                dateTo2.setTime(dateTo2.getTime() - 3600 * 1000);
+                dateTo2.setTime(dateTo2.getTime() + 3600 * 1000);
                 var dd2 = String(dateTo2.getDate()).padStart(2, '0');
                 var mm2 = String(dateTo2.getMonth() + 1).padStart(2, '0'); //January is 0!
                 var yyyy2 = dateTo2.getFullYear();
@@ -85,9 +85,10 @@
 
                 var today2 = yyyy2 + mm2 + dd2 + hh2;
                 currentId = "schedule-item-" + today2;
-                console.log(currentId);
-                currentActive = document.getElementById(currentId);
-                currentActive.classList.add("schedule-event-passed");
+                var currentActiveTmp = document.getElementById(currentId);
+                if (currentActiveTmp !== null && currentActiveTmp !== undefined) {
+                    currentActive = currentActiveTmp;
+                }
             }
             if (currentActive.id !== currentId) {
                 currentActive.classList.add("schedule-event-passed");
