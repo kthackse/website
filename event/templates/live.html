@@ -74,54 +74,57 @@
             var currentId = "schedule-item-" + today;
 
             var currentActive = document.getElementsByClassName("schedule-event-active")[0];
-            if (currentActive === null || currentActive === undefined) {
-                /* TODO: Fix timezone */
-                var dateTo2 = new Date("{{ event.hacking_ends_at | date:"Y-m-d H:i:s" }}");
-                dateTo2.setTime(dateTo2.getTime() + 3600 * 1000);
-                var dd2 = String(dateTo2.getDate()).padStart(2, '0');
-                var mm2 = String(dateTo2.getMonth() + 1).padStart(2, '0'); //January is 0!
-                var yyyy2 = dateTo2.getFullYear();
-                var hh2 = String(dateTo2.getHours()).padStart(2, '0');
-
-                var today2 = yyyy2 + mm2 + dd2 + hh2;
-                currentId = "schedule-item-" + today2;
-                var currentActiveTmp = document.getElementById(currentId);
-                if (currentActiveTmp !== null && currentActiveTmp !== undefined) {
-                    currentActive = currentActiveTmp;
-                }
-            }
-            if (currentActive.id !== currentId) {
-                currentActive.classList.add("schedule-event-passed");
-            }
-            currentActive.classList.remove("schedule-event-active");
-            var current = document.getElementById(currentId);
-            if (current === null || current === undefined) {
+            if (new Date().getTime() > dateFrom){
                 if (currentActive === null || currentActive === undefined) {
+                    /* TODO: Fix timezone */
+                    var dateTo2 = new Date("{{ event.hacking_ends_at | date:"Y-m-d H:i:s" }}");
+                    dateTo2.setTime(dateTo2.getTime() + 3600 * 1000);
+                    var dd2 = String(dateTo2.getDate()).padStart(2, '0');
+                    var mm2 = String(dateTo2.getMonth() + 1).padStart(2, '0'); //January is 0!
+                    var yyyy2 = dateTo2.getFullYear();
+                    var hh2 = String(dateTo2.getHours()).padStart(2, '0');
+
+                    var today2 = yyyy2 + mm2 + dd2 + hh2;
+                    currentId = "schedule-item-" + today2;
+                    var currentActiveTmp = document.getElementById(currentId);
+                    if (currentActiveTmp !== null && currentActiveTmp !== undefined) {
+                        currentActive = currentActiveTmp;
+                    }
                 }
-                else {
-                    current = currentActive;
-                    currentId = currentActive.id;
-
+                if (currentActive.id !== currentId) {
+                    currentActive.classList.add("schedule-event-passed");
                 }
-            }
-            document.getElementById(currentId).classList.add("schedule-event-active");
-            var distanceTop = Math.abs(parseInt(current.getBoundingClientRect().top));
-            var currentDistanceTop = Math.abs(parseInt(document.getElementById("live-schedule").style.top));
-            var diff = 100;
+                currentActive.classList.remove("schedule-event-active");
+                var current = document.getElementById(currentId);
+                if (current === null || current === undefined) {
+                    if (currentActive === null || currentActive === undefined) {
+                    }
+                    else {
+                        current = currentActive;
+                        currentId = currentActive.id;
 
-            var result,
-            el = document.body.appendChild(document.createElement("div")),
-            styleProp = 'margin-top',
-            style;
-            el.id = 'live-schedule';
-            style = el.currentStyle || window.getComputedStyle(el, null);
-            result = style[styleProp] || "unknown";
-            document.body.removeChild(el);
+                    }
+                }
+                document.getElementById(currentId).classList.add("schedule-event-active");
+                document.getElementById(currentId).classList.remove("schedule-event-passed");
+                var distanceTop = Math.abs(parseInt(current.getBoundingClientRect().top));
+                var currentDistanceTop = Math.abs(parseInt(document.getElementById("live-schedule").style.top));
+                var diff = 100;
 
-            diff += parseInt(result);
+                var result,
+                el = document.body.appendChild(document.createElement("div")),
+                styleProp = 'margin-top',
+                style;
+                el.id = 'live-schedule';
+                style = el.currentStyle || window.getComputedStyle(el, null);
+                result = style[styleProp] || "unknown";
+                document.body.removeChild(el);
 
-            if(distanceTop > diff) {
-                document.getElementById("live-schedule").style.top = (-(currentDistanceTop+distanceTop) + diff) + "px";
+                diff += parseInt(result);
+
+                if(distanceTop > diff) {
+                    document.getElementById("live-schedule").style.top = (-(currentDistanceTop+distanceTop) + diff) + "px";
+                }
             }
 
             var now = new Date().getTime();
