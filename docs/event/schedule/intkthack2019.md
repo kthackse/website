@@ -1,7 +1,7 @@
 # 2019-08-20
 
 ## Registration
-18:00
+18:15
 18:45
 > Welcome everyone!
 
@@ -16,12 +16,12 @@
 
 ## Team building
 19:00
-19:30
+19:15
 > Looking for a team or new teammates?
 
 ## [Talk] Tracing and monitoring in web browsers
+19:00
 19:30
-20:00
 > By professor Benoit Baudry
 
 ## Dinner
