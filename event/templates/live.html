@@ -63,6 +63,7 @@
     <script>
         var dateTo = new Date("{{ event.hacking_ends_at | date:"Y-m-d H:i:s" }}").getTime();
         var dateFrom = new Date("{{ event.hacking_starts_at | date:"Y-m-d H:i:s" }}").getTime();
+        var eventDateFrom = new Date("{{ event.starts_at | date:"Y-m-d H:i:s" }}").getTime();
         var x = setInterval(function() {
             var today = new Date();
             var dd = String(today.getDate()).padStart(2, '0');
@@ -74,7 +75,7 @@
             var currentId = "schedule-item-" + today;
 
             var currentActive = document.getElementsByClassName("schedule-event-active")[0];
-            if (new Date().getTime() > dateFrom){
+            if (new Date().getTime() > eventDateFrom){
                 if (currentActive === null || currentActive === undefined) {
                     /* TODO: Fix timezone */
                     var dateTo2 = new Date("{{ event.hacking_ends_at | date:"Y-m-d H:i:s" }}");
