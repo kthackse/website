@@ -38,7 +38,7 @@
 
 ## Hacking ends
 07:00
-> Stop the typing! Remember to upload your project to DevPost in time!
+> Stop the typing! Remember to [upload your project to DevPost](https://kthackint2019.devpost.com) in time!
 
 ## Demos
 07:15
