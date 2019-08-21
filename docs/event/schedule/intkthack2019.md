@@ -46,7 +46,7 @@
 > Time to show your work!
 
 ## Closing ceremony
-07:45
+07:50
 08:00
 >
 
