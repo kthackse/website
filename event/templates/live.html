@@ -3,6 +3,7 @@
 {% load i18n %}
 {% load app_tags %}
 {% load event_tags %}
+{% load markup_tags %}
 {% load static %}
 
 {% block head_title %}{% trans "Live schedule" %}{% endblock %}
@@ -46,9 +47,9 @@
                         {% endif %}
                     </div>
                     <div class="schedule-event-item">
-                        <h3>{{ schedule_item_inner.name }}</h3>
+                        <h3>{{ schedule_item_inner.name | apply_markup:"markdown" }}</h3>
                         {% if schedule_item_inner.description %}
-                            <p>{{ schedule_item_inner.description }}</p>
+                            <p>{{ schedule_item_inner.description | apply_markup:"markdown" }}</p>
                         {% endif %}
                     </div>
                 </div>
