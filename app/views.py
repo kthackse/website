@@ -34,7 +34,7 @@ from event.utils import (
     get_partners_in_event,
     get_sponsors_in_event,
     get_invoice_by_invoice,
-)
+    get_organisers_in_event)
 from user.enums import UserType
 from user.utils import get_user_by_picture, get_organisers
 
@@ -134,6 +134,7 @@ def home(request):
                 sponsors_dict[tier.name.lower()] = sponsors.filter(tier=tier.value)
             current_data["sponsors"] = sponsors_dict
         current_data["partners"] = get_partners_in_event(event_id=event.id)
+        current_data["event_organisers"] = get_organisers_in_event(event_id=event.id)
         current_data["background_video"] = event.background.name[-4:] == ".mp4"
         current_data["background_image"] = event.background.name[-4:] in [
             ".png",
