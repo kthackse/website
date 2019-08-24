@@ -338,8 +338,13 @@ def apply_remove(request, code, context={}):
     context["popup"] = dict(
         title="Remove your application",
         message="Are you sure you want to do that? After removing it, you won't be able to apply again! "
-                "If you just want to modify something, let us know at contact@kthack.com and we'll help you out.",
-        actions=[dict(name="Remove", url=reverse("event_applyremoveconfirm", kwargs=dict(code=code)))],
+        "If you just want to modify something, let us know at contact@kthack.com and we'll help you out.",
+        actions=[
+            dict(
+                name="Remove",
+                url=reverse("event_applyremoveconfirm", kwargs=dict(code=code)),
+            )
+        ],
     )
     return apply(request, code, context=context)
 

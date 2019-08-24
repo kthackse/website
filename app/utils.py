@@ -46,10 +46,8 @@ def variables_processor(request):
     from event.utils import get_next_or_past_event, get_application
 
     event = get_next_or_past_event()
-    application = get_application(event.id, request.user.id)
     if event:
         c["event"] = event
-        c["application"] = application
         c["background_video"] = event.background.name[-4:] == ".mp4"
         c["background_image"] = event.background.name[-4:] in [
             ".png",
@@ -58,6 +56,9 @@ def variables_processor(request):
             ".gif",
             ".svg",
         ]
+        application = get_application(event.id, request.user.id)
+        if application:
+            c["application"] = application
     return c
 
 

@@ -6,14 +6,17 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('event', '0022_add_event_type'),
-    ]
+    dependencies = [("event", "0022_add_event_type")]
 
     operations = [
         migrations.AlterField(
-            model_name='application',
-            name='team',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='event.Team'),
-        ),
+            model_name="application",
+            name="team",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="event.Team",
+            ),
+        )
     ]
