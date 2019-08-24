@@ -1,9 +1,12 @@
+import random
+import string
+
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
 from event.enums import EventApplicationStatus, CompanyTier, SubscriberStatus, EventType
-from event.models import Event, Application, FAQItem, Subscriber, CompanyEvent, Invoice
+from event.models import Event, Application, FAQItem, Subscriber, CompanyEvent, Invoice, Team
 from event.tasks import send_subscriber_new, send_subscriber_resubscribed
 
 from django.core.validators import validate_email
@@ -115,3 +118,52 @@ def get_invoice_by_invoice(invoice):
 
 def get_applications_by_user(user_id):
     return Application.objects.filter(user_id=user_id)
+
+
+def generate_code(length=8):
+    return "".join(
+        random.SystemRandom().choice(string.ascii_lowercase + string.digits)
+        for _ in range(length)
+    ).upper()
+
+
+def create_team(event_id, user_id, name):
+    team = Team(event_id=event_id, creator_id=user_id, name=name, code=generate_code())
+    team.save()
+    return team
+
+
+def remove_team(event_id, user_id, team_id):
+    team = Team.objects.filter(id=team_id, event_id=event_id, creator_id=user_id).first()
+    if team:
+        team.delete()
+
+
+def assign_team(event_id, user_id, team_code):
+    application = Application.objects.filter(event_id=event_id, user_id=user_id).first()
+    if application:
+        team = Team.objects.filter(code=team_code).first()
+        if team:
+            if Application.objects.filter(event_id=event_id, team_id=team.id).count() < 4:
+                application.team_id = team.id
+                application.save()
+                return True
+    return False
+
+
+def deassign_team(event_id, user_id):
+    application = Application.objects.filter(event_id=event_id, user_id=user_id).first()
+    if application:
+        application.team = None
+        application.save()
+        return True
+    return False
+
+
+def get_teammates_by_user(user_id):
+    event = get_next_or_past_event()
+    if event:
+        application = Application.objects.filter(event_id=event.id, user_id=user_id).first()
+        if application and application.team:
+            return Application.objects.filter(event_id=event.id, team_id=application.team.id)
+    return None

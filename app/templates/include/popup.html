@@ -1,0 +1,30 @@
+{% if popup %}
+    <style>
+        body {
+            overflow: hidden;
+        }
+    </style>
+    <div id="popup-background">
+        <div id="popup">
+            <h3>{{ popup.title }}</h3>
+            <p>{{ popup.message | urlize }}</p>
+            <div style="text-align: right;">
+                <a class="link-button" onclick="hidePopup()" style="cursor: pointer;">Dismiss</a>
+                {% if popup.actions %}
+                    {% for action in popup.actions %}
+                        <a class="link-button3" href="{{ action.url }}">{{ action.name }}</a>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function hidePopup() {
+            $('#popup').fadeOut("fast");
+            $('#popup-background').fadeOut("slow");
+            $('body').css("overflow", "unset");
+            window.location.href = window.location.href.substr(0, window.location.href.lastIndexOf("/"));
+        }
+    </script>
+{% endif %}

@@ -21,27 +21,26 @@ from user.utils import is_participant, is_organiser
 
 @login_verified_required
 @user_passes_test(is_participant)
-def apply(request, code):
-    current_data = dict()
+def apply(request, code, context={}):
     current_event = get_event(code=code)
     if current_event:
-        current_data["event"] = current_event
-        current_data["years"] = [
+        context["event"] = current_event
+        context["years"] = [
             (timezone.now().year + year, year == 0) for year in range(-1, 5)
         ]
-        current_data["diets"] = [
+        context["diets"] = [
             (diet.name.capitalize().replace("_", " "), diet.value) for diet in DietType
         ]
-        current_data["tshirts"] = [
+        context["tshirts"] = [
             (tshirt.name.upper(), tshirt.value) for tshirt in TshirtSize
         ]
         current_application = get_application(
             event_id=current_event.id, user_id=request.user.id
         )
-        current_data["status"] = "DRAFT"
+        context["status"] = "DRAFT"
         if current_application:
-            current_data["application"] = current_application
-            current_data["tshirt_int"] = int(current_application.tshirt)
+            context["application"] = current_application
+            context["tshirt_int"] = int(current_application.tshirt)
             if current_application.status in [
                 ApplicationStatus.DRAFT.value,
                 ApplicationStatus.PENDING.value,
@@ -50,11 +49,11 @@ def apply(request, code):
                 ApplicationStatus.CONFIRMED.value,
                 ApplicationStatus.ATTENDED.value,
             ]:
-                current_data["status"] = ApplicationStatus(
+                context["status"] = ApplicationStatus(
                     current_application.status
                 ).name.upper()
             else:
-                current_data["status"] = "PENDING"
+                context["status"] = "PENDING"
         if (
             request.method == "POST"
             and not current_application
@@ -154,20 +153,23 @@ def apply(request, code):
                         status=status,
                     )
                 application.save()
-                return HttpResponseRedirect("")
-        return render(request, "apply.html", current_data)
+                if application.status == ApplicationStatus.DRAFT.value:
+                    messages.success(request, "Your application has been saved.")
+                    return HttpResponseRedirect("")
+                messages.success(request, "Your application has been submitted!")
+                return HttpResponseRedirect(reverse("app_dashboard"))
+        return render(request, "apply.html", context)
     return HttpResponseNotFound()
 
 
 @login_verified_required
 @user_passes_test(is_organiser)
-def applications(request, code):
-    current_data = dict()
+def applications(request, code, context={}):
     current_event = get_event(code=code)
     if current_event:
-        current_data["event"] = current_event
-        current_data["applications"] = get_applications(event_id=current_event.id)
-        return render(request, "applications.html", current_data)
+        context["event"] = current_event
+        context["applications"] = get_applications(event_id=current_event.id)
+        return render(request, "applications.html", context)
     return HttpResponseNotFound()
 
 
@@ -215,11 +217,10 @@ def unsubscribe(request, id):
     return HttpResponseRedirect(reverse("app_home"))
 
 
-def live(request, code):
-    current_data = dict()
+def live(request, code, context={}):
     current_event = get_event(code=code, application_status=None)
     if current_event:
-        current_data["event"] = current_event
+        context["event"] = current_event
         if current_event.schedule:
             current_line = 0
             schedule = list()
@@ -302,7 +303,7 @@ def live(request, code):
             )
             for h in range(math.ceil((ends_at - starts_at).total_seconds() / 3600.0))
         ]
-        current_data["schedule"] = [
+        context["schedule"] = [
             dict(
                 time_from=hour[0].replace(tzinfo=None),
                 time_to=hour[1].replace(tzinfo=None),
@@ -320,12 +321,38 @@ def live(request, code):
         for hour in hours:
             if hour[0].date() not in [d.date() for d in days]:
                 list.append(days, hour[0].replace(tzinfo=None))
-        current_data["days"] = days
+        context["days"] = days
         # TODO: Fix timezone
         now = timezone.now()
         if now > current_event.ends_at:
             now = current_event.ends_at
-        current_data["now"] = now
-        current_data["now_tz"] = now.replace(tzinfo=None) + timezone.timedelta(hours=2)
-        return render(request, "live.html", current_data)
+        context["now"] = now
+        context["now_tz"] = now.replace(tzinfo=None) + timezone.timedelta(hours=2)
+        return render(request, "live.html", context)
     return response(request, code=404)
+
+
+@login_verified_required
+@user_passes_test(is_participant)
+def apply_remove(request, code, context={}):
+    context["popup"] = dict(
+        title="Remove your application",
+        message="Are you sure you want to do that? After removing it, you won't be able to apply again! "
+                "If you just want to modify something, let us know at contact@kthack.com and we'll help you out.",
+        actions=[dict(name="Remove", url=reverse("event_applyremoveconfirm", kwargs=dict(code=code)))],
+    )
+    return apply(request, code, context=context)
+
+
+@login_verified_required
+@user_passes_test(is_participant)
+def apply_remove_confirm(request, code, context={}):
+    current_event = get_event(code=code)
+    if current_event:
+        current_application = get_application(
+            event_id=current_event.id, user_id=request.user.id
+        )
+        if current_application:
+            current_application.cancel()
+            messages.success(request, "Your application has been cancelled.")
+    return HttpResponseRedirect(reverse("app_dashboard"))

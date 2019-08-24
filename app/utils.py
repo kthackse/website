@@ -49,7 +49,7 @@ def variables_processor(request):
     application = get_application(event.id, request.user.id)
     if event:
         c["event"] = event
-        c["application"] = event
+        c["application"] = application
         c["background_video"] = event.background.name[-4:] == ".mp4"
         c["background_image"] = event.background.name[-4:] in [
             ".png",
