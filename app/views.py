@@ -34,7 +34,12 @@ from event.utils import (
     get_partners_in_event,
     get_sponsors_in_event,
     get_invoice_by_invoice,
-    create_team, assign_team, get_teammates_by_user, deassign_team, remove_team)
+    create_team,
+    assign_team,
+    get_teammates_by_user,
+    deassign_team,
+    remove_team,
+)
 from user.enums import UserType
 from user.utils import get_user_by_picture, get_organisers
 
@@ -156,11 +161,15 @@ def home(request):
 def dashboard(request, context={}):
     if request.method == "POST":
         if request.POST["submit"] == "team-create":
-            team = create_team(request.POST["event"], request.user.id, request.POST["name"])
+            team = create_team(
+                request.POST["event"], request.user.id, request.POST["name"]
+            )
             assign_team(request.POST["event"], request.user.id, team.code)
             messages.success(request, "Your team has been created!")
         elif request.POST["submit"] == "team-join":
-            if assign_team(request.POST["event"], request.user.id, request.POST["code"]):
+            if assign_team(
+                request.POST["event"], request.user.id, request.POST["code"]
+            ):
                 messages.success(request, "You have joined the team!")
             else:
                 messages.success(request, "Team is full or doesn't exist!")

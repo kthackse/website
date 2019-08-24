@@ -52,7 +52,7 @@ class ApplicationAdmin(admin.ModelAdmin):
         "team",
     )
     list_display = ("id", "user", "event", "status", "created_at")
-    list_filter = ("status", "created_at", "event",)
+    list_filter = ("status", "created_at", "event")
     ordering = ("created_at", "updated_at", "event", "user")
 
 
