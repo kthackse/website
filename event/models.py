@@ -2,6 +2,8 @@ import os
 import uuid
 from decimal import Decimal
 from io import BytesIO
+import urllib.request
+from urllib.error import URLError
 
 import cairosvg
 from django.core.exceptions import ValidationError
@@ -78,6 +80,8 @@ class Event(models.Model):
     country = models.CharField(max_length=255, default="Sweden")
     starts_at = models.DateTimeField()
     ends_at = models.DateTimeField()
+    coding_starts_at = models.DateTimeField(blank=True, null=True)
+    coding_ends_at = models.DateTimeField(blank=True, null=True)
     hackers = models.IntegerField(default=200)
     published = models.BooleanField(default=False)
     dates_public = models.BooleanField(default=True)
@@ -89,6 +93,7 @@ class Event(models.Model):
     application_deadline = models.DateTimeField()
     companies_open = models.BooleanField(default=True)
     custom_home = models.BooleanField(default=False)
+    schedule_markdown_url = models.CharField(max_length=255, blank=True, null=True)
 
     @property
     def application_status(self):
@@ -108,6 +113,37 @@ class Event(models.Model):
             return True
         current_time = timezone.now()
         return current_time < self.ends_at
+
+    @property
+    def schedule(self):
+        if self.schedule_markdown_url:
+            try:
+                return (
+                    urllib.request.urlopen(self.schedule_markdown_url)
+                    .read()
+                    .decode("utf-8")
+                )
+            except URLError:
+                return None
+        return None
+
+    @property
+    def duration(self):
+        if self.coding_starts_at and self.coding_ends_at:
+            return self.coding_ends_at - self.coding_starts_at
+        return self.ends_at - self.starts_at
+
+    @property
+    def hacking_starts_at(self):
+        if self.coding_starts_at:
+            return self.coding_starts_at
+        return self.starts_at
+
+    @property
+    def hacking_ends_at(self):
+        if self.coding_ends_at:
+            return self.coding_ends_at
+        return self.ends_at
 
     def __str__(self):
         return self.name + " " + str(self.starts_at.year)
@@ -132,33 +168,22 @@ class Event(models.Model):
             messages[
                 "application_deadline"
             ] = "The application deadline can't be before applications open"
-        if messages:
-            raise ValidationError(messages)
-
-
-class ScheduleEvent(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=255)
-    description = models.TextField(max_length=1000)
-    event = models.ForeignKey("Event", on_delete=models.PROTECT)
-    important = models.BooleanField(default=False)
-    starts_at = models.DateTimeField()
-    ends_at = models.DateTimeField(blank=True, null=True)
-
-    def clean(self):
-        messages = dict()
-        if self.starts_at < self.event.starts_at:
+        if (
+            self.coding_starts_at
+            and not self.starts_at <= self.coding_starts_at <= self.ends_at
+        ):
             messages[
-                "starts_at"
-            ] = "The schedule event can't start before the event itself"
-        if self.ends_at and self.ends_at > self.event.ends_at:
-            messages["ends_at"] = "The schedule event can't end after the event itself"
+                "coding_starts_at"
+            ] = "The end time for coding needs to be within the times of the event"
+        if (
+            self.coding_ends_at
+            and not self.starts_at <= self.coding_ends_at <= self.ends_at
+        ):
+            messages[
+                "coding_ends_at"
+            ] = "The start time for coding needs to be within the times of the event"
         if messages:
             raise ValidationError(messages)
-
-    class Meta:
-        verbose_name = "Schedule in event"
-        verbose_name_plural = "Schedules     in events"
 
 
 class CompanyEvent(models.Model):

@@ -8928,7 +8928,7 @@ a.bg-dark:focus, a.bg-dark:hover, button.bg-dark:focus, button.bg-dark:hover {
 }
 
 .text-white {
-    color: #fff !important
+    color: rgba(255, 255, 255, 0.9) !important
 }
 
 .text-primary {

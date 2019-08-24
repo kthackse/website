@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+{% load i18n %}
+{% load app_tags %}
+{% load event_tags %}
+{% load markup_tags %}
+{% load static %}
+
+{% block head_title %}{% trans "Live schedule" %}{% endblock %}
+
+{% block navbar %}
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+{% block background %}
+{% endblock %}
+
+{% block body %}
+    <div id="live-bar">
+        <h3>Remaining time</h3>
+        <h1 id="live-time">{% if now < event.hacking_starts_at %}{{ event.duration | timedelta_display }}{% elif now >= event.hacking_ends_at %}00:00:00{% else %}{{ event.hacking_ends_at | time_left | timedelta_display }}{% endif %}</h1>
+        <!-- TODO: Temporarily hide back button -->
+        <!--<a id="live-back" class="link-button-inline" href="{% if request.user.is_autehnticated %}{% url "app_dashboard" %}{% else %}{% url "app_home" %}{% endif %}"><i style="padding-right: 10px;" class="fas fa-long-arrow-alt-left"></i>Go back</a>-->
+    </div>
+    <!-- TODO: Autoscroll -->
+    <div class="container" id="live-schedule" style="position: absolute; top: 0;">
+        <!--<div class="section-intro text-center">
+            <h2>{{ event.name }} {{ event.starts_at | date:"Y" }} live schedule</h2>
+        </div>-->
+        {% for schedule_item in schedule %}
+            <div id="schedule-item-{{ schedule_item.time_from | date:"YmdH" }}" class="row {% if now_tz >= schedule_item.time_from and now_tz < schedule_item.time_to %}schedule-event-active {% elif now_tz > schedule_item.time_to %}schedule-event-passed {% endif %}schedule-event">
+            {% if schedule_item.time_from in days %}
+                <div class="col-md-12 col-lg-12 mb-12" style="margin: 0.5rem 0;">
+                    <h2>{{ schedule_item.time_from | date:"l d" }}</h2>
+                </div>
+            {% endif %}
+            {% for schedule_item_inner in schedule_item.schedule %}
+                <div class="col-md-12 col-lg-12 mb-12" style="margin: 0.5rem 0;">
+                    <div class="schedule-event-time">
+                        <h3 style="margin-right: 4px;">{{ schedule_item_inner.starts_at | display_clock }}</h3>
+                        <h3>{{ schedule_item_inner.starts_at | date:"H:i" }}</h3>
+                        {% if schedule_item_inner.ends_at %}
+                            <br>
+                            <h5>{{ schedule_item_inner.ends_at | date:"H:i" }}</h5>
+                        {% endif %}
+                    </div>
+                    <div class="schedule-event-item">
+                        <h3>{{ schedule_item_inner.name | apply_markup:"markdown" }}</h3>
+                        {% if schedule_item_inner.description %}
+                            <p>{{ schedule_item_inner.description | apply_markup:"markdown" }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+
+    <link rel="stylesheet" href="//{{ hk_domain }}{% static 'css/live.css' %}">
+    <script src="//{{ hk_domain }}{% static "js/live.js" %}"></script>
+
+    <script>
+        var dateTo = new Date("{{ event.hacking_ends_at | date:"Y-m-d H:i:s" }}").getTime();
+        var dateFrom = new Date("{{ event.hacking_starts_at | date:"Y-m-d H:i:s" }}").getTime();
+        var eventDateFrom = new Date("{{ event.starts_at | date:"Y-m-d H:i:s" }}").getTime();
+        var x = setInterval(function() {
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+            var yyyy = today.getFullYear();
+            var hh = String(today.getHours()).padStart(2, '0');
+
+            today = yyyy + mm + dd + hh;
+            var currentId = "schedule-item-" + today;
+
+            var currentActive = document.getElementsByClassName("schedule-event-active")[0];
+            if (new Date().getTime() > eventDateFrom){
+                if (currentActive === null || currentActive === undefined) {
+                    /* TODO: Fix timezone */
+                    var dateTo2 = new Date("{{ event.hacking_ends_at | date:"Y-m-d H:i:s" }}");
+                    dateTo2.setTime(dateTo2.getTime() + 3600 * 1000);
+                    var dd2 = String(dateTo2.getDate()).padStart(2, '0');
+                    var mm2 = String(dateTo2.getMonth() + 1).padStart(2, '0'); //January is 0!
+                    var yyyy2 = dateTo2.getFullYear();
+                    var hh2 = String(dateTo2.getHours()).padStart(2, '0');
+
+                    var today2 = yyyy2 + mm2 + dd2 + hh2;
+                    currentId = "schedule-item-" + today2;
+                    var currentActiveTmp = document.getElementById(currentId);
+                    if (currentActiveTmp !== null && currentActiveTmp !== undefined) {
+                        currentActive = currentActiveTmp;
+                    }
+                }
+                if (currentActive.id !== currentId) {
+                    currentActive.classList.add("schedule-event-passed");
+                }
+                currentActive.classList.remove("schedule-event-active");
+                var current = document.getElementById(currentId);
+                if (current === null || current === undefined) {
+                    if (currentActive === null || currentActive === undefined) {
+                    }
+                    else {
+                        current = currentActive;
+                        currentId = currentActive.id;
+
+                    }
+                }
+                document.getElementById(currentId).classList.add("schedule-event-active");
+                document.getElementById(currentId).classList.remove("schedule-event-passed");
+                var distanceTop = Math.abs(parseInt(current.getBoundingClientRect().top));
+                var currentDistanceTop = Math.abs(parseInt(document.getElementById("live-schedule").style.top));
+                var diff = 100;
+
+                var result,
+                el = document.body.appendChild(document.createElement("div")),
+                styleProp = 'margin-top',
+                style;
+                el.id = 'live-schedule';
+                style = el.currentStyle || window.getComputedStyle(el, null);
+                result = style[styleProp] || "unknown";
+                document.body.removeChild(el);
+
+                diff += parseInt(result);
+
+                if(distanceTop > diff) {
+                    document.getElementById("live-schedule").style.top = (-(currentDistanceTop+distanceTop) + diff) + "px";
+                }
+            }
+
+            var now = new Date().getTime();
+            var distance = dateTo - now;
+
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("live-time").innerHTML = "00:00:00";
+            }
+            else if (now >= dateFrom) {
+                document.getElementById("live-time").innerHTML = ("0" + (days * 24 + hours)).slice(-2) + ":" + ("0" + minutes).slice(-2) + ":" + ("0" + seconds).slice(-2);
+            }
+            else {
+                document.getElementById("live-time").innerHTML = "{{ event.duration | timedelta_display }}";
+            }
+        }, 100);
+    </script>
+{% endblock %}
