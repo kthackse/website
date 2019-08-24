@@ -168,6 +168,24 @@
                             </div>
                         </div>
                     {% endif %}
+                    {% if event_organisers %}
+                        <div class="row" {% if sponsors %}style="margin-top: 2rem;"{% endif %}>
+                            <div class="col-md-12 text-center">
+                                <h3>Organised by</h3>
+                                <div class="row">
+                                    <div class="home-companies-center">
+                                        {% for event_organiser in event_organisers %}
+                                            <div class="text-center home-companies-item company-partner">
+                                                <a href="{{ event_organiser.company.website }}" target="_blank">
+                                                    <img src="/files/{{ event_organiser.company.logo }}" />
+                                                </a>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
                     {% if event.companies_open %}
                         <div class="row" {% if sponsors or partners %}style="margin-top: 2rem;"{% endif %}>
                             <div class="col-md-12 text-center">

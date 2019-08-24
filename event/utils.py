@@ -120,6 +120,12 @@ def get_partners_in_event(event_id):
     )
 
 
+def get_organisers_in_event(event_id):
+    return CompanyEvent.objects.filter(
+        event_id=event_id, tier=CompanyTier.ORGANISER.value, public=True
+    )
+
+
 def get_invoice_by_invoice(invoice):
     return Invoice.objects.filter(invoice=invoice).first()
 
