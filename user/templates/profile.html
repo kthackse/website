@@ -7,6 +7,7 @@
 {% block head_title %}{% if other %}{{ form.name.value }} {{ form.surname.value | ownership }} profile{% else %}{% trans "Your profile" %}{% endif %}{% endblock %}
 
 {% block content %}
+    <!-- TODO: Hide sensitive information -->
     <div class="container">
         <div class="section-intro text-center">
           {% if other %}
@@ -161,7 +162,7 @@
                 <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
                     {% if user.type == 0 %}
                         <div class="section-intro text-center">
-                            <h2>Your past applications</h2>
+                            <h2>Your applications</h2>
                         </div>
                         <div class="row">
                             <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
@@ -171,7 +172,7 @@
                                     <ul>
                                         {% for application in user.applications %}
                                             <!-- TODO: Add link here -->
-                                            <li>{{ application.event }} ({{ application.status | application_status | lower }})</li>
+                                            <li><a href="{% url "event_apply" code=event.code %}">{{ application.event }}</a> ({{ application.status | application_status | lower }}) on {{ application.created_at | date:"d/m/Y \a\t H:i e" }}</li>
                                         {% endfor %}
                                     </ul>
                                 {% endif %}

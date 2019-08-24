@@ -42,6 +42,7 @@ class ApplicationAdmin(admin.ModelAdmin):
     search_fields = (
         "id",
         "user",
+        "event",
         "description",
         "projects",
         "city",
@@ -50,9 +51,9 @@ class ApplicationAdmin(admin.ModelAdmin):
         "degree",
         "team",
     )
-    list_display = ("user", "status", "created_at")
-    list_filter = ("status", "created_at")
-    ordering = ("created_at", "updated_at", "user")
+    list_display = ("id", "user", "event", "status", "created_at")
+    list_filter = ("status", "created_at", "event",)
+    ordering = ("created_at", "updated_at", "event", "user")
 
 
 @admin.register(Team)

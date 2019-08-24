@@ -34,7 +34,7 @@ from event.utils import (
     get_partners_in_event,
     get_sponsors_in_event,
     get_invoice_by_invoice,
-)
+    create_team, assign_team, get_teammates_by_user, deassign_team, remove_team)
 from user.enums import UserType
 from user.utils import get_user_by_picture, get_organisers
 
@@ -134,8 +134,8 @@ def home(request):
                 sponsors_dict[tier.name.lower()] = sponsors.filter(tier=tier.value)
             current_data["sponsors"] = sponsors_dict
         current_data["partners"] = get_partners_in_event(event_id=event.id)
-        current_data["background_video"] = event.background.name[-4:] == ".mp4"
-        current_data["background_image"] = event.background.name[-4:] in [
+        current_data["background_video"] = event.background.name[-4:].lower() == ".mp4"
+        current_data["background_image"] = event.background.name[-4:].lower() in [
             ".png",
             ".jpg",
             ".jpeg",
@@ -153,8 +153,26 @@ def home(request):
 
 
 @login_verified_required
-def dashboard(request):
-    return render(request, "dashboard.html")
+def dashboard(request, context={}):
+    if request.method == "POST":
+        if request.POST["submit"] == "team-create":
+            team = create_team(request.POST["event"], request.user.id, request.POST["name"])
+            assign_team(request.POST["event"], request.user.id, team.code)
+            messages.success(request, "Your team has been created!")
+        elif request.POST["submit"] == "team-join":
+            if assign_team(request.POST["event"], request.user.id, request.POST["code"]):
+                messages.success(request, "You have joined the team!")
+            else:
+                messages.success(request, "Team is full or doesn't exist!")
+        elif request.POST["submit"] == "team-leave":
+            deassign_team(request.POST["event"], request.user.id)
+            messages.success(request, "You have left the team!")
+        elif request.POST["submit"] == "team-remove":
+            remove_team(request.POST["event"], request.user.id, request.POST["team"])
+            messages.success(request, "The team has been removed!")
+
+    context["teammates"] = get_teammates_by_user(request.user.id)
+    return render(request, "dashboard.html", context)
 
 
 def redirect_to(request):
