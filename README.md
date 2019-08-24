@@ -151,6 +151,21 @@ server {
 }
 ```
 - Replace `[PROJECT_FOLDER]` with the full project location.
+- In case this is not the production site, add the following to the `location /` directive.
+```
+auth_basic "Protected website";
+auth_basic_user_file /etc/nginx/.htpasswd;
+```
+- Moreover, if the previous step was followed, add this directive right after in case you will be using autodeploy.
+```
+location /deploy/ {
+    auth_basic off;
+    include proxy_params;
+    proxy_pass http://unix:/home/deploy/nginx/beta.kthack.com/beta_mykthack.sock;
+    client_max_body_size 5M;
+}
+```
+- Also, if you followed the previous step, run `sudo sh -c "echo -n '[USERNAME]:' >> /etc/nginx/.htpasswd"` and `sudo sh -c "openssl passwd -apr1 >> /etc/nginx/.htpasswd"` replacing `[USER]` with a username.
 - `sudo ln -s /etc/nginx/sites-available/kthack.com /etc/nginx/sites-enabled/`.
 - `sudo nginx -t`.
 - `sudo nginx -s reload`.

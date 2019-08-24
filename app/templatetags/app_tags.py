@@ -5,7 +5,6 @@ from django import template
 from django.utils import timezone
 
 from app import settings
-from event.enums import ApplicationStatus
 
 register = template.Library()
 

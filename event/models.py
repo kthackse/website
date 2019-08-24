@@ -80,6 +80,8 @@ class Event(models.Model):
     country = models.CharField(max_length=255, default="Sweden")
     starts_at = models.DateTimeField()
     ends_at = models.DateTimeField()
+    coding_starts_at = models.DateTimeField(blank=True, null=True)
+    coding_ends_at = models.DateTimeField(blank=True, null=True)
     hackers = models.IntegerField(default=200)
     published = models.BooleanField(default=False)
     dates_public = models.BooleanField(default=True)
@@ -125,6 +127,24 @@ class Event(models.Model):
                 return None
         return None
 
+    @property
+    def duration(self):
+        if self.coding_starts_at and self.coding_ends_at:
+            return self.coding_ends_at - self.coding_starts_at
+        return self.ends_at - self.starts_at
+
+    @property
+    def hacking_starts_at(self):
+        if self.coding_starts_at:
+            return self.coding_starts_at
+        return self.starts_at
+
+    @property
+    def hacking_ends_at(self):
+        if self.coding_ends_at:
+            return self.coding_ends_at
+        return self.ends_at
+
     def __str__(self):
         return self.name + " " + str(self.starts_at.year)
 
@@ -148,6 +168,20 @@ class Event(models.Model):
             messages[
                 "application_deadline"
             ] = "The application deadline can't be before applications open"
+        if (
+            self.coding_starts_at
+            and not self.starts_at <= self.coding_starts_at <= self.ends_at
+        ):
+            messages[
+                "coding_starts_at"
+            ] = "The end time for coding needs to be within the times of the event"
+        if (
+            self.coding_ends_at
+            and not self.starts_at <= self.coding_ends_at <= self.ends_at
+        ):
+            messages[
+                "coding_ends_at"
+            ] = "The start time for coding needs to be within the times of the event"
         if messages:
             raise ValidationError(messages)
 

@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
-from event.enums import EventApplicationStatus, CompanyTier, SubscriberStatus
+from event.enums import EventApplicationStatus, CompanyTier, SubscriberStatus, EventType
 from event.models import Event, Application, FAQItem, Subscriber, CompanyEvent, Invoice
 from event.tasks import send_subscriber_new, send_subscriber_resubscribed
 
@@ -11,14 +11,22 @@ from django.core.validators import validate_email
 
 def get_next_or_past_event(published=True):
     event = (
-        Event.objects.filter(published=published, ends_at__gte=timezone.now())
+        Event.objects.filter(
+            published=published,
+            ends_at__gte=timezone.now(),
+            type=EventType.HACKATHON.value,
+        )
         .order_by("starts_at")
         .first()
     )
     if event:
         event.passed = False
         return event
-    event = Event.objects.filter(published=published).order_by("ends_at").first()
+    event = (
+        Event.objects.filter(published=published, type=EventType.HACKATHON.value)
+        .order_by("ends_at")
+        .first()
+    )
     if event:
         event.passed = True
         return event

@@ -10,16 +10,16 @@
         <meta name="theme-color" content="#003984">
         <meta name="author" content="{{ hk_name }}">
         <meta name="description" content="{{ hk_description }}">
-        <link rel="icon" href="{% static 'favicon.png' %}" type="image/png">
+        <link rel="icon" href="//{{ hk_domain }}{% static 'favicon.png' %}" type="image/png">
         <meta property="og:image" content="http://{{ hk_domain }}{% static "img/preview.png" %}" />
         <!-- TODO: Add social network URLs and information -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
-        <link rel="stylesheet" href="{% static 'css/fontawesome.css' %}">
-        <link rel="stylesheet" href="{% static 'css/main.css' %}">
+        <link rel="stylesheet" href="//{{ hk_domain }}{% static 'css/bootstrap.css' %}">
+        <link rel="stylesheet" href="//{{ hk_domain }}{% static 'css/fontawesome.css' %}">
+        <link rel="stylesheet" href="//{{ hk_domain }}{% static 'css/main.css' %}">
 
-        <script src="{% static 'js/jquery.js' %}"></script>
-        <script src="{% static "cookielaw/js/cookielaw.js"%}" type="text/javascript"></script>
+        <script src="//{{ hk_domain }}{% static 'js/jquery.js' %}"></script>
+        <script src="//{{ hk_domain }}{% static "cookielaw/js/cookielaw.js"%}" type="text/javascript"></script>
 
         {% include "include/google.html" %}
 
@@ -139,9 +139,9 @@
                             <small> Made with 💛 by students in KTH 🇸🇪</small>
                         </div>
                         <div class="col-md-12 text-center footer-upper">
-                            <a href="/page/legal/legal-notice" class="legal-page">Legal notice</a>
-                            <a href="/page/legal/terms-and-conditions" class="legal-page">Terms and Conditions</a>
-                            <a href="/page/legal/privacy-and-cookies" class="legal-page">Privacy and Cookies</a>
+                            <a href="//{{ hk_domain }}/page/legal/legal-notice" class="legal-page">Legal notice</a>
+                            <a href="//{{ hk_domain }}/page/legal/terms-and-conditions" class="legal-page">Terms and Conditions</a>
+                            <a href="//{{ hk_domain }}/page/legal/privacy-and-cookies" class="legal-page">Privacy and Cookies</a>
                         </div>
                     </div>
                 </div>
