@@ -9,6 +9,10 @@
     margin-right: 10px;
 }
 
+.row-middle {
+    margin-bottom: 2.5rem;
+}
+
 .footer .container{
     padding-top: 15px;
     padding-bottom: 15px;
@@ -53,6 +57,14 @@ body .content{
   h6 {
     font-size: 15px !important;
   }
+}
+
+p {
+    line-height: 125%;
+}
+
+.form-block {
+    display: block !important;
 }
 
 .col-centered {
@@ -110,14 +122,41 @@ a:focus {
   margin-bottom: 1rem;
 }
 
+.form-group-button-15 {
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
 .container-bottom {
   margin-top: 50px;
 }
 
 .dashboard-event {
-  margin-bottom: 1.5rem;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
+    width: 100%;
+    padding-top: 160px;
+    padding-bottom: 75px;
+    background-color: #003984;
+    background-size: cover;
+    margin: 0 auto;
+}
+
+.dashboard-event h3 {
+    font-size: 32px;
+    margin-bottom: 1rem;
+}
+
+.dashboard-event h5 {
+    color: #333;
+    font-weight: 200;
+    margin-bottom: 1.5rem;
+}
+
+.dashboard-event a {
+    margin-bottom: 0.25rem;
+}
+
+.dashboard-event .row {
+    background-color: #fff;
 }
 
 .live-event {
@@ -441,8 +480,8 @@ form .is-valid:focus {
     z-index: -100;
     position: fixed;
     opacity: 0.25;
-    filter: blur(5px);
-    -webkit-filter: blur(5px);
+    /* filter: blur(5px);
+    -webkit-filter: blur(5px); */
 }
 
 .page-background {
@@ -464,6 +503,56 @@ form .is-valid:focus {
 
 .background-color {
     background-color: #003984;
+}
+
+#popup {
+    z-index: 150;
+    background-color: #f5f5f5;
+    /* border: 2px solid #cccccc; */
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1.5rem;
+    max-width: 600px;
+    transform: translateY(-50%);
+    top: 50%;
+}
+
+#popup h3 {
+    font-size: 24px;
+}
+
+#popup p {
+    line-height: 125%;
+    margin-bottom: 1.5rem;
+}
+
+#popup-background {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: block;
+    z-index: 100;
+    position: fixed;
+    background-color: rgba(204, 204, 204, 0.75);
+}
+
+.form-center {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+.form-right {
+    float: right;
+    display: block;
 }
 
 table {
@@ -489,6 +578,8 @@ td {
     text-transform: uppercase;
     font-size: 13px;
     font-weight: 400 !important;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 @media (min-width: 600px) {
@@ -513,6 +604,8 @@ td {
     -moz-transition: all 0.3s ease 0s;
     -o-transition: all 0.3s ease 0s;
     transition: all 0.3s ease 0s;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 @media (min-width: 600px) {
@@ -523,6 +616,36 @@ td {
 
 .link-button2:hover {
     background-color: rgba(255, 255, 255, 0.1) !important;
+    color: #fff !important;
+}
+
+.link-button3 {
+    display: inline-block;
+    border: none;
+    color: #fff !important;
+    padding: 9px 25px !important;
+    margin-top: -1px;
+    -webkit-transition: all 0.3s ease 0s;
+    -moz-transition: all 0.3s ease 0s;
+    -o-transition: all 0.3s ease 0s;
+    transition: all 0.3s ease 0s;
+    background-color: rgba(30, 92, 177, 1);
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 400 !important;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+@media (min-width: 600px) {
+    .link-button3 {
+        padding: 9px 24px !important;
+        margin-top: -1px;
+    }
+}
+
+.link-button3:hover {
+    background-color: rgba(0, 57, 132, 1) !important;
     color: #fff !important;
 }
 
@@ -1545,6 +1668,16 @@ h5, .h5 {
 
 .section-intro-top {
   margin-bottom: 35px;
+}
+
+.section-event {
+  max-width: 640px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.section-event p {
+  margin-bottom: 0;
 }
 
 /* section intro end
@@ -3093,7 +3226,7 @@ h5, .h5 {
 }
 
 .profile-picture {
-    background-color: #cccccc;
+    /* background-color: #cccccc; */
 }
 
 /*============ End Blog Single Styles  =============*/

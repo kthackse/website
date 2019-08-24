@@ -43,7 +43,7 @@ def get_substitutions_templates():
 
 def variables_processor(request):
     c = get_substitutions_templates()
-    from event.utils import get_next_or_past_event
+    from event.utils import get_next_or_past_event, get_application
 
     event = get_next_or_past_event()
     if event:
@@ -56,6 +56,9 @@ def variables_processor(request):
             ".gif",
             ".svg",
         ]
+        application = get_application(event.id, request.user.id)
+        if application:
+            c["application"] = application
     return c
 
 

@@ -290,7 +290,7 @@ class Application(models.Model):
     hardware = models.TextField(max_length=1000, null=True, blank=True)
 
     # Team
-    team = models.ForeignKey("Team", on_delete=models.PROTECT, null=True, blank=True)
+    team = models.ForeignKey("Team", on_delete=models.SET_NULL, null=True, blank=True)
 
     class Meta:
         unique_together = ("event", "user")
@@ -316,6 +316,10 @@ class Application(models.Model):
     def is_reimbursementneeded(self):
         return self.money_needed.amount > Decimal(0.0)
 
+    def cancel(self):
+        self.status = ApplicationStatus.CANCELLED.value
+        self.save()
+
     def clean(self):
         messages = dict()
         if self.user.type != UserType.PARTICIPANT.value:
@@ -334,6 +338,9 @@ class Team(models.Model):
     code = models.CharField(max_length=31)
     lemma = models.CharField(max_length=127, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name + " (" + str(self.event) + ")"
 
     class Meta:
         unique_together = (("event", "creator"), ("event", "code"))

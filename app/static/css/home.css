@@ -80,8 +80,8 @@ html, body {
 
 .home-background {
     opacity: 0.75 !important;
-    filter: blur(5px) !important;;
-    -webkit-filter: blur(5px) !important;;
+    /* filter: blur(5px) !important;
+    -webkit-filter: blur(5px) !important; */
 }
 
 body {

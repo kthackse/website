@@ -2419,14 +2419,14 @@ a.btn.disabled, fieldset:disabled a.btn {
 
 .btn-secondary {
     color: #fff;
-    background-color: #6c757d;
-    border-color: #6c757d
+    background-color: rgb(30, 92, 177);
+    border-color: rgb(30, 92, 177);
 }
 
 .btn-secondary:hover {
     color: #fff;
-    background-color: #5a6268;
-    border-color: #545b62
+    background-color: rgb(0, 57, 132);
+    border-color: rgb(0, 57, 132);
 }
 
 .btn-secondary.focus, .btn-secondary:focus {
@@ -2441,8 +2441,8 @@ a.btn.disabled, fieldset:disabled a.btn {
 
 .btn-secondary:not(:disabled):not(.disabled).active, .btn-secondary:not(:disabled):not(.disabled):active, .show > .btn-secondary.dropdown-toggle {
     color: #fff;
-    background-color: #545b62;
-    border-color: #4e555b
+    background-color: rgb(0, 57, 132);
+    border-color: rgb(0, 57, 132);
 }
 
 .btn-secondary:not(:disabled):not(.disabled).active:focus, .btn-secondary:not(:disabled):not(.disabled):active:focus, .show > .btn-secondary.dropdown-toggle:focus {

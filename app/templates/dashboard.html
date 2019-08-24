@@ -1,40 +1,158 @@
 {% extends "base.html" %}
 {% load bootstrap4 %}
 {% load i18n %}
+{% load app_tags %}
 
 {% block head_title %}{% trans "Dashboard" %}{% endblock %}
 
+{% block pre_body %}
+    {% if request.user.is_participant %}
+        {% if event.application_status == 1 %}
+            {% if not application or application.status != 2 %}
+                {% if not application or application.status != 9 %}
+                    <div class="row dashboard-event" style="background-image: url('/files/{{ event.background }}')">
+                        <div class="container">
+                            <div class="row">
+                                <div class="section-event text-center">
+                                    <span style="text-transform: uppercase;">{{ event.name }} {{ event.starts_at | date:"Y" }}</span>
+                                    {% if application %}
+                                        {% if application.status == 0 %}
+                                            <h3>Your application has been drafted</h3>
+                                            <h5>Make sure to submit it before {{ event.application_deadline | date:"F d \a\t H:i e" }}!</h5>
+                                            <a class="link-button" href="/event/{{ event.code }}/apply">Submit your application</a>
+                                        {% elif application.status == 3 or application.status == 6 %}
+                                            <!-- TODO: Invited -->
+                                        {% elif application.status == 4 %}
+                                            <!-- TODO: Confirmed -->
+                                        {% elif application.status == 5 %}
+                                            <!-- TODO: Rejected -->
+                                        {% elif application.status == 7 %}
+                                            <!-- TODO: Expired -->
+                                        {% else %}
+                                            <h3>Your application has been submited</h3>
+                                            <h5>You've submitted your application on time. Now, sit back and relax, we'll get back to you once we've reviewed your application!</h5>
+                                            <a class="link-button" href="/event/{{ event.code }}/apply">Check your application</a>
+                                            <!-- TODO: Cancel application -->
+                                            <a class="link-button3" href="/event/{{ event.code }}/apply/remove">Remove your application</a>
+                                        {% endif %}
+                                    {% else %}
+                                        <h3>Have you applied yet?</h3>
+                                        {% with remaining_days=event.application_deadline|time_left|days_left %}
+                                            {% if remaining_days == 0 %}
+                                                <h5>Hurry up, applications close <b style="font-weight: 600;">today</b> at {{ event.application_deadline | date:"H:i e" }}!</h5>
+                                            {% elif remaining_days == 1 %}
+                                                <h5>Hurry up, applications close <b style="font-weight: 600;">tomorrow</b> at {{ event.application_deadline | date:"H:i e" }}!</h5>
+                                            {% else %}
+                                                <h5>Applications close in {{ remaining_days }} days!</h5>
+                                            {% endif %}
+                                        {% endwith %}
+                                        <a class="link-button" href="/event/{{ event.code }}/apply">Apply now to {{ event.name }} {{ event.starts_at | date:"Y" }} <i style="padding-left: 10px;" class="fas fa-long-arrow-alt-right"></i></a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <style>
+                        #container-main {
+                            padding-top: 5rem !important;
+                        }
+                    </style>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
 {% block content %}
     <div class="container">
-      <div class="section-intro text-center">
-        <h2>Dashboard</h2>
-      </div>
-      {% if request.user.is_participant %}
-          {% if events %}
-              <div class="row">
-                <div class="col-md-12 col-lg-12 mb-12 mb-lg-0 text-center pb-25px">
-                    <h3>Future events</h3>
+        <div class="section-intro text-center">
+            <h2>Dashboard</h2>
+        </div>
+        {% if request.user.is_participant %}
+            {% if event.application_status == 1 and application %}
+                <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                    {% if application.team %}
+                        <div class="subsection-intro text-center">
+                            <h3>Your team</h3>
+                        </div>
+                        <div class="row">
+                            <form action="" method="post" class="form form-block">
+                                {% csrf_token %}
+                                <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                                    <h3>{{ application.team.name }}</h3>
+                                    <p>Code: {{ application.team.code }}</p>
+                                </div>
+                                <div class="col-md-12 col-lg-12 mb-12 mb-lg-0" style="padding-bottom: 1rem;">
+                                    <h4>Members list</h4>
+                                        {% for teammate in teammates %}
+                                            <div>
+                                                <a href="{% url "user_profileother" id=teammate.user.id %}">
+                                                    <img class="application-profile" src="{{ teammate.user.picture.crop.500x500 }}"/>
+                                                </a>
+                                                <p style="display: inline-block;"><a href="{% url "user_profileother" id=teammate.user.id %}">{{ teammate.user }}</a>{% if teammate.user.id == application.team.creator.id %} (creator){% endif %}</p>
+
+                                            </div>
+                                        {% endfor %}
+                                </div>
+                                <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                                    <div class="service-card">
+                                        <div class="form-group-button-1">
+                                            <input type="hidden" id="id_event" name="event" value="{{ event.id }}">
+                                            <input type="hidden" id="id_team" name="team" value="{{ application.team.id }}">
+                                            <button class="btn btn-primary btn-block text-center" type="submit" name="submit" value="team-leave">Leave</button>
+                                            {% if application.team.creator.id == request.user.id %}
+                                                <button class="btn btn-secondary btn-block text-center" type="submit" name="submit" value="team-remove">Remove team</button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    {% else %}
+                        <div class="text-center">
+                            <h3>Join a team</h3>
+                        </div>
+                        <p>In order to join a team it must have a free spot, maximum team size is , you won't be able to join a full team.</p>
+                        <div class="row row-middle">
+                            <form action="" method="post" class="form">
+                                {% csrf_token %}
+                                <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                                    <div class="service-card">
+                                        <div class="form-group">
+                                            <label for="id_code">Team code</label>
+                                            <input type="text" name="code" maxlength="225" class="form-control" placeholder="ELL2IOT0" id="id_name">
+                                        </div>
+                                        <div class="form-group-button-1">
+                                            <input type="hidden" id="id_event" name="event" value="{{ event.id }}">
+                                            <button class="btn btn-primary btn-block text-center" type="submit" name="submit" value="team-join">Join</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="text-center">
+                            <h3>Create a team</h3>
+                        </div>
+                        <div class="row">
+                            <form action="" method="post" class="form">
+                                {% csrf_token %}
+                                <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                                    <div class="service-card">
+                                        <div class="form-group">
+                                            <label for="id_name">Team name</label>
+                                            <input type="text" name="name" maxlength="225" class="form-control" placeholder="Allsafe Cybersecurity" id="id_name">
+                                        </div>
+                                        <div class="form-group-button-1">
+                                            <input type="hidden" id="id_event" name="event" value="{{ event.id }}">
+                                            <button class="btn btn-primary btn-block text-center" type="submit" name="submit" value="team-create">Create</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    {% endif %}
                 </div>
-              </div>
-            {% for event in events %}
-                <div class="row dashboard-event">
-                    <div class="col-md-2 col-lg-2 mb-2 mb-lg-0">
-                        <img src="/files/{{ event.picture }}" />
-                    </div>
-                    <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
-                        <h4>{{ event.name }}</h4>
-                        <h5>{{ event.city }}, {{ event.country }}</h5>
-                        <p>{{ event.description }}</p>
-                        <!-- TODO: Display apply only if open -->
-                        <a href="../event/{{ event.code }}/apply">APPLY</a>
-                    </div>
-                    <div class="col-md-4 col-lg-4 mb-4 mb-lg-0 text-right">
-                        <h2>{{ event.starts_at | date:"Y" }}</h2>
-                        <h3>{{ event.starts_at | date:"F d" }}</h3>
-                    </div>
-                </div>
-            {% endfor %}
-          {% endif %}
+            {% endif %}
         {% endif %}
     </div>
 {% endblock %}
