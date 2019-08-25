@@ -5,14 +5,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('event', '0025_application_score'),
-    ]
+    dependencies = [("event", "0025_application_score")]
 
     operations = [
         migrations.AddField(
-            model_name='application',
-            name='note',
+            model_name="application",
+            name="note",
             field=models.CharField(blank=True, max_length=255, null=True),
-        ),
+        )
     ]

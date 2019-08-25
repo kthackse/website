@@ -6,14 +6,12 @@ import event.models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('event', '0026_application_note'),
-    ]
+    dependencies = [("event", "0026_application_note")]
 
     operations = [
         migrations.AlterField(
-            model_name='vote',
-            name='vote_tech',
+            model_name="vote",
+            name="vote_tech",
             field=models.SmallIntegerField(validators=[event.models.valid_vote]),
-        ),
+        )
     ]

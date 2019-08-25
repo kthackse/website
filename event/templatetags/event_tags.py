@@ -24,4 +24,4 @@ def display_clock(time):
 
 @register.filter
 def one_year(time: timezone.datetime):
-    return time.replace(year=time.year-1)
+    return time.replace(year=time.year - 1)

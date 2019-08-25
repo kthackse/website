@@ -5,14 +5,10 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('event', '0024_set_null_on_team_deletion'),
-    ]
+    dependencies = [("event", "0024_set_null_on_team_deletion")]
 
     operations = [
         migrations.AddField(
-            model_name='application',
-            name='score',
-            field=models.FloatField(default=0.0),
-        ),
+            model_name="application", name="score", field=models.FloatField(default=0.0)
+        )
     ]

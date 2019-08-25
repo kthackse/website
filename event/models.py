@@ -386,7 +386,11 @@ class Vote(models.Model):
 
     def delete(self, *args, **kwargs):
         with transaction.atomic():
-            votes = Vote.objects.filter(application_id=self.application_id).exclude(id=self.id).values_list("vote_total", flat=True)
+            votes = (
+                Vote.objects.filter(application_id=self.application_id)
+                .exclude(id=self.id)
+                .values_list("vote_total", flat=True)
+            )
             if not votes:
                 votes = [0]
             self.application.set_score((sum(votes) / len(votes)))
@@ -399,7 +403,11 @@ class Vote(models.Model):
             + HACKATHON_VOTE_TECHNICAL * self.vote_tech
         ) / (HACKATHON_VOTE_PERSONAL + HACKATHON_VOTE_TECHNICAL)
         with transaction.atomic():
-            votes = Vote.objects.filter(application_id=self.application_id).exclude(id=self.id).count()
+            votes = (
+                Vote.objects.filter(application_id=self.application_id)
+                .exclude(id=self.id)
+                .count()
+            )
             score = (self.application.score * votes + self.vote_total) / (votes + 1)
             self.application.set_score(score)
         return super().save(*args, **kwargs)
