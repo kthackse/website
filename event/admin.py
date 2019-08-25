@@ -51,7 +51,7 @@ class ApplicationAdmin(admin.ModelAdmin):
         "degree",
         "team",
     )
-    list_display = ("id", "user", "event", "status", "created_at")
+    list_display = ("id", "user", "event", "status", "score", "created_at")
     list_filter = ("status", "created_at", "event")
     ordering = ("created_at", "updated_at", "event", "user")
 
@@ -68,6 +68,7 @@ class TeamAdmin(admin.ModelAdmin):
 class VoteAdmin(admin.ModelAdmin):
     search_fields = ("id", "application", "voted_by")
     list_display = (
+        "id",
         "application",
         "voted_by",
         "vote_tech",

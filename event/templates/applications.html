@@ -35,8 +35,7 @@
                     </a>
                 </div>
                 <div class="col-md-1 col-lg-1 mb-1 mb-lg-0">
-                    <!-- TODO: Display the score -->
-                    <p>8,50</p>
+                    <p>{{ application.score | floatformat:2 }}</p>
                 </div>
                 <div class="col-md-1 col-lg-1 mb-1 mb-lg-0">
                     <p>{{ application.status_str }}</p>
@@ -48,10 +47,16 @@
                     <p><a href="https://www.google.com/maps/search/{{ application.user.city }},%20{{ application.user.country }}" target="_blank">{{ application.user.city }}, {{ application.user.country }}</a></p>
                 </div>
                 <div class="col-md-1 col-lg-1 mb-1 mb-lg-0">
-                    <!-- TODO: Set application URL -->
-                    <p><a href="">Details</a></p>
+                    <p><a href="{% url "event_applicationsother" code=event.code id=application.id %}">Details</a></p>
                 </div>
             </div>
         {% endfor %}
+        {% if not applications %}
+            <div class="row application-event">
+                <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                    <p>There are no applications yet!</p>
+                </div>
+            </div>
+        {% endif %}
     </div>
 {% endblock %}

@@ -15,8 +15,15 @@ from app.variables import HACKATHON_TIMEZONE
 from app.views import response
 from event.enums import DietType, TshirtSize, ApplicationStatus, SubscriberStatus
 from event.models import Application, Subscriber
-from event.utils import get_event, get_application, get_applications, get_application_to_review, add_comment, \
-    get_comments_for_application
+from event.utils import (
+    get_event,
+    get_application,
+    get_applications,
+    get_application_to_review,
+    add_comment,
+    get_comments_for_application,
+    add_vote,
+    get_application_by_id)
 from user.utils import is_participant, is_organiser
 
 
@@ -183,15 +190,61 @@ def applications_review(request, code, context={}):
         if request.method == "POST":
             if request.POST["submit"] == "comment":
                 if request.POST["comment"]:
-                    add_comment(request.POST["application"], request.user.id, request.POST["comment"])
-                    messages.success(request, "Your comment has been added successfully to the application.")
+                    add_comment(
+                        request.POST["application"],
+                        request.user.id,
+                        request.POST["comment"],
+                    )
+                    messages.success(
+                        request,
+                        "Your comment has been added successfully to the application.",
+                    )
                 else:
                     messages.error(request, "The comment cannot be empty!")
+            elif request.POST["submit"] == "vote":
+                if (
+                    "vote-personal" not in request.POST
+                    or request.POST["vote-personal"] == "-1"
+                    or "vote-technical" not in request.POST
+                    or request.POST["vote-technical"] == "-1"
+                ):
+                    messages.error(
+                        request, "You need to vote both personal and technical skills!"
+                    )
+                else:
+                    add_vote(
+                        request.POST["application"],
+                        request.user.id,
+                        int(request.POST["vote-personal"]),
+                        int(request.POST["vote-technical"]),
+                    )
         context["event"] = current_event
-        application = get_application_to_review(event_id=current_event.id, user_id=request.user.id)
+        application = get_application_to_review(
+            event_id=current_event.id, user_id=request.user.id
+        )
         context["application"] = application
-        context["comments"] = get_comments_for_application(application_id=application.id)
+        if application:
+            context["comments"] = get_comments_for_application(
+                application_id=application.id
+            )
+        context["review"] = True
         return render(request, "application_review.html", context)
+    return HttpResponseNotFound()
+
+
+@login_verified_required
+@user_passes_test(is_organiser)
+def applications_other(request, code, id, context={}):
+    current_event = get_event(code=code)
+    if current_event:
+        current_application = get_application_by_id(application_id=id)
+        if current_application:
+            context["event"] = current_event
+            context["application"] = current_application
+            context["comments"] = get_comments_for_application(
+                application_id=current_application.id
+            )
+            return render(request, "application_review.html", context)
     return HttpResponseNotFound()
 
 

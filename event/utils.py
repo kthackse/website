@@ -20,7 +20,9 @@ from event.models import (
     CompanyEvent,
     Invoice,
     Team,
-    Comment, Vote)
+    Comment,
+    Vote,
+)
 from event.tasks import send_subscriber_new, send_subscriber_resubscribed
 
 from django.core.validators import validate_email
@@ -65,12 +67,16 @@ def get_application(event_id, user_id):
     return Application.objects.filter(event_id=event_id, user_id=user_id).first()
 
 
+def get_application_by_id(application_id):
+    return Application.objects.filter(id=application_id).first()
+
+
 def get_application_to_review(event_id, user_id):
-    application_voted_ids = Vote.objects.filter(voted_by=user_id, application__event_id=event_id).values_list("application__id", flat=True)
+    application_voted_ids = Vote.objects.filter(
+        voted_by=user_id, application__event_id=event_id
+    ).values_list("application__id", flat=True)
     return (
-        Application.objects.filter(
-            event_id=event_id, status=ApplicationStatus.PENDING
-        )
+        Application.objects.filter(event_id=event_id, status=ApplicationStatus.PENDING)
         .exclude(id__in=application_voted_ids)
         .order_by("score", "created_at")
         .first()
@@ -211,10 +217,23 @@ def get_teammates_by_user(user_id):
 
 
 def add_comment(application_id, user_id, content):
-    comment = Comment(application_id=application_id, commented_by_id=user_id, content=content)
+    comment = Comment(
+        application_id=application_id, commented_by_id=user_id, content=content
+    )
     comment.save()
     return comment
 
 
 def get_comments_for_application(application_id):
     return Comment.objects.filter(application_id=application_id).order_by("-created_at")
+
+
+def add_vote(application_id, user_id, vote_personal, vote_technical):
+    vote = Vote(
+        application_id=application_id,
+        voted_by_id=user_id,
+        vote_personal=vote_personal,
+        vote_tech=vote_technical,
+    )
+    vote.save()
+    return vote

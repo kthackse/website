@@ -3,147 +3,270 @@
 {% load i18n %}
 {% load app_tags %}
 
-{% block head_title %}Review application{% endblock %}
+{% block head_title %}{% if review %}Review{% else %}{% if application %}{{ application.user }}{% else %}View{% endif %}{% endif %} application{% endblock %}
 
 {% block content %}
     <div class="container">
         <div class="section-intro text-center">
-            <h2>Review application</h2>
+            <h2>{% if review %}Review{% else %}View{% endif %} application</h2>
         </div>
-        <div class="row">
-            <div class="col-md-8 col-lg-8 mb-8 mb-lg-0">
-                <div class="row subsection-intro">
-                    <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
-                        <h3>{{ application.user.name }} {{ application.user.surname }}</h3>
-                        <p>Application created {{ application.created_at | timesince }} ago</p>
-                    </div>
-                    <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
-                        <div class="form-group text-right">
-                            <h6>Location</h6>
-                            <p><a href="https://www.google.com/maps/search/{{ application.user.city }},%20{{ application.user.country }}" target="_blank">{{ application.user.city }}, {{ application.user.country }}</a></p>
+        {% if application %}
+            <div class="row">
+                <div class="col-md-8 col-lg-8 mb-8 mb-lg-0">
+                    <div class="row subsection-intro">
+                        <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                            <a href="/user/profile/{{ application.user.id }}">
+                                <img class="application-profile" src="{{ application.user.picture.crop.500x500 }}"/>
+                                <h3 style="display: inline-block;">{{ application.user }}</h3>
+                            </a>
+                            <p>Application created {{ application.created_at | timesince }} ago</p>
                         </div>
-                    </div>
-                </div>
-                <div class="row subsection-intro">
-                    <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
-                        <object data="/files/{{ application.resume }}" type="application/pdf" width="100%" height="500px">
-                            <embed src="/files/{{ application.resume }}" type="application/pdf" />
-                            <h6>Resume</h6>
-                            <a href="/files/{{ application.resume }}">{{ application.resume | file_name }}</a>
-                        </object>
-                    </div>
-                </div>
-                <div class="row subsection-intro-mid">
-                    <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
-                        <div class="subsection-intro text-center">
-                            <h3>Academic</h3>
-                        </div>
-                        <div class="form-group">
-                            <h6>University</h6>
-                            <p><a href="https://www.google.com/maps/search/{{ application.university }}" target="_blank">{{ application.university }}</a></p>
-                        </div>
-                        <div class="form-group">
-                            <h6>Degree</h6>
-                            <p>{{ application.degree }}</p>
-                        </div>
-                        <div class="form-group">
-                            <h6>Graduation year</h6>
-                            <p>{{ application.graduation_year }}</p>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
-                        <div class="subsection-intro text-center">
-                            <h3>Social</h3>
-                        </div>
-                        {% if application.github or application.devpost or application.linkedin or application.website %}
-                            {% if application.github %}
-                                <div class="form-group text-right">
-                                    <h6><i aria-hidden="true" class="fab fa-github fa-lg" style="margin-right: 5px;"></i> GitHub</h6>
-                                    <p><a href="{{ application.github }}" target="_blank">{{ application.github }}</a></p>
-                                </div>
-                            {% endif %}
-                            {% if application.devpost %}
-                                <div class="form-group text-right">
-                                    <h6><i aria-hidden="true" class="fas fa-lightbulb fa-lg" style="margin-right: 5px;"></i> DevPost</h6>
-                                    <p><a href="{{ application.devpost }}" target="_blank">{{ application.devpost }}</a></p>
-                                </div>
-                            {% endif %}
-                            {% if application.linkedin %}
-                                <div class="form-group text-right">
-                                    <h6><i aria-hidden="true" class="fab fa-linkedin fa-lg" style="margin-right: 5px;"></i> LinkedIn</h6>
-                                    <p><a href="{{ application.linkedin }}" target="_blank">{{ application.linkedin }}</a></p>
-                                </div>
-                            {% endif %}
-                            {% if application.website %}
-                                <div class="form-group text-right">
-                                    <h6><i aria-hidden="true" class="fas fa-globe-europe fa-lg" style="margin-right: 5px;"></i> Website</h6>
-                                    <p><a href="{{ application.website }}" target="_blank">{{ application.website }}</a></p>
-                                </div>
-                            {% endif %}
-                        {% else %}
+                        <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
                             <div class="form-group text-right">
-                                <p>The hacker hasn't provided any links.</p>
+                                <h6>Location</h6>
+                                <p><a href="https://www.google.com/maps/search/{{ application.user.city }},%20{{ application.user.country }}" target="_blank">{{ application.user.city }}, {{ application.user.country }}</a></p>
                             </div>
-                        {% endif %}
+                        </div>
                     </div>
+                    <div class="row subsection-intro">
+                        <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                            <object data="/files/{{ application.resume }}" type="application/pdf" width="100%" height="500px">
+                                <embed src="/files/{{ application.resume }}" type="application/pdf" />
+                                <h6>Resume</h6>
+                                <a href="/files/{{ application.resume }}">{{ application.resume | file_name }}</a>
+                            </object>
+                        </div>
+                    </div>
+                    <div class="row subsection-intro-mid">
+                        <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                            <div class="subsection-intro text-center">
+                                <h3>Academic</h3>
+                            </div>
+                            <div class="form-group">
+                                <h6>University</h6>
+                                <p><a href="https://www.google.com/maps/search/{{ application.university }}" target="_blank">{{ application.university }}</a></p>
+                            </div>
+                            <div class="form-group">
+                                <h6>Degree</h6>
+                                <p>{{ application.degree }}</p>
+                            </div>
+                            <div class="form-group">
+                                <h6>Graduation year</h6>
+                                <p>{{ application.graduation_year }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                            <div class="subsection-intro text-center">
+                                <h3>Social</h3>
+                            </div>
+                            {% if application.github or application.devpost or application.linkedin or application.website %}
+                                {% if application.github %}
+                                    <div class="form-group text-right">
+                                        <h6><i aria-hidden="true" class="fab fa-github fa-lg" style="margin-right: 5px;"></i> GitHub</h6>
+                                        <p><a href="{{ application.github }}" target="_blank">{{ application.github }}</a></p>
+                                    </div>
+                                {% endif %}
+                                {% if application.devpost %}
+                                    <div class="form-group text-right">
+                                        <h6><i aria-hidden="true" class="fas fa-lightbulb fa-lg" style="margin-right: 5px;"></i> DevPost</h6>
+                                        <p><a href="{{ application.devpost }}" target="_blank">{{ application.devpost }}</a></p>
+                                    </div>
+                                {% endif %}
+                                {% if application.linkedin %}
+                                    <div class="form-group text-right">
+                                        <h6><i aria-hidden="true" class="fab fa-linkedin fa-lg" style="margin-right: 5px;"></i> LinkedIn</h6>
+                                        <p><a href="{{ application.linkedin }}" target="_blank">{{ application.linkedin }}</a></p>
+                                    </div>
+                                {% endif %}
+                                {% if application.website %}
+                                    <div class="form-group text-right">
+                                        <h6><i aria-hidden="true" class="fas fa-globe-europe fa-lg" style="margin-right: 5px;"></i> Website</h6>
+                                        <p><a href="{{ application.website }}" target="_blank">{{ application.website }}</a></p>
+                                    </div>
+                                {% endif %}
+                            {% else %}
+                                <div class="form-group text-right">
+                                    <p>The hacker hasn't provided any links.</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row subsection-intro-mid">
+                        <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                            <div class="subsection-intro text-center">
+                                <h3>Background</h3>
+                            </div>
+                            <div class="form-group">
+                                <h6>Why interested?</h6>
+                                <p>{{ application.description }}</p>
+                            </div>
+                            <div class="form-group">
+                                <h6>Projects</h6>
+                                <p>{{ application.projects }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% if review %}
+                        <div class="row subsection-intro-mid">
+                            <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                                <div class="subsection-intro text-center">
+                                    <h3>Vote</h3>
+                                </div>
+                                <div class="subsection-intro text-center">
+                                    <h4>Personal skills</h4>
+                                </div>
+                                <div class="form-group vote-boxes">
+                                    <a id="vote-personal-0" href="javascript:setPersonalVote(0)" class="vote-box">
+                                        <span>0</span>
+                                    </a>
+                                    <a id="vote-personal-1" href="javascript:setPersonalVote(1)" class="vote-box">
+                                        <span>1</span>
+                                    </a>
+                                    <a id="vote-personal-2" href="javascript:setPersonalVote(2)" class="vote-box">
+                                        <span>2</span>
+                                    </a>
+                                    <a id="vote-personal-3" href="javascript:setPersonalVote(3)" class="vote-box">
+                                        <span>3</span>
+                                    </a>
+                                    <a id="vote-personal-4" href="javascript:setPersonalVote(4)" class="vote-box">
+                                        <span>4</span>
+                                    </a>
+                                    <a id="vote-personal-5" href="javascript:setPersonalVote(5)" class="vote-box">
+                                        <span>5</span>
+                                    </a>
+                                    <a id="vote-personal-6" href="javascript:setPersonalVote(6)" class="vote-box">
+                                        <span>6</span>
+                                    </a>
+                                    <a id="vote-personal-7" href="javascript:setPersonalVote(7)" class="vote-box">
+                                        <span>7</span>
+                                    </a>
+                                    <a id="vote-personal-8" href="javascript:setPersonalVote(8)" class="vote-box">
+                                        <span>8</span>
+                                    </a>
+                                    <a id="vote-personal-9" href="javascript:setPersonalVote(9)" class="vote-box">
+                                        <span>9</span>
+                                    </a>
+                                    <a id="vote-personal-10" href="javascript:setPersonalVote(10)" class="vote-box">
+                                        <span>10</span>
+                                    </a>
+                                </div>
+                                <div class="subsection-intro text-center">
+                                    <h4>Technical skills</h4>
+                                </div>
+                                <div class="form-group vote-boxes">
+                                    <a id="vote-technical-0" href="javascript:setTechnicalVote(0)" class="vote-box">
+                                        <span>0</span>
+                                    </a>
+                                    <a id="vote-technical-1" href="javascript:setTechnicalVote(1)" class="vote-box">
+                                        <span>1</span>
+                                    </a>
+                                    <a id="vote-technical-2" href="javascript:setTechnicalVote(2)" class="vote-box">
+                                        <span>2</span>
+                                    </a>
+                                    <a id="vote-technical-3" href="javascript:setTechnicalVote(3)" class="vote-box">
+                                        <span>3</span>
+                                    </a>
+                                    <a id="vote-technical-4" href="javascript:setTechnicalVote(4)" class="vote-box">
+                                        <span>4</span>
+                                    </a>
+                                    <a id="vote-technical-5" href="javascript:setTechnicalVote(5)" class="vote-box">
+                                        <span>5</span>
+                                    </a>
+                                    <a id="vote-technical-6" href="javascript:setTechnicalVote(6)" class="vote-box">
+                                        <span>6</span>
+                                    </a>
+                                    <a id="vote-technical-7" href="javascript:setTechnicalVote(7)" class="vote-box">
+                                        <span>7</span>
+                                    </a>
+                                    <a id="vote-technical-8" href="javascript:setTechnicalVote(8)" class="vote-box">
+                                        <span>8</span>
+                                    </a>
+                                    <a id="vote-technical-9" href="javascript:setTechnicalVote(9)" class="vote-box">
+                                        <span>9</span>
+                                    </a>
+                                    <a id="vote-technical-10" href="javascript:setTechnicalVote(10)" class="vote-box">
+                                        <span>10</span>
+                                    </a>
+                                </div>
+                                <form action="" method="post" class="form form-block">
+                                    {% csrf_token %}
+                                    <div class="form-group-button-2">
+                                        <input type="hidden" id="id_application" name="application" value="{{ application.id }}">
+                                        <input type="hidden" id="id_votepersonal" name="vote-personal" value="-1">
+                                        <input type="hidden" id="id_votetechnical" name="vote-technical" value="-1">
+                                        <button class="btn btn-primary btn-block" type="submit" name="submit" value="vote">Send vote</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <script>
+                            function setPersonalVote(value){
+                                var prevSelected = document.getElementsByClassName("vote-personal-selected")[0];
+                                if (prevSelected !== undefined) {
+                                    prevSelected.classList.remove("vote-personal-selected");
+                                }
+                                document.getElementById("vote-personal-"+value).classList.add("vote-personal-selected");
+                                document.getElementById("id_votepersonal").value = value;
+                            }
+                            function setTechnicalVote(value){
+                                var prevSelected = document.getElementsByClassName("vote-technical-selected")[0];
+                                if (prevSelected !== undefined) {
+                                    prevSelected.classList.remove("vote-technical-selected");
+                                }
+                                document.getElementById("vote-technical-"+value).classList.add("vote-technical-selected");
+                                document.getElementById("id_votetechnical").value = value;
+                            }
+                        </script>
+                    {% endif %}
                 </div>
-                <div class="row subsection-intro-mid">
-                    <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
-                        <div class="subsection-intro text-center">
-                            <h3>Background</h3>
-                        </div>
-                        <div class="form-group">
-                            <h6>Why interested?</h6>
-                            <p>{{ application.description }}</p>
-                        </div>
-                        <div class="form-group">
-                            <h6>Projects</h6>
-                            <p>{{ application.projects }}</p>
+                <div class="col-md-4 col-lg-4 mb-4 mb-lg-0">
+                    <div class="subsection-intro text-center">
+                        <h3>Comments</h3>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                            <form action="" method="post" class="form form-block section-intro">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="id_comment">Add a comment below...</label>
+                                    <textarea type="text" name="comment" maxlength="1000" class="form-control" placeholder="" id="id_comment"></textarea>
+                                </div>
+                                <div class="form-group-button">
+                                    <input type="hidden" id="id_application" name="application" value="{{ application.id }}">
+                                    <button class="btn btn-primary btn-block" type="submit" name="submit" value="comment">Add comment</button>
+                                </div>
+                            </form>
+                            <div class="row">
+                                <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                                    <div class="subsection-intro text-center">
+                                        <h3>Previous comments</h3>
+                                    </div>
+                                </div>
+                                {% for comment in comments %}
+                                    <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                                        <div class="row" style="margin-bottom: 0.5rem;">
+                                            <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                                                <h5>{{ comment.commented_by }}</h5>
+                                            </div>
+                                            <div class="col-md-6 col-lg-6 mb-6 mb-lg-0" style="text-align: right;">
+                                                <p style="margin-bottom: 0;">{{ comment.created_at | date:"d/m/Y H:i" }}</p>
+                                            </div>
+                                            <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                                                <p>{{ comment.content }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 col-lg-4 mb-4 mb-lg-0">
-                <div class="subsection-intro text-center">
-                    <h3>Comments</h3>
-                </div>
-                <div class="row">
-                    <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
-                        <form action="" method="post" class="form form-block section-intro">
-                            {% csrf_token %}
-                            <div class="form-group">
-                                <label for="id_comment">Add a comment below...</label>
-                                <textarea type="text" name="comment" maxlength="1000" class="form-control" placeholder="" id="id_comment"></textarea>
-                            </div>
-                            <div class="form-group-button">
-                                <input type="hidden" id="id_application" name="application" value="{{ application.id }}">
-                                <button class="btn btn-primary btn-block" type="submit" name="submit" value="comment">Add comment</button>
-                            </div>
-                        </form>
-                        <div class="row">
-                            <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
-                                <div class="subsection-intro text-center">
-                                    <h3>Previous comments</h3>
-                                </div>
-                            </div>
-                            {% for comment in comments %}
-                                <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
-                                    <div class="row" style="margin-bottom: 0.5rem;">
-                                        <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
-                                            <h5>{{ comment.commented_by }}</h5>
-                                        </div>
-                                        <div class="col-md-6 col-lg-6 mb-6 mb-lg-0" style="text-align: right;">
-                                            <p style="margin-bottom: 0;">{{ comment.created_at | date:"d/m/Y H:i" }}</p>
-                                        </div>
-                                        <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
-                                            <p>{{ comment.content }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
+        {% endif %}
+        <div class="row text-center">
+            <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                <p>There are no new applications to review!</p>
             </div>
         </div>
     </div>
