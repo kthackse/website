@@ -18,7 +18,11 @@
 
 
 {% block navbar %}
+    {% block messages %}
+        {% include "include/messages_home.html" %}
+    {% endblock %}
 {% endblock %}
+
 
 {% block background %}
     {% if event %}

@@ -9,6 +9,20 @@
     margin-right: 10px;
 }
 
+#messages {
+    background-color: #3F7ED1;
+    padding: 1rem 0;
+    color: #f5f5f5 !important;
+}
+
+#page-content {
+    height: 100%;
+}
+
+.link-no, .link-no:hover, .link-no:active {
+    color: #f5f5f5 !important;
+}
+
 .row-middle {
     margin-bottom: 2.5rem;
 }
@@ -110,6 +124,10 @@ a:focus {
 
 .social-icons a {
   margin-left: 5px;
+}
+
+.form-group {
+    width: 100%;
 }
 
 .form-group-button {
@@ -854,9 +872,12 @@ h5, .h5 {
   width: 100%;
   z-index: 99;
   transition: background 0.4s, all 0.3s linear;
-  background-color: rgba(0, 57, 132, 1);
   /*background-color: rgba(43, 43, 43, 0.75);*/
   /* box-shadow: 0 -5px 50px rgba(0, 0, 0, 0.1); */
+}
+
+.main-menu {
+  background-color: rgba(0, 57, 132, 1);
 }
 
 .header-area .navbar-right {

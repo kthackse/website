@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+{% load i18n %}
+{% load app_tags %}
+
+{% block head_title %}Review application{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="section-intro text-center">
+            <h2>Review application</h2>
+        </div>
+        <div class="row">
+            <div class="col-md-8 col-lg-8 mb-8 mb-lg-0">
+                <div class="row subsection-intro">
+                    <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                        <h3>{{ application.user.name }} {{ application.user.surname }}</h3>
+                        <p>Application created {{ application.created_at | timesince }} ago</p>
+                    </div>
+                    <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                        <div class="form-group text-right">
+                            <h6>Location</h6>
+                            <p><a href="https://www.google.com/maps/search/{{ application.user.city }},%20{{ application.user.country }}" target="_blank">{{ application.user.city }}, {{ application.user.country }}</a></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row subsection-intro">
+                    <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                        <object data="/files/{{ application.resume }}" type="application/pdf" width="100%" height="500px">
+                            <embed src="/files/{{ application.resume }}" type="application/pdf" />
+                            <h6>Resume</h6>
+                            <a href="/files/{{ application.resume }}">{{ application.resume | file_name }}</a>
+                        </object>
+                    </div>
+                </div>
+                <div class="row subsection-intro-mid">
+                    <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                        <div class="subsection-intro text-center">
+                            <h3>Academic</h3>
+                        </div>
+                        <div class="form-group">
+                            <h6>University</h6>
+                            <p><a href="https://www.google.com/maps/search/{{ application.university }}" target="_blank">{{ application.university }}</a></p>
+                        </div>
+                        <div class="form-group">
+                            <h6>Degree</h6>
+                            <p>{{ application.degree }}</p>
+                        </div>
+                        <div class="form-group">
+                            <h6>Graduation year</h6>
+                            <p>{{ application.graduation_year }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                        <div class="subsection-intro text-center">
+                            <h3>Social</h3>
+                        </div>
+                        {% if application.github or application.devpost or application.linkedin or application.website %}
+                            {% if application.github %}
+                                <div class="form-group text-right">
+                                    <h6><i aria-hidden="true" class="fab fa-github fa-lg" style="margin-right: 5px;"></i> GitHub</h6>
+                                    <p><a href="{{ application.github }}" target="_blank">{{ application.github }}</a></p>
+                                </div>
+                            {% endif %}
+                            {% if application.devpost %}
+                                <div class="form-group text-right">
+                                    <h6><i aria-hidden="true" class="fas fa-lightbulb fa-lg" style="margin-right: 5px;"></i> DevPost</h6>
+                                    <p><a href="{{ application.devpost }}" target="_blank">{{ application.devpost }}</a></p>
+                                </div>
+                            {% endif %}
+                            {% if application.linkedin %}
+                                <div class="form-group text-right">
+                                    <h6><i aria-hidden="true" class="fab fa-linkedin fa-lg" style="margin-right: 5px;"></i> LinkedIn</h6>
+                                    <p><a href="{{ application.linkedin }}" target="_blank">{{ application.linkedin }}</a></p>
+                                </div>
+                            {% endif %}
+                            {% if application.website %}
+                                <div class="form-group text-right">
+                                    <h6><i aria-hidden="true" class="fas fa-globe-europe fa-lg" style="margin-right: 5px;"></i> Website</h6>
+                                    <p><a href="{{ application.website }}" target="_blank">{{ application.website }}</a></p>
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            <div class="form-group text-right">
+                                <p>The hacker hasn't provided any links.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row subsection-intro-mid">
+                    <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                        <div class="subsection-intro text-center">
+                            <h3>Background</h3>
+                        </div>
+                        <div class="form-group">
+                            <h6>Why interested?</h6>
+                            <p>{{ application.description }}</p>
+                        </div>
+                        <div class="form-group">
+                            <h6>Projects</h6>
+                            <p>{{ application.projects }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-4 mb-4 mb-lg-0">
+                <div class="subsection-intro text-center">
+                    <h3>Comments</h3>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                        <form action="" method="post" class="form form-block section-intro">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="id_comment">Add a comment below...</label>
+                                <textarea type="text" name="comment" maxlength="1000" class="form-control" placeholder="" id="id_comment"></textarea>
+                            </div>
+                            <div class="form-group-button">
+                                <input type="hidden" id="id_application" name="application" value="{{ application.id }}">
+                                <button class="btn btn-primary btn-block" type="submit" name="submit" value="comment">Add comment</button>
+                            </div>
+                        </form>
+                        <div class="row">
+                            <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                                <div class="subsection-intro text-center">
+                                    <h3>Previous comments</h3>
+                                </div>
+                            </div>
+                            {% for comment in comments %}
+                                <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                                    <div class="row" style="margin-bottom: 0.5rem;">
+                                        <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                                            <h5>{{ comment.commented_by }}</h5>
+                                        </div>
+                                        <div class="col-md-6 col-lg-6 mb-6 mb-lg-0" style="text-align: right;">
+                                            <p style="margin-bottom: 0;">{{ comment.created_at | date:"d/m/Y H:i" }}</p>
+                                        </div>
+                                        <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                                            <p>{{ comment.content }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

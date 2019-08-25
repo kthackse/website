@@ -1,26 +1,28 @@
 {% if messages %}
-    <div id="messages-hide">
-        {% for message in messages %}
-          <div class="{{ message.tags }}" role="alert">
-            {{ message }}
-          </div>
-        {% endfor %}
+    <div id="messages">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container box_1620" style="display: block; position: relative;">
+                <a href="#" style="position: absolute; right: 15px;" class="link-no" onclick="hideMessages()"><i class="fas fa-times"></i></a>
+                {% for message in messages %}
+                  <div class="{{ message.tags }}" role="alert">
+                    {{ message }}
+                  </div>
+                {% endfor %}
+            </div>
+        </nav>
     </div>
 
     <script>
+        function hideMessages() {
+            $('#messages').fadeOut("fast");
+            var top = parseInt($("#page-content").css("padding-top"));
+            var mes = parseInt($("#messages").outerHeight());
+            $("#page-content").animate({paddingTop: top-mes}, "slow");
+        }
         $(document).ready(function () {
-            setTimeout(function() {
-                if($("#CookielawBanner").css("display") !== "none"){
-                    var added_height = $("#CookielawBanner").outerHeight();
-                    $("#messages-hide").css("margin-bottom", "+=" + added_height + "px")
-                }
-                $('#messages-hide').fadeIn("fast");
-            }, 0);
-        });
-        $(document).ready(function () {
-            setTimeout(function() {
-                $('#messages-hide').fadeOut("slow");
-            }, 10000);
+            var top = parseInt($("#page-content").css("padding-top"));
+            var mes = parseInt($("#messages").outerHeight());
+            $("#page-content").css("padding-top", top+mes);
         });
     </script>
 {% endif %}

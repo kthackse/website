@@ -69,7 +69,7 @@
             <h2>Dashboard</h2>
         </div>
         {% if request.user.is_participant %}
-            {% if event.application_status == 1 and application %}
+            {% if event.application_status == 1 and application and not application.status == 2 %}
                 <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
                     {% if application.team %}
                         <div class="subsection-intro text-center">

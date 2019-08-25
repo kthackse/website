@@ -292,6 +292,9 @@ class Application(models.Model):
     # Team
     team = models.ForeignKey("Team", on_delete=models.SET_NULL, null=True, blank=True)
 
+    # Score
+    score = models.FloatField(default=0.0)
+
     class Meta:
         unique_together = ("event", "user")
 
@@ -317,8 +320,12 @@ class Application(models.Model):
         return self.money_needed.amount > Decimal(0.0)
 
     def cancel(self):
+        self.team = None
         self.status = ApplicationStatus.CANCELLED.value
         self.save()
+
+    def __str__(self):
+        return str(self.user) + " (" + str(self.event) + ")"
 
     def clean(self):
         messages = dict()
@@ -366,7 +373,7 @@ class Vote(models.Model):
 
     def clean(self):
         messages = dict()
-        if not self.voted_by.is_organiser():
+        if not self.voted_by.is_organiser:
             messages["user"] = "A user must be an organiser in order to vote"
         if messages:
             raise ValidationError(messages)
@@ -381,7 +388,7 @@ class Comment(models.Model):
 
     def clean(self):
         messages = dict()
-        if not self.commented_by.is_organiser():
+        if not self.commented_by.is_organiser:
             messages["user"] = "A user must be an organiser in order to make a comment"
         if messages:
             raise ValidationError(messages)
