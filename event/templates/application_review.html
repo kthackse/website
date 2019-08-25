@@ -263,11 +263,12 @@
                     </div>
                 </div>
             </div>
-        {% endif %}
-        <div class="row text-center">
-            <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
-                <p>There are no new applications to review!</p>
+        {% else %}
+            <div class="row text-center">
+                <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                    <p>There are no new applications to review!</p>
+                </div>
             </div>
-        </div>
+        {% endif %}
     </div>
 {% endblock %}

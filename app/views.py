@@ -40,6 +40,7 @@ from event.utils import (
     deassign_team,
     remove_team,
     get_organisers_in_event,
+    get_statistics,
 )
 from user.enums import UserType
 from user.utils import get_user_by_picture, get_organisers
@@ -183,6 +184,7 @@ def dashboard(request, context={}):
             messages.success(request, "The team has been removed!")
 
     context["teammates"] = get_teammates_by_user(request.user.id)
+    context["statistics"] = get_statistics()
     return render(request, "dashboard.html", context)
 
 

@@ -18,8 +18,10 @@
                                     {% if application %}
                                         {% if application.status == 0 %}
                                             <h3>Your application has been drafted</h3>
-                                            <h5>Make sure to submit it before {{ event.application_deadline | date:"F d \a\t H:i e" }}!</h5>
-                                            <a class="link-button" href="/event/{{ event.code }}/apply">Submit your application</a>
+                                            <h5>Make sure to submit it
+                                                before {{ event.application_deadline | date:"F d \a\t H:i e" }}!</h5>
+                                            <a class="link-button" href="/event/{{ event.code }}/apply">Submit your
+                                                application</a>
                                         {% elif application.status == 3 or application.status == 6 %}
                                             <!-- TODO: Invited -->
                                         {% elif application.status == 4 %}
@@ -30,23 +32,31 @@
                                             <!-- TODO: Expired -->
                                         {% else %}
                                             <h3>Your application has been submited</h3>
-                                            <h5>You've submitted your application on time. Now, sit back and relax, we'll get back to you once we've reviewed your application!</h5>
-                                            <a class="link-button" href="/event/{{ event.code }}/apply">Check your application</a>
+                                            <h5>You've submitted your application on time. Now, sit back and relax,
+                                                we'll get back to you once we've reviewed your application!</h5>
+                                            <a class="link-button" href="/event/{{ event.code }}/apply">Check your
+                                                application</a>
                                             <!-- TODO: Cancel application -->
-                                            <a class="link-button3" href="/event/{{ event.code }}/apply/remove">Remove your application</a>
+                                            <a class="link-button3" href="/event/{{ event.code }}/apply/remove">Remove
+                                                your application</a>
                                         {% endif %}
                                     {% else %}
                                         <h3>Have you applied yet?</h3>
                                         {% with remaining_days=event.application_deadline|time_left|days_left %}
                                             {% if remaining_days == 0 %}
-                                                <h5>Hurry up, applications close <b style="font-weight: 600;">today</b> at {{ event.application_deadline | date:"H:i e" }}!</h5>
+                                                <h5>Hurry up, applications close <b style="font-weight: 600;">today</b>
+                                                    at {{ event.application_deadline | date:"H:i e" }}!</h5>
                                             {% elif remaining_days == 1 %}
-                                                <h5>Hurry up, applications close <b style="font-weight: 600;">tomorrow</b> at {{ event.application_deadline | date:"H:i e" }}!</h5>
+                                                <h5>Hurry up, applications close <b
+                                                        style="font-weight: 600;">tomorrow</b>
+                                                    at {{ event.application_deadline | date:"H:i e" }}!</h5>
                                             {% else %}
                                                 <h5>Applications close in {{ remaining_days }} days!</h5>
                                             {% endif %}
                                         {% endwith %}
-                                        <a class="link-button" href="/event/{{ event.code }}/apply">Apply now to {{ event.name }} {{ event.starts_at | date:"Y" }} <i style="padding-left: 10px;" class="fas fa-long-arrow-alt-right"></i></a>
+                                        <a class="link-button" href="/event/{{ event.code }}/apply">Apply now
+                                            to {{ event.name }} {{ event.starts_at | date:"Y" }} <i
+                                                    style="padding-left: 10px;" class="fas fa-long-arrow-alt-right"></i></a>
                                     {% endif %}
                                 </div>
                             </div>
@@ -68,91 +78,336 @@
         <div class="section-intro text-center">
             <h2>Dashboard</h2>
         </div>
-        {% if request.user.is_participant %}
-            {% if event.application_status == 1 and application and not application.status == 2 %}
-                <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
-                    {% if application.team %}
-                        <div class="subsection-intro text-center">
-                            <h3>Your team</h3>
-                        </div>
-                        <div class="row">
-                            <form action="" method="post" class="form form-block">
-                                {% csrf_token %}
-                                <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
-                                    <h3>{{ application.team.name }}</h3>
-                                    <p>Code: {{ application.team.code }}</p>
-                                </div>
-                                <div class="col-md-12 col-lg-12 mb-12 mb-lg-0" style="padding-bottom: 1rem;">
-                                    <h4>Members list</h4>
+        <div class="row">
+            {% if request.user.is_participant %}
+                {% if event.application_status == 1 and application and not application.status == 2 %}
+                    <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                        {% if application.team %}
+                            <div class="subsection-intro text-center">
+                                <h3>Your team</h3>
+                            </div>
+                            <div class="row">
+                                <form action="" method="post" class="form form-block">
+                                    {% csrf_token %}
+                                    <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                                        <h3>{{ application.team.name }}</h3>
+                                        <p>Code: {{ application.team.code }}</p>
+                                    </div>
+                                    <div class="col-md-12 col-lg-12 mb-12 mb-lg-0" style="padding-bottom: 1rem;">
+                                        <h4>Members list</h4>
                                         {% for teammate in teammates %}
                                             <div>
                                                 <a href="{% url "user_profileother" id=teammate.user.id %}">
-                                                    <img class="application-profile" src="{{ teammate.user.picture.crop.500x500 }}"/>
+                                                    <img class="application-profile"
+                                                         src="{{ teammate.user.picture.crop.500x500 }}"/>
                                                 </a>
-                                                <p style="display: inline-block;"><a href="{% url "user_profileother" id=teammate.user.id %}">{{ teammate.user }}</a>{% if teammate.user.id == application.team.creator.id %} (creator){% endif %}</p>
+                                                <p style="display: inline-block;"><a
+                                                        href="{% url "user_profileother" id=teammate.user.id %}">{{ teammate.user }}</a>
+                                                    {% if teammate.user.id == application.team.creator.id %}
+                                                        (creator){% endif %}</p>
 
                                             </div>
                                         {% endfor %}
-                                </div>
-                                <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
-                                    <div class="service-card">
-                                        <div class="form-group-button-1">
-                                            <input type="hidden" id="id_event" name="event" value="{{ event.id }}">
-                                            <input type="hidden" id="id_team" name="team" value="{{ application.team.id }}">
-                                            <button class="btn btn-primary btn-block text-center" type="submit" name="submit" value="team-leave">Leave</button>
-                                            {% if application.team.creator.id == request.user.id %}
-                                                <button class="btn btn-secondary btn-block text-center" type="submit" name="submit" value="team-remove">Remove team</button>
-                                            {% endif %}
+                                    </div>
+                                    <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                                        <div class="service-card">
+                                            <div class="form-group-button-1">
+                                                <input type="hidden" id="id_event" name="event" value="{{ event.id }}">
+                                                <input type="hidden" id="id_team" name="team"
+                                                       value="{{ application.team.id }}">
+                                                <button class="btn btn-primary btn-block text-center" type="submit"
+                                                        name="submit" value="team-leave">Leave
+                                                </button>
+                                                {% if application.team.creator.id == request.user.id %}
+                                                    <button class="btn btn-secondary btn-block text-center"
+                                                            type="submit" name="submit" value="team-remove">Remove team
+                                                    </button>
+                                                {% endif %}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </form>
-                        </div>
-                    {% else %}
-                        <div class="text-center">
-                            <h3>Join a team</h3>
-                        </div>
-                        <p>In order to join a team it must have a free spot, maximum team size is , you won't be able to join a full team.</p>
-                        <div class="row row-middle">
-                            <form action="" method="post" class="form">
-                                {% csrf_token %}
-                                <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
-                                    <div class="service-card">
-                                        <div class="form-group">
-                                            <label for="id_code">Team code</label>
-                                            <input type="text" name="code" maxlength="225" class="form-control" placeholder="ELL2IOT0" id="id_name">
-                                        </div>
-                                        <div class="form-group-button-1">
-                                            <input type="hidden" id="id_event" name="event" value="{{ event.id }}">
-                                            <button class="btn btn-primary btn-block text-center" type="submit" name="submit" value="team-join">Join</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="text-center">
-                            <h3>Create a team</h3>
-                        </div>
-                        <div class="row">
-                            <form action="" method="post" class="form">
-                                {% csrf_token %}
-                                <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
-                                    <div class="service-card">
-                                        <div class="form-group">
-                                            <label for="id_name">Team name</label>
-                                            <input type="text" name="name" maxlength="225" class="form-control" placeholder="Allsafe Cybersecurity" id="id_name">
-                                        </div>
-                                        <div class="form-group-button-1">
-                                            <input type="hidden" id="id_event" name="event" value="{{ event.id }}">
-                                            <button class="btn btn-primary btn-block text-center" type="submit" name="submit" value="team-create">Create</button>
+                                </form>
+                            </div>
+                        {% else %}
+                            <div class="text-center">
+                                <h3>Join a team</h3>
+                            </div>
+                            <p>In order to join a team it must have a free spot, maximum team size is , you won't be
+                                able to join a full team.</p>
+                            <div class="row row-middle">
+                                <form action="" method="post" class="form">
+                                    {% csrf_token %}
+                                    <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                                        <div class="service-card">
+                                            <div class="form-group">
+                                                <label for="id_code">Team code</label>
+                                                <input type="text" name="code" maxlength="225" class="form-control"
+                                                       placeholder="ELL2IOT0" id="id_name">
+                                            </div>
+                                            <div class="form-group-button-1">
+                                                <input type="hidden" id="id_event" name="event" value="{{ event.id }}">
+                                                <button class="btn btn-primary btn-block text-center" type="submit"
+                                                        name="submit" value="team-join">Join
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </form>
+                                </form>
+                            </div>
+                            <div class="text-center">
+                                <h3>Create a team</h3>
+                            </div>
+                            <div class="row">
+                                <form action="" method="post" class="form">
+                                    {% csrf_token %}
+                                    <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                                        <div class="service-card">
+                                            <div class="form-group">
+                                                <label for="id_name">Team name</label>
+                                                <input type="text" name="name" maxlength="225" class="form-control"
+                                                       placeholder="Allsafe Cybersecurity" id="id_name">
+                                            </div>
+                                            <div class="form-group-button-1">
+                                                <input type="hidden" id="id_event" name="event" value="{{ event.id }}">
+                                                <button class="btn btn-primary btn-block text-center" type="submit"
+                                                        name="submit" value="team-create">Create
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% elif request.user.is_organiser %}
+                <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                            <div class="subsection-intro text-center">
+                                <h3>Applications evolution</h3>
+                            </div>
+                            <div id="chart-applications"></div>
                         </div>
-                    {% endif %}
+                    </div>
+                    <div class="row subsection-intro-mid text-center">
+                        <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                            <div class="subsection-intro">
+                                <h3>Applications status</h3>
+                            </div>
+                            {% if not statistics.status %}
+                                <p>No data is available yet.</p>
+                            {% else %}
+                                <div id="chart-status"></div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                            <div class="subsection-intro">
+                                <h3>Applications sex</h3>
+                            </div>
+                            {% if not statistics.sex %}
+                                <p>No data is available yet.</p>
+                            {% else %}
+                                <div id="chart-sex"></div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row subsection-intro-mid text-center" style="margin-top: 2rem;">
+                        <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                            <div class="subsection-intro">
+                                <h3>T-shirt sizes</h3>
+                            </div>
+                            {% if not statistics.tshirt %}
+                                <p>No data is available yet.</p>
+                            {% else %}
+                                <div id="chart-tshirt"></div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                            <div class="subsection-intro">
+                                <h3>Dietary restrictions</h3>
+                            </div>
+                            {% if not statistics.diet %}
+                                <p>No data is available yet.</p>
+                            {% else %}
+                                <div id="chart-diet"></div>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
+
+                <script>
+                    var optionsApplications = {
+                        chart: {
+                            height: 350,
+                            type: 'line',
+                            id: 'applications'
+                        },
+                        dataLabels: {
+                            enabled: false
+                        },
+                        stroke: {
+                            curve: 'straight'
+                        },
+                        grid: {
+                            padding: {
+                                right: 30,
+                                left: 20
+                            }
+                        },
+                        series: [{
+                            name: "Applications",
+                            data: [{% for data in statistics.applications %}{{ data.1 }}, {% endfor %}]
+                        }],
+                        labels: [{% for data in statistics.applications %}{{ data.0 }}, {% endfor %}],
+                        xaxis: {
+                            type: 'datetime',
+                        },
+                        yaxis: {
+
+                            tickAmount: 1,
+                            min: 0,
+                        }
+                    };
+                    var optionsStatus = {
+                        chart: {
+                            type: 'donut',
+                        },
+                        dataLabels: {
+                            enabled: true,
+                        },
+                        grid: {
+                            padding: {
+                                right: 30,
+                                left: 20
+                            }
+                        },
+                        legend: {
+                            position: 'bottom'
+                        },
+                        series: [{% for data in statistics.status %}{{ data.count }}, {% endfor %}],
+                        labels: [{% for data in statistics.status %}"{{ data.status | application_status }}", {% endfor %}],
+                        plotOptions: {
+                            pie: {
+                                customScale: 0.9
+                            }
+                        }
+                    };
+                    var optionsSex = {
+                        chart: {
+                            type: 'donut',
+                        },
+                        dataLabels: {
+                            enabled: true,
+                        },
+                        grid: {
+                            padding: {
+                                right: 30,
+                                left: 20
+                            }
+                        },
+                        legend: {
+                            position: 'bottom'
+                        },
+                        series: [{% for data in statistics.sex %}{{ data.count }}, {% endfor %}],
+                        labels: [{% for data in statistics.sex %}"{{ data.user__sex | user_sex }}", {% endfor %}],
+                        plotOptions: {
+                            pie: {
+                                customScale: 0.9
+                            }
+                        }
+                    };
+                    var optionsTshirt = {
+                        chart: {
+                            height: 350,
+                            type: 'bar',
+                            id: 'tshirts',
+                        },
+                        dataLabels: {
+                            enabled: false
+                        },
+                        stroke: {
+                            curve: 'straight'
+                        },
+                        grid: {
+                            padding: {
+                                right: 30,
+                                left: 20
+                            }
+                        },
+                        series: [{
+                            name: "T-shirts",
+                            data: [{% for data in statistics.tshirt %}{{ data.count }}, {% endfor %}]
+                        }],
+                        labels: [{% for data in statistics.tshirt %}"{{ data.tshirt | application_tshirt }}", {% endfor %}],
+                        yaxis: {
+                            tickAmount: 1,
+                            min: 0,
+                        },
+                        fill: {
+                            opacity: 1
+                        },
+                    };
+                    var optionsDiet = {
+                        chart: {
+                            height: 380,
+                            type: 'bar',
+                            id: 'diets',
+                        },
+                        dataLabels: {
+                            enabled: false
+                        },
+                        stroke: {
+                            curve: 'straight'
+                        },
+                        grid: {
+                            padding: {
+                                right: 30,
+                                left: 20
+                            }
+                        },
+                        series: [{
+                            name: "Diet",
+                            data: [{% for data in statistics.diet %}{{ data.count }}, {% endfor %}]
+                        }],
+                        labels: [{% for data in statistics.diet %}"{{ data.diet | application_diet }}", {% endfor %}],
+                        yaxis: {
+                            tickAmount: 1,
+                            min: 0,
+                        },
+                        fill: {
+                            opacity: 1
+                        },
+                    };
+
+                    var chartApplications = new ApexCharts(
+                        document.querySelector("#chart-applications"),
+                        optionsApplications
+                    );
+                    var chartStatus = new ApexCharts(
+                        document.querySelector("#chart-status"),
+                        optionsStatus
+                    );
+                    var chartSex = new ApexCharts(
+                        document.querySelector("#chart-sex"),
+                        optionsSex
+                    );
+                    var chartTshirt = new ApexCharts(
+                        document.querySelector("#chart-tshirt"),
+                        optionsTshirt
+                    );
+                    var chartDiet = new ApexCharts(
+                        document.querySelector("#chart-diet"),
+                        optionsDiet
+                    );
+
+                    chartApplications.render();
+                    chartStatus.render();
+                    chartSex.render();
+                    chartTshirt.render();
+                    chartDiet.render();
+                </script>
             {% endif %}
-        {% endif %}
+        </div>
     </div>
 {% endblock %}

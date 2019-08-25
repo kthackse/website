@@ -5,6 +5,8 @@ from django import template
 from django.utils import timezone
 
 from app import settings
+from event.enums import ApplicationStatus, DietType, TshirtSize
+from user.enums import SexType
 
 register = template.Library()
 
@@ -47,3 +49,23 @@ def response_title(code):
     if float(code) / 100.0 == 2.0:
         return "Success " + str(code)
     return "Error " + str(code)
+
+
+@register.filter
+def application_status(status):
+    return ApplicationStatus(status).name.capitalize()
+
+
+@register.filter
+def user_sex(status):
+    return SexType(status).name.capitalize()
+
+
+@register.filter
+def application_tshirt(status):
+    return TshirtSize(status).name.upper()
+
+
+@register.filter
+def application_diet(status):
+    return DietType(status).name.replace("_", "-").capitalize()
