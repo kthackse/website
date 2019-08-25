@@ -6,7 +6,7 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [("event", "0022_add_event_type")]
+    dependencies = [("event", "0023_add_organiser_event_company_type")]
 
     operations = [
         migrations.AlterField(

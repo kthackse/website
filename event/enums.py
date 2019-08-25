@@ -78,6 +78,7 @@ class CompanyTier(enum.IntEnum):
     MILI = 50
     PARTNER = 60
     SUPPORT = 70
+    ORGANISER = 80
 
 
 class InvoiceStatus(enum.IntEnum):

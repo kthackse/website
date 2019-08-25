@@ -20,3 +20,8 @@ def display_clock(time):
     if hour == 0:
         hour = 12
     return chr(base + hour)
+
+
+@register.filter
+def one_year(time: timezone.datetime):
+    return time.replace(year=time.year - 1)

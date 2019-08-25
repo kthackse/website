@@ -24,4 +24,7 @@ HACKATHON_SN_GITHUB = "kthackse"
 
 HACKATHON_EMAIL_PREFIX = "[" + HACKATHON_NAME + "] "
 
+HACKATHON_VOTE_PERSONAL = 0.8
+HACKATHON_VOTE_TECHNICAL = 0.2
+
 # TODO: Add the rest of variables including images, Google Analytics, texts, currency, deadlines...

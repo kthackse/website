@@ -29,9 +29,6 @@
         <title>{% block title_plain %}{% block title %}{% block head_title %}{% endblock %} | {% endblock %}{% if event %}{{ event.name }} {{ event.starts_at | date:"Y" }}{% else %}{{ hk_app_name }}{% endif %}{% endblock %}</title>
     </head>
     <body>
-        {% block messages %}
-            {% include "include/messages.html" %}
-        {% endblock %}
         {% block popup %}
             {% include "include/popup.html" %}
         {% endblock %}
@@ -89,6 +86,13 @@
                                             {% endif %}
                                         {% endif %}
                                         <li class="nav-item"><a class="nav-link" href="{% url 'app_dashboard' %}">Dashboard</a></li>
+                                        {% if request.user.email_verified %}
+                                            {% if request.user.is_organiser %}
+                                                {% if event %}
+                                                    <li class="nav-item"><a class="nav-link" href="{% url 'event_applications' code=event.code %}">Applications</a></li>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endif %}
                                         <li class="nav-item"><a class="nav-link" href="{% url 'user_logout' %}">Logout</a></li>
                                         <li class="nav-item"><a class="nav-profile" href="{% url 'user_profile' %}"><img class="header-profile" src="{{ request.user.picture.crop.500x500 }}"/></a></li>
                                     {% else %}
@@ -103,52 +107,57 @@
                         </div>
                     </nav>
                 </div>
+                {% block messages %}
+                    {% include "include/messages.html" %}
+                {% endblock %}
             </header>
         {% endblock %}
         <!-- Add error/info messages display -->
-        {% block pre_body %}
-        {% endblock %}
-        {% block body_plain %}
-            <div id="container-main" class="content container">
-                <div class="content-inside">
-                    {% block body %}
-                        <div class="margin-top">
-                            <div class="panel panel-default">
-                                <div class="panel-body">
-                                    {% block content %}
-                                    {% endblock %}
+        <div id="page-content">
+            {% block pre_body %}
+            {% endblock %}
+            {% block body_plain %}
+                <div id="container-main" class="content container">
+                    <div class="content-inside">
+                        {% block body %}
+                            <div class="margin-top">
+                                <div class="panel panel-default">
+                                    <div class="panel-body">
+                                        {% block content %}
+                                        {% endblock %}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        {% block extra_body %}
+                            {% block extra_body %}
+                            {% endblock %}
                         {% endblock %}
-                    {% endblock %}
-                </div>
-            </div>
-        {% endblock %}
-        {% block footer %}
-            <footer class="footer navbar-fixed-bottom">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-6 mobile-center">
-                            <p>Need help? Ping us at {{ hk_email_contact | urlize }}.</p>
-                        </div>
-                        <div class="social-icons col-sm-6 text-right text-center-xs mobile-center">
-                            {% include "include/social.html" %}
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12 text-center" style="margin-bottom: 15px;">
-                            <small> Made with 💛 by students in KTH 🇸🇪</small>
-                        </div>
-                        <div class="col-md-12 text-center footer-upper">
-                            <a href="/page/legal/legal-notice" class="legal-page">Legal notice</a>
-                            <a href="/page/legal/terms-and-conditions" class="legal-page">Terms and Conditions</a>
-                            <a href="/page/legal/privacy-and-cookies" class="legal-page">Privacy and Cookies</a>
-                        </div>
                     </div>
                 </div>
-            </footer>
-        {% endblock %}
+            {% endblock %}
+            {% block footer %}
+                <footer class="footer navbar-fixed-bottom">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-6 mobile-center">
+                                <p>Need help? Ping us at {{ hk_email_contact | urlize }}.</p>
+                            </div>
+                            <div class="social-icons col-sm-6 text-right text-center-xs mobile-center">
+                                {% include "include/social.html" %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-center" style="margin-bottom: 15px;">
+                                <small> Made with 💛 by students in KTH 🇸🇪</small>
+                            </div>
+                            <div class="col-md-12 text-center footer-upper">
+                                <a href="/page/legal/legal-notice" class="legal-page">Legal notice</a>
+                                <a href="/page/legal/terms-and-conditions" class="legal-page">Terms and Conditions</a>
+                                <a href="/page/legal/privacy-and-cookies" class="legal-page">Privacy and Cookies</a>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            {% endblock %}
+        </div>
     </body>
 </html>

@@ -8,10 +8,11 @@ from urllib.error import URLError
 import cairosvg
 from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
-from django.db import models
+from django.db import models, transaction
 from django.utils import timezone
 from versatileimagefield.fields import VersatileImageField
 
+from app.variables import HACKATHON_VOTE_PERSONAL, HACKATHON_VOTE_TECHNICAL
 from event.enums import (
     EventType,
     EventApplicationStatus,
@@ -254,6 +255,7 @@ class Application(models.Model):
         choices=((s.value, s.name) for s in ApplicationStatus),
         default=ApplicationStatus.DRAFT.value,
     )
+    note = models.CharField(max_length=255, blank=True, null=True)
 
     # Application details
     description = models.TextField(max_length=1000)
@@ -292,6 +294,9 @@ class Application(models.Model):
     # Team
     team = models.ForeignKey("Team", on_delete=models.SET_NULL, null=True, blank=True)
 
+    # Score
+    score = models.FloatField(default=0.0)
+
     class Meta:
         unique_together = ("event", "user")
 
@@ -317,8 +322,16 @@ class Application(models.Model):
         return self.money_needed.amount > Decimal(0.0)
 
     def cancel(self):
+        self.team = None
         self.status = ApplicationStatus.CANCELLED.value
         self.save()
+
+    def set_score(self, score):
+        self.score = score
+        self.save()
+
+    def __str__(self):
+        return str(self.user) + " (" + str(self.event) + ")"
 
     def clean(self):
         messages = dict()
@@ -357,7 +370,7 @@ class Vote(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     # Vote result
-    vote_tech = models.IntegerField(validators=[valid_vote])
+    vote_tech = models.SmallIntegerField(validators=[valid_vote])
     vote_personal = models.SmallIntegerField(validators=[valid_vote])
     vote_total = models.FloatField()
 
@@ -366,10 +379,38 @@ class Vote(models.Model):
 
     def clean(self):
         messages = dict()
-        if not self.voted_by.is_organiser():
+        if not self.voted_by.is_organiser:
             messages["user"] = "A user must be an organiser in order to vote"
         if messages:
             raise ValidationError(messages)
+
+    def delete(self, *args, **kwargs):
+        with transaction.atomic():
+            votes = (
+                Vote.objects.filter(application_id=self.application_id)
+                .exclude(id=self.id)
+                .values_list("vote_total", flat=True)
+            )
+            if not votes:
+                votes = [0]
+            self.application.set_score((sum(votes) / len(votes)))
+        return super().delete(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        self.vote_total = (
+            HACKATHON_VOTE_PERSONAL * self.vote_personal
+            + HACKATHON_VOTE_TECHNICAL * self.vote_tech
+        ) / (HACKATHON_VOTE_PERSONAL + HACKATHON_VOTE_TECHNICAL)
+        with transaction.atomic():
+            votes = (
+                Vote.objects.filter(application_id=self.application_id)
+                .exclude(id=self.id)
+                .count()
+            )
+            score = (self.application.score * votes + self.vote_total) / (votes + 1)
+            self.application.set_score(score)
+        return super().save(*args, **kwargs)
 
 
 class Comment(models.Model):
@@ -381,7 +422,7 @@ class Comment(models.Model):
 
     def clean(self):
         messages = dict()
-        if not self.commented_by.is_organiser():
+        if not self.commented_by.is_organiser:
             messages["user"] = "A user must be an organiser in order to make a comment"
         if messages:
             raise ValidationError(messages)

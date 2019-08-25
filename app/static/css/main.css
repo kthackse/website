@@ -9,6 +9,20 @@
     margin-right: 10px;
 }
 
+#messages {
+    background-color: #3F7ED1;
+    padding: 1rem 0;
+    color: #f5f5f5 !important;
+}
+
+#page-content {
+    height: 100%;
+}
+
+.link-no, .link-no:hover, .link-no:active {
+    color: #f5f5f5 !important;
+}
+
 .row-middle {
     margin-bottom: 2.5rem;
 }
@@ -110,6 +124,52 @@ a:focus {
 
 .social-icons a {
   margin-left: 5px;
+}
+
+.vote-boxes {
+    display: flex;
+}
+
+.vote-boxes:first-child .vote-box {
+    margin-left: 0 !important;
+}
+
+.vote-boxes:last-child .vote-box {
+    margin-right: 0 !important;
+}
+
+.vote-box {
+    display: inline-block;
+    width: 100%;
+    padding: 0.5rem 0.25rem;
+    text-align: center;
+    font-size: 20px;
+    color: #555555;
+    border: 2px solid #cccccc !important;
+    background-color: #fafafa;
+    margin: 0 5px;
+}
+
+.vote-box:hover {
+    border: 2px solid #3F7ED1 !important;
+    background-color: #3F7ED1 !important;
+    color: #f5f5f5;
+}
+
+.vote-personal-selected {
+    color: #f5f5f5 !important;
+    border: 2px solid #3F7ED1 !important;
+    background-color: #3F7ED1 !important;
+}
+
+.vote-technical-selected {
+    color: #f5f5f5 !important;
+    border: 2px solid #3F7ED1 !important;
+    background-color: #3F7ED1 !important;
+}
+
+.form-group {
+    width: 100%;
 }
 
 .form-group-button {
@@ -348,7 +408,7 @@ form .is-valid:focus {
 }
 
 .header-titles {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  border-bottom: 1px solid rgba(0, 57, 132, 0.25);
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
 }
@@ -854,9 +914,12 @@ h5, .h5 {
   width: 100%;
   z-index: 99;
   transition: background 0.4s, all 0.3s linear;
-  background-color: rgba(0, 57, 132, 1);
   /*background-color: rgba(43, 43, 43, 0.75);*/
   /* box-shadow: 0 -5px 50px rgba(0, 0, 0, 0.1); */
+}
+
+.main-menu {
+  background-color: rgba(0, 57, 132, 1);
 }
 
 .header-area .navbar-right {

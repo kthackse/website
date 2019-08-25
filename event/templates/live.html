@@ -58,8 +58,8 @@
         {% endfor %}
     </div>
 
-    <link rel="stylesheet" href="//{{ hk_domain }}{% static 'css/live.css' %}">
-    <script src="//{{ hk_domain }}{% static "js/live.js" %}"></script>
+    <link rel="stylesheet" href="{% static 'css/live.css' %}">
+    <script src="{% static "js/live.js" %}"></script>
 
     <script>
         var dateTo = new Date("{{ event.hacking_ends_at | date:"Y-m-d H:i:s" }}").getTime();
