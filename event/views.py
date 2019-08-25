@@ -241,11 +241,7 @@ def applications_other(request, code, id, context={}):
         if request.method == "POST":
             if request.POST["submit"] == "comment":
                 if request.POST["comment"]:
-                    add_comment(
-                        id,
-                        request.user.id,
-                        request.POST["comment"],
-                    )
+                    add_comment(id, request.user.id, request.POST["comment"])
                     messages.success(
                         request,
                         "Your comment has been added successfully to the application.",

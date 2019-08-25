@@ -190,18 +190,48 @@
                             <div id="chart-applications"></div>
                         </div>
                     </div>
-                    <div class="row subsection-intro-mid">
+                    <div class="row subsection-intro-mid text-center">
                         <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
-                            <div class="subsection-intro text-center">
+                            <div class="subsection-intro">
                                 <h3>Applications status</h3>
                             </div>
-                            <div id="chart-status"></div>
+                            {% if not statistics.status %}
+                                <p>No data is available yet.</p>
+                            {% else %}
+                                <div id="chart-status"></div>
+                            {% endif %}
                         </div>
                         <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
-                            <div class="subsection-intro text-center">
+                            <div class="subsection-intro">
                                 <h3>Applications sex</h3>
                             </div>
-                            <div id="chart-sex"></div>
+                            {% if not statistics.sex %}
+                                <p>No data is available yet.</p>
+                            {% else %}
+                                <div id="chart-sex"></div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row subsection-intro-mid text-center" style="margin-top: 2rem;">
+                        <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                            <div class="subsection-intro">
+                                <h3>T-shirt sizes</h3>
+                            </div>
+                            {% if not statistics.tshirt %}
+                                <p>No data is available yet.</p>
+                            {% else %}
+                                <div id="chart-tshirt"></div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                            <div class="subsection-intro">
+                                <h3>Dietary restrictions</h3>
+                            </div>
+                            {% if not statistics.diet %}
+                                <p>No data is available yet.</p>
+                            {% else %}
+                                <div id="chart-diet"></div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -232,7 +262,6 @@
                         labels: [{% for data in statistics.applications %}{{ data.0 }}, {% endfor %}],
                         xaxis: {
                             type: 'datetime',
-
                         },
                         yaxis: {
 
@@ -288,6 +317,68 @@
                             }
                         }
                     };
+                    var optionsTshirt = {
+                        chart: {
+                            height: 350,
+                            type: 'bar',
+                            id: 'tshirts',
+                        },
+                        dataLabels: {
+                            enabled: false
+                        },
+                        stroke: {
+                            curve: 'straight'
+                        },
+                        grid: {
+                            padding: {
+                                right: 30,
+                                left: 20
+                            }
+                        },
+                        series: [{
+                            name: "T-shirts",
+                            data: [{% for data in statistics.tshirt %}{{ data.count }}, {% endfor %}]
+                        }],
+                        labels: [{% for data in statistics.tshirt %}"{{ data.tshirt | application_tshirt }}", {% endfor %}],
+                        yaxis: {
+                            tickAmount: 1,
+                            min: 0,
+                        },
+                        fill: {
+                            opacity: 1
+                        },
+                    };
+                    var optionsDiet = {
+                        chart: {
+                            height: 380,
+                            type: 'bar',
+                            id: 'diets',
+                        },
+                        dataLabels: {
+                            enabled: false
+                        },
+                        stroke: {
+                            curve: 'straight'
+                        },
+                        grid: {
+                            padding: {
+                                right: 30,
+                                left: 20
+                            }
+                        },
+                        series: [{
+                            name: "Diet",
+                            data: [{% for data in statistics.diet %}{{ data.count }}, {% endfor %}]
+                        }],
+                        labels: [{% for data in statistics.diet %}"{{ data.diet | application_diet }}", {% endfor %}],
+                        yaxis: {
+                            tickAmount: 1,
+                            min: 0,
+                        },
+                        fill: {
+                            opacity: 1
+                        },
+                    };
 
                     var chartApplications = new ApexCharts(
                         document.querySelector("#chart-applications"),
@@ -301,10 +392,20 @@
                         document.querySelector("#chart-sex"),
                         optionsSex
                     );
+                    var chartTshirt = new ApexCharts(
+                        document.querySelector("#chart-tshirt"),
+                        optionsTshirt
+                    );
+                    var chartDiet = new ApexCharts(
+                        document.querySelector("#chart-diet"),
+                        optionsDiet
+                    );
 
                     chartApplications.render();
                     chartStatus.render();
                     chartSex.render();
+                    chartTshirt.render();
+                    chartDiet.render();
                 </script>
             {% endif %}
         </div>

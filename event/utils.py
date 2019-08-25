@@ -14,6 +14,8 @@ from event.enums import (
     SubscriberStatus,
     EventType,
     ApplicationStatus,
+    DietType,
+    TshirtSize,
 )
 from event.models import (
     Event,
@@ -251,14 +253,30 @@ def get_statistics(event_id: UUID = None):
     if event:
         date_from = event.application_available.date()
         date_to = timezone.now().date()
-        days = math.ceil((date_to - date_from).total_seconds() / (60*60*24))
+        days = math.ceil((date_to - date_from).total_seconds() / (60 * 60 * 24))
         apps_all = Application.objects.filter(event_id=event.id)
         apps = list(apps_all.values_list("created_at__date", flat=True))
         applications = []
         for day in range(days + 1):
             date_current = date_from + timezone.timedelta(days=day)
-            applications.append((int(date_current.strftime("%s"))*1000, apps.count(date_current)))
+            applications.append(
+                (int(date_current.strftime("%s")) * 1000, apps.count(date_current))
+            )
         statistics["applications"] = applications
         statistics["status"] = apps_all.values("status").annotate(count=Count("status"))
-        statistics["sex"] = apps_all.values("user__sex").annotate(count=Count("user__sex"))
+        statistics["sex"] = apps_all.values("user__sex").annotate(
+            count=Count("user__sex")
+        )
+        tshirts = apps_all.values("tshirt").annotate(count=Count("tshirt"))
+        tshirts = dict([(t["tshirt"], t["count"]) for t in tshirts])
+        statistics["tshirt"] = [
+            dict(tshirt=t.value, count=(tshirts[t.value] if t.value in tshirts else 0))
+            for t in TshirtSize
+        ]
+        diets = apps_all.values("diet").annotate(count=Count("diet"))
+        diets = dict([(d["diet"], d["count"]) for d in diets])
+        statistics["diet"] = [
+            dict(diet=d.value, count=(diets[d.value] if d.value in diets else 0))
+            for d in DietType
+        ]
     return statistics
