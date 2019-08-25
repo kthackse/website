@@ -1,8 +1,11 @@
+import math
 import random
 import string
+from uuid import UUID
 
 from django.contrib import messages
 from django.core.exceptions import ValidationError
+from django.db.models import Count
 from django.utils import timezone
 
 from event.enums import (
@@ -237,3 +240,25 @@ def add_vote(application_id, user_id, vote_personal, vote_technical):
     )
     vote.save()
     return vote
+
+
+def get_statistics(event_id: UUID = None):
+    statistics = dict()
+    if not event_id:
+        event = get_next_or_past_event()
+    else:
+        event = Event.objects.filter(id=event_id).first()
+    if event:
+        date_from = event.application_available.date()
+        date_to = timezone.now().date()
+        days = math.ceil((date_to - date_from).total_seconds() / (60*60*24))
+        apps_all = Application.objects.filter(event_id=event.id)
+        apps = list(apps_all.values_list("created_at__date", flat=True))
+        applications = []
+        for day in range(days + 1):
+            date_current = date_from + timezone.timedelta(days=day)
+            applications.append((int(date_current.strftime("%s"))*1000, apps.count(date_current)))
+        statistics["applications"] = applications
+        statistics["status"] = apps_all.values("status").annotate(count=Count("status"))
+        statistics["sex"] = apps_all.values("user__sex").annotate(count=Count("user__sex"))
+    return statistics

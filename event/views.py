@@ -238,6 +238,20 @@ def applications_review(request, code, context={}):
 def applications_other(request, code, id, context={}):
     current_event = get_event(code=code)
     if current_event:
+        if request.method == "POST":
+            if request.POST["submit"] == "comment":
+                if request.POST["comment"]:
+                    add_comment(
+                        id,
+                        request.user.id,
+                        request.POST["comment"],
+                    )
+                    messages.success(
+                        request,
+                        "Your comment has been added successfully to the application.",
+                    )
+                else:
+                    messages.error(request, "The comment cannot be empty!")
         current_application = get_application_by_id(application_id=id)
         if current_application:
             context["event"] = current_event
