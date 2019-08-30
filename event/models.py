@@ -24,7 +24,7 @@ from event.enums import (
     SubscriberStatus,
     CompanyTier,
     InvoiceStatus,
-)
+    MessageType)
 from user.enums import UserType
 
 from djmoney.models.fields import MoneyField
@@ -671,3 +671,29 @@ class Invoice(models.Model):
             ).date()
         self.invoice = self.create_invoice()
         return super().save(*args, **kwargs)
+
+
+class Message(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    event = models.ForeignKey("event.Event", on_delete=models.PROTECT)
+    creator = models.ForeignKey("user.User", on_delete=models.PROTECT, related_name="sender")
+    type = models.PositiveSmallIntegerField(
+        choices=((t.value, t.name) for t in MessageType),
+        default=MessageType.GENERIC.value,
+    )
+    title = models.CharField(max_length=255)
+    content = models.TextField(max_length=5000)
+    action = models.CharField(max_length=255, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+class MessageSent(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    message = models.ForeignKey("event.Message", on_delete=models.PROTECT)
+    recipient = models.ForeignKey("user.User", on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Message sent"
+        verbose_name_plural = "Messages sent"

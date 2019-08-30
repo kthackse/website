@@ -179,6 +179,11 @@
                             </div>
                         {% endif %}
                     </div>
+                    <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                        <div class="subsection-intro text-center">
+                            <h3>Recent messages</h3>
+                        </div>
+                    </div>
                 {% endif %}
             {% elif request.user.is_organiser %}
                 <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
@@ -213,7 +218,17 @@
                         </div>
                     </div>
                     <div class="row subsection-intro-mid text-center" style="margin-top: 2rem;">
-                        <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                        <div class="col-md-4 col-lg-4 mb-4 mb-lg-0">
+                            <div class="subsection-intro">
+                                <h3>Application scores</h3>
+                            </div>
+                            {% if not statistics.score %}
+                                <p>No data is available yet.</p>
+                            {% else %}
+                                <div id="chart-score"></div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 col-lg-4 mb-4 mb-lg-0">
                             <div class="subsection-intro">
                                 <h3>T-shirt sizes</h3>
                             </div>
@@ -223,7 +238,7 @@
                                 <div id="chart-tshirt"></div>
                             {% endif %}
                         </div>
-                        <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                        <div class="col-md-4 col-lg-4 mb-4 mb-lg-0">
                             <div class="subsection-intro">
                                 <h3>Dietary restrictions</h3>
                             </div>
@@ -317,9 +332,40 @@
                             }
                         }
                     };
+                    var optionsScore = {
+                        chart: {
+                            height: 250,
+                            type: 'bar',
+                            id: 'scores',
+                        },
+                        dataLabels: {
+                            enabled: false
+                        },
+                        stroke: {
+                            curve: 'straight'
+                        },
+                        grid: {
+                            padding: {
+                                right: 30,
+                                left: 20
+                            }
+                        },
+                        series: [{
+                            name: "Score",
+                            data: [{% for data_0, data_1 in statistics.score.items %}{{ data_1 }}, {% endfor %}]
+                        }],
+                        labels: [{% for data_0, data_1 in statistics.score.items %}{{ data_0 }}, {% endfor %}],
+                        yaxis: {
+                            tickAmount: 1,
+                            min: 0,
+                        },
+                        fill: {
+                            opacity: 1
+                        },
+                    };
                     var optionsTshirt = {
                         chart: {
-                            height: 350,
+                            height: 250,
                             type: 'bar',
                             id: 'tshirts',
                         },
@@ -350,7 +396,7 @@
                     };
                     var optionsDiet = {
                         chart: {
-                            height: 380,
+                            height: 280,
                             type: 'bar',
                             id: 'diets',
                         },
@@ -392,6 +438,10 @@
                         document.querySelector("#chart-sex"),
                         optionsSex
                     );
+                    var chartScore = new ApexCharts(
+                        document.querySelector("#chart-score"),
+                        optionsScore
+                    );
                     var chartTshirt = new ApexCharts(
                         document.querySelector("#chart-tshirt"),
                         optionsTshirt
@@ -404,6 +454,7 @@
                     chartApplications.render();
                     chartStatus.render();
                     chartSex.render();
+                    chartScore.render();
                     chartTshirt.render();
                     chartDiet.render();
                 </script>

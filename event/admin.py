@@ -16,9 +16,20 @@ from event.models import (
     Subscriber,
     CompanyEvent,
     Invoice,
-)
+    Message, MessageSent)
 from event.tasks import send_invoice
 from user.enums import DepartmentType
+
+
+class ReadOnlyAdmin(admin.ModelAdmin):
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
 
 
 @admin.register(Event)
@@ -156,3 +167,19 @@ class InvoiceAdmin(admin.ModelAdmin):
         )
 
     send.short_description = "Send invoice"
+
+
+@admin.register(Message)
+class MessageAdmin(admin.ModelAdmin):
+    search_fields = ("id", "creator", "type", "title", "content",)
+    list_display = ("title", "type", "creator",)
+    list_filter = ("created_at",)
+    ordering = ("created_at",)
+
+
+@admin.register(MessageSent)
+class MessageSentAdmin(ReadOnlyAdmin):
+    search_fields = ("id", "message", "recipient",)
+    list_display = ("message", "recipient",)
+    list_filter = ("created_at",)
+    ordering = ("created_at",)

@@ -279,4 +279,8 @@ def get_statistics(event_id: UUID = None):
             dict(diet=d.value, count=(diets[d.value] if d.value in diets else 0))
             for d in DietType
         ]
+        scores = dict([(i, 0) for i in range(0, 11)])
+        for application in apps_all:
+            scores[int(application.score)] += 1
+        statistics["score"] = scores
     return statistics
