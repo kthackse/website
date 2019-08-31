@@ -1,1 +1,39 @@
-{{ content | safe }}
+{% extends "base.html" %}
+{% load static %}
+
+{% block title_plain %}{{ message.title }}{% endblock %}
+
+{% block body_all %}
+    <div class="main-menu-message">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container box_1620">
+                <div class="row">
+                    <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                        <h5 style="margin-bottom: 1.5rem;">{{ message.title }}</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8 col-lg-8 mb-8 mb-lg-0">
+                        <img class="email-profile" src="/files/{{ event.logo }}"/>
+                        <div class="row" style="display: inline-block;">
+                            <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                                <h6 style="line-height: 100%; margin-bottom: 0;"><b style="line-height: 100%; margin-bottom: 0;">{{ hk_name }}</b></h6>
+                                <p style="line-height: 100%; margin-bottom: 0;">{{ hk_email_contact }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-4 mb-4 mb-lg-0 text-right">
+                        <small>{{ message.created_at | date:"d/m/Y \a\t H:i e" }}</small>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 1.25rem;">
+                    <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                        <a href="{% url "app_dashboard" %}" class="link-button-inline" style="margin-left: 0;">Back to the dashboard</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+    {{ message.content | safe }}
+{% endblock %}
+</html>

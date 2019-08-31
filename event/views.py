@@ -451,6 +451,6 @@ def apply_remove_confirm(request, code, context={}):
 def message(request, id, context={}):
     message = get_message(message_id=id)
     if message:
-        context["content"] = message.content
+        context["message"] = message
         return render(request, "message.html", context)
     return HttpResponseRedirect(reverse("app_dashboard"))
