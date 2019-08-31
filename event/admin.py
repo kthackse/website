@@ -16,7 +16,8 @@ from event.models import (
     Subscriber,
     CompanyEvent,
     Invoice,
-    Message, MessageSent)
+    Message,
+)
 from event.tasks import send_invoice
 from user.enums import DepartmentType
 
@@ -171,15 +172,7 @@ class InvoiceAdmin(admin.ModelAdmin):
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
-    search_fields = ("id", "creator", "type", "title", "content",)
-    list_display = ("title", "type", "creator",)
+    search_fields = ("id", "type", "title", "content")
+    list_display = ("title", "event", "type", "recipient", "created_at",)
     list_filter = ("created_at",)
-    ordering = ("created_at",)
-
-
-@admin.register(MessageSent)
-class MessageSentAdmin(ReadOnlyAdmin):
-    search_fields = ("id", "message", "recipient",)
-    list_display = ("message", "recipient",)
-    list_filter = ("created_at",)
-    ordering = ("created_at",)
+    ordering = ("-created_at",)

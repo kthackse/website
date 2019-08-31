@@ -27,6 +27,7 @@ from event.models import (
     Team,
     Comment,
     Vote,
+    Message,
 )
 from event.tasks import send_subscriber_new, send_subscriber_resubscribed
 
@@ -284,3 +285,10 @@ def get_statistics(event_id: UUID = None):
             scores[int(application.score)] += 1
         statistics["score"] = scores
     return statistics
+
+
+def get_messages_for_user(user_id):
+    event = get_next_or_past_event()
+    if event:
+        return Message.objects.filter(event_id=event.id, recipient_id=user_id).order_by("-created_at")
+    return None

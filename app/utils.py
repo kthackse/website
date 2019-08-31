@@ -13,12 +13,15 @@ from django.urls import reverse
 
 from app.variables import (
     HACKATHON_ORGANIZER_EMAIL_REGEX,
-    HACKATHON_EMAIL_PREFIX,
     HACKATHON_EMAIL_NOREPLY,
     HACKATHON_EMAIL_CONTACT,
     HACKATHON_NAME,
 )
 from user.enums import DepartmentType
+
+
+from bs4 import BeautifulSoup
+from markdown import markdown
 
 
 def get_substitutions_templates():
@@ -43,7 +46,7 @@ def get_substitutions_templates():
 
 def variables_processor(request):
     c = get_substitutions_templates()
-    from event.utils import get_next_or_past_event, get_application
+    from event.utils.utils import get_next_or_past_event, get_application
 
     event = get_next_or_past_event()
     if event:
@@ -170,3 +173,31 @@ def require_department(departments: List[DepartmentType], **decokwargs):
         return _argwrap
 
     return _funcwrap
+
+
+def markdown_to_text(markdown_string):
+    """
+    GitHub Gist
+    Markdown to Plaintext in Python
+    https://gist.github.com/lorey/eb15a7f3338f959a78cc3661fbc255fe
+    """
+    html = markdown(markdown_string)
+
+    html = re.sub(r'\n', ' ', html)
+    html = re.sub(r'<pre>(.*?)</pre>', ' ', html)
+    html = re.sub(r'<code>(.*?)</code >', ' ', html)
+    html = re.sub(r'<h1>(.*?)</h1>', ' ', html)
+    html = re.sub(r'<h2>(.*?)</h2>', ' ', html)
+    html = re.sub(r'<h3>(.*?)</h3>', ' ', html)
+    html = re.sub(r'<img (.*?)/>', ' ', html)
+    html = re.sub(r'<p>\|(</p>)?', ' ', html)
+    html = re.sub(r'<a (.*?)>(.*?)</a>', ' ', html)
+    html = re.sub(r'\[(.*?)\]', ' ', html)
+    html = re.sub(r'\((.*?)\)', ' ', html)
+
+    print(html)
+
+    soup = BeautifulSoup(html, "html.parser")
+    text = ''.join(soup.findAll(text=True))
+
+    return text

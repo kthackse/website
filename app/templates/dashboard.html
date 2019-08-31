@@ -183,6 +183,50 @@
                         <div class="subsection-intro text-center">
                             <h3>Recent messages</h3>
                         </div>
+                        {% if alerts %}
+                            {% for message in alerts %}
+                                <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                                    <div class="row" style="margin-bottom: 0.5rem;">
+                                        <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                                            <h5>{{ message.title }}</h5>
+                                        </div>
+                                        <div class="col-md-6 col-lg-6 mb-6 mb-lg-0" style="text-align: right;">
+                                            <p style="margin-bottom: 0;">{{ message.created_at | date:"d/m/Y H:i" }}</p>
+                                        </div>
+                                        <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                                            <p>{{ message.content_short_plain }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p>You have no recent messages.</p>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                        <div class="subsection-intro text-center">
+                            <h3>Recent messages</h3>
+                        </div>
+                        {% if alerts %}
+                            {% for message in alerts %}
+                                <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                                    <div class="row" style="margin-bottom: 0.5rem;">
+                                        <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                                            <h5>{{ message.title }}</h5>
+                                        </div>
+                                        <div class="col-md-6 col-lg-6 mb-6 mb-lg-0" style="text-align: right;">
+                                            <p style="margin-bottom: 0;">{{ message.created_at | date:"d/m/Y H:i" }}</p>
+                                        </div>
+                                        <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                                            <p>{{ message.content_short_plain }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p>You have no recent messages.</p>
+                        {% endif %}
                     </div>
                 {% endif %}
             {% elif request.user.is_organiser %}

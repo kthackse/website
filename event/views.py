@@ -1,8 +1,6 @@
 import math
 import datetime
-import os
 
-import pytz
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
 from django.http import HttpResponseNotFound, HttpResponseRedirect
@@ -11,11 +9,11 @@ from django.urls import reverse
 from django.utils import timezone
 
 from app.utils import login_verified_required
-from app.variables import HACKATHON_TIMEZONE
 from app.views import response
 from event.enums import DietType, TshirtSize, ApplicationStatus, SubscriberStatus
 from event.models import Application, Subscriber
-from event.utils import (
+from event.utils.messages import get_message
+from event.utils.utils import (
     get_event,
     get_application,
     get_applications,
@@ -446,4 +444,13 @@ def apply_remove_confirm(request, code, context={}):
         if current_application:
             current_application.cancel()
             messages.success(request, "Your application has been cancelled.")
+    return HttpResponseRedirect(reverse("app_dashboard"))
+
+
+@login_verified_required
+def message(request, id, context={}):
+    message = get_message(message_id=id)
+    if message:
+        context["content"] = message.content
+        return render(request, "message.html", context)
     return HttpResponseRedirect(reverse("app_dashboard"))

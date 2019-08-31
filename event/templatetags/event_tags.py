@@ -1,8 +1,6 @@
-import pytz
 from django import template
 from django.utils import timezone
 
-from app.variables import HACKATHON_TIMEZONE
 from event.enums import ApplicationStatus
 
 register = template.Library()
