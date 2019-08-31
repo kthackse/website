@@ -94,7 +94,7 @@ def send_invoice(invoice: Invoice, request=None):
         subject,
         body,
         MessageType.INVOICE,
-        attachment=invoice.invoice
+        attachment=invoice.invoice,
     )
 
     send_email(

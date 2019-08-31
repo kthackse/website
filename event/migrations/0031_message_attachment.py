@@ -6,14 +6,14 @@ import event.models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('event', '0030_make_event_optional_in_message'),
-    ]
+    dependencies = [("event", "0030_make_event_optional_in_message")]
 
     operations = [
         migrations.AddField(
-            model_name='message',
-            name='attachment',
-            field=models.FileField(blank=True, null=True, upload_to=event.models.path_and_rename_attachment),
-        ),
+            model_name="message",
+            name="attachment",
+            field=models.FileField(
+                blank=True, null=True, upload_to=event.models.path_and_rename_attachment
+            ),
+        )
     ]

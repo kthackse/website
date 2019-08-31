@@ -183,21 +183,21 @@ def markdown_to_text(markdown_string):
     """
     html = markdown(markdown_string)
 
-    html = re.sub(r'\n', ' ', html)
-    html = re.sub(r'<pre>(.*?)</pre>', ' ', html)
-    html = re.sub(r'<code>(.*?)</code >', ' ', html)
-    html = re.sub(r'<h1>(.*?)</h1>', ' ', html)
-    html = re.sub(r'<h2>(.*?)</h2>', ' ', html)
-    html = re.sub(r'<h3>(.*?)</h3>', ' ', html)
-    html = re.sub(r'<img (.*?)/>', ' ', html)
-    html = re.sub(r'<p>\|(</p>)?', ' ', html)
-    html = re.sub(r'<a (.*?)>(.*?)</a>', ' ', html)
-    html = re.sub(r'\[(.*?)\]', ' ', html)
-    html = re.sub(r'\((.*?)\)', ' ', html)
+    html = re.sub(r"\n", " ", html)
+    html = re.sub(r"<pre>(.*?)</pre>", " ", html)
+    html = re.sub(r"<code>(.*?)</code >", " ", html)
+    html = re.sub(r"<h1>(.*?)</h1>", " ", html)
+    html = re.sub(r"<h2>(.*?)</h2>", " ", html)
+    html = re.sub(r"<h3>(.*?)</h3>", " ", html)
+    html = re.sub(r"<img (.*?)/>", " ", html)
+    html = re.sub(r"<p>\|(</p>)?", " ", html)
+    html = re.sub(r"<a (.*?)>(.*?)</a>", " ", html)
+    html = re.sub(r"\[(.*?)\]", " ", html)
+    html = re.sub(r"\((.*?)\)", " ", html)
 
     print(html)
 
     soup = BeautifulSoup(html, "html.parser")
-    text = ''.join(soup.findAll(text=True))
+    text = "".join(soup.findAll(text=True))
 
     return text

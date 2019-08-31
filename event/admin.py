@@ -173,6 +173,6 @@ class InvoiceAdmin(admin.ModelAdmin):
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
     search_fields = ("id", "type", "title", "content")
-    list_display = ("title", "event", "type", "recipient", "created_at",)
+    list_display = ("title", "event", "type", "recipient", "created_at")
     list_filter = ("created_at",)
     ordering = ("-created_at",)
