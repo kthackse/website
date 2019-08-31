@@ -17,9 +17,9 @@ from django.utils import timezone
 from app.settings import SIGNUP_DISABLED
 from app.utils import login_verified_required
 from app.variables import HACKATHON_NAME
-from event.utils import get_applications_by_user
+from event.utils.utils import get_applications_by_user
 from user import forms
-from user.enums import SexType, UserType, DepartmentType
+from user.enums import SexType, UserType
 from user.models import User, UserChange
 from user.utils import send_verify
 

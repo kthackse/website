@@ -3,7 +3,7 @@ from django.template.loader import render_to_string
 
 from app.enums import MailTag
 from app.utils import get_notification_template, send_email, get_substitutions_templates
-from event.utils import get_next_or_past_event
+from event.utils.utils import get_next_or_past_event
 from user.models import User
 
 

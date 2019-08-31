@@ -84,3 +84,15 @@ class CompanyTier(enum.IntEnum):
 class InvoiceStatus(enum.IntEnum):
     DRAFT = 0
     SENT = 1
+
+
+class MessageType(enum.IntEnum):
+    GENERIC = 10
+    SUBSCRIBED = 20
+    ACCEPTED = 30
+    LETTER = 40
+    INVOICE = 50
+    BILL = 60
+    VOLUNTEERS = 70
+    MENTORS = 80
+    SPONSORS = 90

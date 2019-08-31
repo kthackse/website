@@ -6,12 +6,14 @@ import urllib.request
 from urllib.error import URLError
 
 import cairosvg
+import html2text
 from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
 from django.db import models, transaction
 from django.utils import timezone
 from versatileimagefield.fields import VersatileImageField
 
+from app.utils import markdown_to_text
 from app.variables import HACKATHON_VOTE_PERSONAL, HACKATHON_VOTE_TECHNICAL
 from event.enums import (
     EventType,
@@ -24,6 +26,7 @@ from event.enums import (
     SubscriberStatus,
     CompanyTier,
     InvoiceStatus,
+    MessageType,
 )
 from user.enums import UserType
 
@@ -671,3 +674,62 @@ class Invoice(models.Model):
             ).date()
         self.invoice = self.create_invoice()
         return super().save(*args, **kwargs)
+
+
+def path_and_rename_attachment(instance, filename):
+    """
+    Stack Overflow
+    Django ImageField change file name on upload
+    https://stackoverflow.com/questions/15140942/django-imagefield-change-file-name-on-upload
+    """
+    ext = filename.split(".")[-1]
+    # get filename
+    if instance.pk:
+        filename = "{}.{}".format(instance.pk, ext)
+    else:
+        # set filename as random string
+        filename = "{}.{}".format(uuid.uuid4().hex, ext)
+    # return the whole path to the file
+    return os.path.join("event/attachment/", filename)
+
+
+class Message(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    event = models.ForeignKey(
+        "event.Event", on_delete=models.PROTECT, blank=True, null=True
+    )
+    recipient = models.ForeignKey(
+        "user.User", on_delete=models.CASCADE, blank=True, null=True
+    )
+    recipient_email = models.EmailField(max_length=255, blank=True, null=True)
+    type = models.PositiveSmallIntegerField(
+        choices=((t.value, t.name) for t in MessageType),
+        default=MessageType.GENERIC.value,
+    )
+    title = models.CharField(max_length=255)
+    content = models.TextField()
+    attachment = models.FileField(
+        upload_to=path_and_rename_attachment, blank=True, null=True
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def content_short(self):
+        short = self.content[:50].rstrip(" ")
+        if short[-3:] != "...":
+            short += "..."
+        return short
+
+    @property
+    def content_short_plain(self):
+        short = markdown_to_text(html2text.html2text(self.content))[:100].rstrip(" ")
+        if short[-3:] != "...":
+            short += "..."
+        return short
+
+    def clean(self):
+        messages = dict()
+        if not self.recipient and not self.recipient_email:
+            messages["recipient"] = "A recipient or email's recipient must be provided"
+        if messages:
+            raise ValidationError(messages)
