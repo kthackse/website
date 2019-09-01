@@ -1034,8 +1034,7 @@ h5, .h5 {
   margin-right: 35px;
 }
 
-.header-area .navbar .nav .nav-item .nav-link {
-  font-family: "Roboto", sans-serif;
+.header-area .navbar .nav .nav-item .nav-link, .header-area .navbar .nav .dropdown .dropdown-toggle {
   color: #f4f4f4;
   text-transform: capitalize;
   font-weight: 500;
@@ -1051,7 +1050,7 @@ h5, .h5 {
     margin-left: 14px;
 }
 
-.header-area .navbar .nav .nav-item:hover .nav-link, .header-area .navbar .nav .nav-item.active .nav-link {
+.header-area .navbar .nav .nav-item:hover .nav-link, .header-area .navbar .nav .dropdown:hover .dropdown-toggle {
   background-color: #1e5cb1;
   opacity: 1;
 }

@@ -91,7 +91,13 @@
                                             {% if request.user.email_verified %}
                                                 {% if request.user.is_organiser %}
                                                     {% if event %}
-                                                        <li class="nav-item"><a class="nav-link" href="{% url 'event_applications' code=event.code %}">Applications</a></li>
+                                                        <li class="dropdown">
+                                                            <a class="dropdown-toggle" data-toggle="dropdown" role="button" href="#">Applications</a>
+                                                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
+                                                                <li><a class="nav-link" href="{% url 'event_applications' code=event.code %}">List</a></li>
+                                                                <li><a class="nav-link" href="{% url 'event_applicationsreview' code=event.code %}">Review</a></li>
+                                                            </ul>
+                                                        </li>
                                                     {% endif %}
                                                 {% endif %}
                                             {% endif %}

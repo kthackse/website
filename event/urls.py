@@ -17,6 +17,11 @@ urlpatterns = [
         name="event_applicationsreview",
     ),
     url(
+        r"^(?P<code>.*)/applications/ranking$",
+        views.applications_ranking,
+        name="event_applicationsranking",
+    ),
+    url(
         r"^(?P<code>.*)/applications/(?P<id>[\w-]+)$",
         views.applications_other,
         name="event_applicationsother",

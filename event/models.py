@@ -373,9 +373,12 @@ class Vote(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     # Vote result
-    vote_tech = models.SmallIntegerField(validators=[valid_vote])
-    vote_personal = models.SmallIntegerField(validators=[valid_vote])
-    vote_total = models.FloatField()
+    vote_tech = models.SmallIntegerField(validators=[valid_vote], null=True, blank=True)
+    vote_personal = models.SmallIntegerField(validators=[valid_vote], null=True, blank=True)
+    vote_total = models.FloatField(null=True, blank=True)
+
+    # Skipped?
+    skipped = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ("application", "voted_by")
@@ -384,35 +387,39 @@ class Vote(models.Model):
         messages = dict()
         if not self.voted_by.is_organiser:
             messages["user"] = "A user must be an organiser in order to vote"
+        if not self.skipped and (not self.vote_tech or not self.vote_personal or not self.vote_total):
+            messages["skipped"] = "A non skip vote must have a score"
         if messages:
             raise ValidationError(messages)
 
     def delete(self, *args, **kwargs):
-        with transaction.atomic():
-            votes = (
-                Vote.objects.filter(application_id=self.application_id)
-                .exclude(id=self.id)
-                .values_list("vote_total", flat=True)
-            )
-            if not votes:
-                votes = [0]
-            self.application.set_score((sum(votes) / len(votes)))
+        if not self.skipped:
+            with transaction.atomic():
+                votes = (
+                    Vote.objects.filter(application_id=self.application_id)
+                    .exclude(id=self.id)
+                    .values_list("vote_total", flat=True)
+                )
+                if not votes:
+                    votes = [0]
+                self.application.set_score((sum(votes) / len(votes)))
         return super().delete(*args, **kwargs)
 
     def save(self, *args, **kwargs):
         self.clean()
-        self.vote_total = (
-            HACKATHON_VOTE_PERSONAL * self.vote_personal
-            + HACKATHON_VOTE_TECHNICAL * self.vote_tech
-        ) / (HACKATHON_VOTE_PERSONAL + HACKATHON_VOTE_TECHNICAL)
-        with transaction.atomic():
-            votes = (
-                Vote.objects.filter(application_id=self.application_id)
-                .exclude(id=self.id)
-                .count()
-            )
-            score = (self.application.score * votes + self.vote_total) / (votes + 1)
-            self.application.set_score(score)
+        if not self.skipped:
+            self.vote_total = (
+                HACKATHON_VOTE_PERSONAL * self.vote_personal
+                + HACKATHON_VOTE_TECHNICAL * self.vote_tech
+            ) / (HACKATHON_VOTE_PERSONAL + HACKATHON_VOTE_TECHNICAL)
+            with transaction.atomic():
+                votes = (
+                    Vote.objects.filter(application_id=self.application_id)
+                    .exclude(id=self.id)
+                    .count()
+                )
+                score = (self.application.score * votes + self.vote_total) / (votes + 1)
+                self.application.set_score(score)
         return super().save(*args, **kwargs)
 
 

@@ -22,7 +22,7 @@ from event.utils.utils import (
     get_comments_for_application,
     add_vote,
     get_application_by_id,
-)
+    get_ranking)
 from user.utils import is_participant, is_organiser
 
 
@@ -454,3 +454,13 @@ def message(request, id, context={}):
         context["message"] = message
         return render(request, "message.html", context)
     return HttpResponseRedirect(reverse("app_dashboard"))
+
+
+@login_verified_required
+@user_passes_test(is_organiser)
+def applications_ranking(request, code, context={}):
+    current_event = get_event(code=code)
+    if current_event:
+        context["ranking"] = get_ranking(code)
+        return render(request, "application_ranking.html", context)
+    return HttpResponseNotFound()
