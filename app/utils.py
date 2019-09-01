@@ -195,8 +195,6 @@ def markdown_to_text(markdown_string):
     html = re.sub(r"\[(.*?)\]", " ", html)
     html = re.sub(r"\((.*?)\)", " ", html)
 
-    print(html)
-
     soup = BeautifulSoup(html, "html.parser")
     text = "".join(soup.findAll(text=True))
 
