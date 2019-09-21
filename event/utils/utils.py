@@ -299,12 +299,14 @@ def get_messages_for_user(user_id):
 def get_ranking(event_code):
     return enumerate(
         Vote.objects.filter(application__event__code=event_code)
-        .values("voted_by__id", "voted_by__picture", "voted_by__name", "voted_by__surname")
+        .values(
+            "voted_by__id", "voted_by__picture", "voted_by__name", "voted_by__surname"
+        )
         .annotate(
             vote=Count(Case(When(skipped=False, then=1), output_field=IntegerField())),
             skip=Count(Case(When(skipped=True, then=1), output_field=IntegerField())),
-            total=Count("voted_by__id")
+            total=Count("voted_by__id"),
         )
         .order_by("total", "vote", "-skip"),
-        1
+        1,
     )

@@ -214,7 +214,9 @@ class CompanyEvent(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     event = models.ForeignKey("Event", on_delete=models.PROTECT)
     company = models.ForeignKey("user.Company", on_delete=models.PROTECT)
-    current_logo = VersatileImageField("Image", upload_to=path_and_rename_company, blank=True, null=True)
+    current_logo = VersatileImageField(
+        "Image", upload_to=path_and_rename_company, blank=True, null=True
+    )
     tier = models.PositiveSmallIntegerField(
         choices=((t.value, t.name) for t in CompanyTier)
     )
@@ -401,7 +403,9 @@ class Vote(models.Model):
 
     # Vote result
     vote_tech = models.SmallIntegerField(validators=[valid_vote], null=True, blank=True)
-    vote_personal = models.SmallIntegerField(validators=[valid_vote], null=True, blank=True)
+    vote_personal = models.SmallIntegerField(
+        validators=[valid_vote], null=True, blank=True
+    )
     vote_total = models.FloatField(null=True, blank=True)
 
     # Skipped?
@@ -414,7 +418,9 @@ class Vote(models.Model):
         messages = dict()
         if not self.voted_by.is_organiser:
             messages["user"] = "A user must be an organiser in order to vote"
-        if not self.skipped and (not self.vote_tech or not self.vote_personal or not self.vote_total):
+        if not self.skipped and (
+            not self.vote_tech or not self.vote_personal or not self.vote_total
+        ):
             messages["skipped"] = "A non skip vote must have a score"
         if messages:
             raise ValidationError(messages)

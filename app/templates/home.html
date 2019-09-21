@@ -131,7 +131,7 @@
                 </div>
             </div>
         {% endif %}
-        {% if event.companies_public %}
+        {% if event.companies_public and sponsors or event.companies_open %}
             <div class="home-companies">
                 <div class="container">
                     {% if sponsors %}
@@ -204,24 +204,57 @@
                 </div>
             </div>
         {% endif %}
-        {% if event.organisers_public and organisers %}
+        {% if event.organisers_public and organisers or event.organisers_open or event.volunteers_open or event.mentors_open %}
             <div class="home-organisers">
                 <div class="container">
-                    <div class="row">
-                        <div class="col-md-12 text-center">
-                            <h2>Organisers</h2>
-                            <div class="row">
-                                <!-- TODO: Handle if not logged or picture is not public -->
-                                {% for organiser in organisers %}
-                                    <div class="col-md-2 text-center home-organisers-item col-centered">
-                                        <img src="/files/{{ organiser.picture }}" />
-                                        <h6>{{ organiser.name }} {{ organiser.surname }}</h6>
-                                        <p>{{ organiser.departments.all | display_departments }}</p>
-                                    </div>
-                                {% endfor %}
+                    {% if event.organisers_public and organisers %}
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <h2>Organisers</h2>
+                                <div class="row">
+                                    <!-- TODO: Handle if not logged or picture is not public -->
+                                    {% for organiser in organisers %}
+                                        <div class="col-md-2 text-center home-organisers-item col-centered">
+                                            <img src="/files/{{ organiser.picture }}" />
+                                            <h6>{{ organiser.name }} {{ organiser.surname }}</h6>
+                                            <p>{{ organiser.departments.all | display_departments }}</p>
+                                        </div>
+                                    {% endfor %}
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    {% endif %}
+                    {% if event.organisers_open or event.volunteers_open or event.mentors_open %}
+                        <div class="row" {% if event.organisers_public and organisers %}style="margin-top: 2rem;"{% endif %}>
+                            {% if event.organisers_open %}
+                                <div class="col text-center home-organisers-apply">
+                                    <h3>Interested in organising?</h3>
+                                    <p style="margin-bottom: 0;">We are looking for driven people, capable of assuming responsabilities to take part of our team!</p>
+                                    <p>Do you love hackathons and you would like to help organise one yourself? Don't think it twice and apply now.</p>
+                                    <p>Interested? Email us at {{ hk_email_contact | urlize }}.</p>
+                                    <a class="home-button4 organisers-button" href="mailto:{{ hk_email_contact }}">Become an organiser</a>
+                                </div>
+                            {% endif %}
+                            {% if event.volunteers_open %}
+                                <div class="col text-center home-organisers-apply">
+                                    <h3>Interested in volunteering?</h3>
+                                    <p style="margin-bottom: 0;">Be part of the {{ hk_name }} team! Perks include exclusive t-shirts, swag, tons of free food and an awesome group of friends.</p>
+                                    <p>Help make this happen and welcome over {{ event.hackers }} awesome hackers in {{ event.city }}!</p>
+                                    <p>Interested? Email us at {{ hk_email_contact | urlize }}.</p>
+                                    <a class="home-button4 organisers-button" href="mailto:{{ hk_email_contact }}">Become a volunteer</a>
+                                </div>
+                            {% endif %}
+                            {% if event.mentors_open %}
+                                <div class="col text-center home-organisers-apply">
+                                    <h3>Interested in mentoring?</h3>
+                                    <p style="margin-bottom: 0;">Sometimes hackers can get lost or might need help, with your guidance, you can help them find that bug on line 132 or inspire them with new ideas.</p>
+                                    <p>Moreover, as a mentor, you will receive an exclusive t-shirt!</p>
+                                    <p>Interested? Email us at {{ hk_email_contact | urlize }}.</p>
+                                    <a class="home-button4 organisers-button" href="mailto:{{ hk_email_contact }}">Become a mentor</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         {% endif %}

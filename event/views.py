@@ -22,7 +22,8 @@ from event.utils.utils import (
     get_comments_for_application,
     add_vote,
     get_application_by_id,
-    get_ranking)
+    get_ranking,
+)
 from user.utils import is_participant, is_organiser
 
 

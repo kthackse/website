@@ -102,7 +102,8 @@ def files(request, file_):
         elif path in ["/files/event/attachment", "event/attachment"]:
             message = get_message_by_attachment(attachment=file_)
             if message and (
-                request.user.id == message.recipient_id or request.user.email == message.recipient_email
+                request.user.id == message.recipient_id
+                or request.user.email == message.recipient_email
             ):
                 if file_[:7] != "/files/":
                     file_ = "/files/" + file_

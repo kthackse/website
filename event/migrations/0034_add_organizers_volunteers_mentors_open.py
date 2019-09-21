@@ -5,24 +5,22 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('event', '0033_companyevent_current_logo'),
-    ]
+    dependencies = [("event", "0033_companyevent_current_logo")]
 
     operations = [
         migrations.AddField(
-            model_name='event',
-            name='mentors_open',
+            model_name="event",
+            name="mentors_open",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='event',
-            name='organisers_open',
+            model_name="event",
+            name="organisers_open",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='event',
-            name='volunteers_open',
+            model_name="event",
+            name="volunteers_open",
             field=models.BooleanField(default=False),
         ),
     ]

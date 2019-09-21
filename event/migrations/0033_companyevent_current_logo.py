@@ -7,14 +7,17 @@ import versatileimagefield.fields
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('event', '0032_enable_skip_on_vote'),
-    ]
+    dependencies = [("event", "0032_enable_skip_on_vote")]
 
     operations = [
         migrations.AddField(
-            model_name='companyevent',
-            name='current_logo',
-            field=versatileimagefield.fields.VersatileImageField(blank=True, null=True, upload_to=event.models.path_and_rename_company, verbose_name='Image'),
-        ),
+            model_name="companyevent",
+            name="current_logo",
+            field=versatileimagefield.fields.VersatileImageField(
+                blank=True,
+                null=True,
+                upload_to=event.models.path_and_rename_company,
+                verbose_name="Image",
+            ),
+        )
     ]

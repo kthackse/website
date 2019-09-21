@@ -6,29 +6,29 @@ import event.models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('event', '0031_message_attachment'),
-    ]
+    dependencies = [("event", "0031_message_attachment")]
 
     operations = [
         migrations.AddField(
-            model_name='vote',
-            name='skipped',
-            field=models.BooleanField(default=False),
+            model_name="vote", name="skipped", field=models.BooleanField(default=False)
         ),
         migrations.AlterField(
-            model_name='vote',
-            name='vote_personal',
-            field=models.SmallIntegerField(blank=True, null=True, validators=[event.models.valid_vote]),
+            model_name="vote",
+            name="vote_personal",
+            field=models.SmallIntegerField(
+                blank=True, null=True, validators=[event.models.valid_vote]
+            ),
         ),
         migrations.AlterField(
-            model_name='vote',
-            name='vote_tech',
-            field=models.SmallIntegerField(blank=True, null=True, validators=[event.models.valid_vote]),
+            model_name="vote",
+            name="vote_tech",
+            field=models.SmallIntegerField(
+                blank=True, null=True, validators=[event.models.valid_vote]
+            ),
         ),
         migrations.AlterField(
-            model_name='vote',
-            name='vote_total',
+            model_name="vote",
+            name="vote_total",
             field=models.FloatField(blank=True, null=True),
         ),
     ]
