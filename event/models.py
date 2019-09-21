@@ -95,6 +95,9 @@ class Event(models.Model):
     companies_public = models.BooleanField(default=True)
     application_available = models.DateTimeField()
     application_deadline = models.DateTimeField()
+    organisers_open = models.BooleanField(default=False)
+    volunteers_open = models.BooleanField(default=False)
+    mentors_open = models.BooleanField(default=False)
     companies_open = models.BooleanField(default=True)
     custom_home = models.BooleanField(default=False)
     schedule_markdown_url = models.CharField(max_length=255, blank=True, null=True)
@@ -190,10 +193,28 @@ class Event(models.Model):
             raise ValidationError(messages)
 
 
+def path_and_rename_company(instance, filename):
+    """
+    Stack Overflow
+    Django ImageField change file name on upload
+    https://stackoverflow.com/questions/15140942/django-imagefield-change-file-name-on-upload
+    """
+    ext = filename.split(".")[-1]
+    # get filename
+    if instance.pk:
+        filename = "{}.{}".format(instance.pk, ext)
+    else:
+        # set filename as random string
+        filename = "{}.{}".format(uuid.uuid4().hex, ext)
+    # return the whole path to the file
+    return os.path.join("event/company/", filename)
+
+
 class CompanyEvent(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     event = models.ForeignKey("Event", on_delete=models.PROTECT)
     company = models.ForeignKey("user.Company", on_delete=models.PROTECT)
+    current_logo = VersatileImageField("Image", upload_to=path_and_rename_company, blank=True, null=True)
     tier = models.PositiveSmallIntegerField(
         choices=((t.value, t.name) for t in CompanyTier)
     )
@@ -203,6 +224,12 @@ class CompanyEvent(models.Model):
         verbose_name = "Company in event"
         verbose_name_plural = "Companies in events"
         # unique_together = ("event", "company",)
+
+    @property
+    def logo(self):
+        if self.current_logo:
+            return self.current_logo
+        return self.company.logo
 
     def __str__(self):
         return self.company.name + " (" + self.event.name + ")"

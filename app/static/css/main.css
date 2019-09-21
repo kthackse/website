@@ -179,6 +179,19 @@ a:focus {
     background-color: #3F7ED1 !important;
 }
 
+.dashboard-logo {
+    max-width: 200px;
+}
+
+.dashboard-company span {
+    color: #003984;
+    font-weight: 500;
+}
+
+.dashboard-address {
+    margin-bottom: 0;
+}
+
 .form-group {
     width: 100%;
 }
@@ -659,8 +672,8 @@ td {
     text-transform: uppercase;
     font-size: 13px;
     font-weight: 400 !important;
-    margin-left: 5px;
-    margin-right: 5px;
+    /* margin-left: 5px;
+    margin-right: 5px; */
 }
 
 @media (min-width: 600px) {

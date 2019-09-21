@@ -79,9 +79,9 @@ html, body {
 }
 
 .home-background {
-    opacity: 0.75 !important;
-    /* filter: blur(5px) !important;
-    -webkit-filter: blur(5px) !important; */
+    opacity: 1 !important;
+    filter: blur(2px) !important;
+    -webkit-filter: blur(2px) !important;
 }
 
 body {
