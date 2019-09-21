@@ -8,7 +8,7 @@ from django.utils import timezone
 
 from app.tests.factories import EventFactory
 from app.variables import HACKATHON_APP_NAME
-from event.utils import get_next_or_past_event
+from event.utils.utils import get_next_or_past_event
 
 
 @pytest.mark.django_db

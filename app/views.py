@@ -11,9 +11,8 @@ from django.http import (
     HttpResponseRedirect,
     StreamingHttpResponse,
     HttpResponseNotFound,
-    HttpResponse,
 )
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render
 from django.template import TemplateDoesNotExist
 from django.urls import reverse
 from django.utils.encoding import force_bytes
@@ -25,9 +24,9 @@ from app.settings import GH_KEY, GH_BRANCH
 from app.slack import send_deploy_message
 from app.utils import login_verified_required
 from event.enums import CompanyTier
-from event.utils import (
+from event.utils.messages import get_message_by_attachment
+from event.utils.utils import (
     get_next_or_past_event,
-    get_next_events,
     get_application_by_resume,
     get_faq_items,
     add_subscriber,
@@ -41,6 +40,7 @@ from event.utils import (
     remove_team,
     get_organisers_in_event,
     get_statistics,
+    get_messages_for_user,
 )
 from user.enums import UserType
 from user.utils import get_user_by_picture, get_organisers
@@ -93,6 +93,17 @@ def files(request, file_):
             if invoice and (
                 request.user.is_sponsorship
                 or request.user.company == invoice.company_event.company
+            ):
+                if file_[:7] != "/files/":
+                    file_ = "/files/" + file_
+                response = StreamingHttpResponse(open(settings.BASE_DIR + file_, "rb"))
+                response["Content-Type"] = ""
+                return response
+        elif path in ["/files/event/attachment", "event/attachment"]:
+            message = get_message_by_attachment(attachment=file_)
+            if message and (
+                request.user.id == message.recipient_id
+                or request.user.email == message.recipient_email
             ):
                 if file_[:7] != "/files/":
                     file_ = "/files/" + file_
@@ -185,6 +196,7 @@ def dashboard(request, context={}):
 
     context["teammates"] = get_teammates_by_user(request.user.id)
     context["statistics"] = get_statistics()
+    context["alerts"] = get_messages_for_user(request.user.id)
     return render(request, "dashboard.html", context)
 
 

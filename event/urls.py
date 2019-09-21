@@ -17,6 +17,11 @@ urlpatterns = [
         name="event_applicationsreview",
     ),
     url(
+        r"^(?P<code>.*)/applications/ranking$",
+        views.applications_ranking,
+        name="event_applicationsranking",
+    ),
+    url(
         r"^(?P<code>.*)/applications/(?P<id>[\w-]+)$",
         views.applications_other,
         name="event_applicationsother",
@@ -24,4 +29,5 @@ urlpatterns = [
     url(r"^(?P<code>.*)/live$", views.live, name="event_live"),
     url(r"^subscribe/(?P<id>[\w-]+)$", views.subscribe, name="event_subscribe"),
     url(r"^unsubscribe/(?P<id>[\w-]+)$", views.unsubscribe, name="event_unsubscribe"),
+    url(r"^message/(?P<id>[\w-]+)$", views.message, name="event_message"),
 ]

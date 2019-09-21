@@ -5,7 +5,7 @@ from uuid import UUID
 
 from django.contrib import messages
 from django.core.exceptions import ValidationError
-from django.db.models import Count
+from django.db.models import Count, Case, IntegerField, When
 from django.utils import timezone
 
 from event.enums import (
@@ -27,6 +27,7 @@ from event.models import (
     Team,
     Comment,
     Vote,
+    Message,
 )
 from event.tasks import send_subscriber_new, send_subscriber_resubscribed
 
@@ -279,4 +280,33 @@ def get_statistics(event_id: UUID = None):
             dict(diet=d.value, count=(diets[d.value] if d.value in diets else 0))
             for d in DietType
         ]
+        scores = dict([(i, 0) for i in range(0, 11)])
+        for application in apps_all:
+            scores[int(application.score)] += 1
+        statistics["score"] = scores
     return statistics
+
+
+def get_messages_for_user(user_id):
+    event = get_next_or_past_event()
+    if event:
+        return Message.objects.filter(event_id=event.id, recipient_id=user_id).order_by(
+            "-created_at"
+        )
+    return None
+
+
+def get_ranking(event_code):
+    return enumerate(
+        Vote.objects.filter(application__event__code=event_code)
+        .values(
+            "voted_by__id", "voted_by__picture", "voted_by__name", "voted_by__surname"
+        )
+        .annotate(
+            vote=Count(Case(When(skipped=False, then=1), output_field=IntegerField())),
+            skip=Count(Case(When(skipped=True, then=1), output_field=IntegerField())),
+            total=Count("voted_by__id"),
+        )
+        .order_by("total", "vote", "-skip"),
+        1,
+    )

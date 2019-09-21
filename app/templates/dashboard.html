@@ -179,7 +179,44 @@
                             </div>
                         {% endif %}
                     </div>
+                    <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                        {% include "include/alerts.html" %}
+                    </div>
+                {% else %}
+                    <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                        {% include "include/alerts.html" %}
+                    </div>
                 {% endif %}
+            {% elif request.user.is_sponsor %}
+                <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                    <div class="subsection-intro text-center">
+                        <h3>Your company</h3>
+                    </div>
+                    <div class="col-md-12 col-lg-12 mb-12 mb-lg-0 text-center">
+                        <img class="dashboard-logo" alt="Logo of {{ request.user.company }}" src="/files/{{ request.user.company.logo }}" />
+                        <h4>{{ request.user.company }}</h4>
+                        {% if request.user.company.website %}
+                            <p class="dashboard-company"><span>Website: </span>{{ request.user.company.website | urlize }}</p>
+                        {% endif %}
+                        {% if request.user.company.organisation_name %}
+                            <p class="dashboard-company"><span>Organisation name: </span>{{ request.user.company.organisation_name }}</p>
+                        {% endif %}
+                        {% if request.user.company.organisation_number %}
+                            <p class="dashboard-company"><span>Organisation number: </span>{{ request.user.company.organisation_number }}</p>
+                        {% endif %}
+                        {% if request.user.company.address_1 and request.user.company.postcode and request.user.company.city %}
+                            <h6>Address</h6>
+                            <p class="dashboard-company dashboard-address">{{ request.user.company.address_1 }}</p>
+                            {% if request.user.company.address_2 %}
+                                <p class="dashboard-company dashboard-address">{{ request.user.company.address_2 }}</p>
+                            {% endif %}
+                            <p class="dashboard-company">{{ request.user.company.postcode }} {{ request.user.company.city }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                    {% include "include/alerts.html" %}
+                </div>
             {% elif request.user.is_organiser %}
                 <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
                     <div class="row">
@@ -213,7 +250,17 @@
                         </div>
                     </div>
                     <div class="row subsection-intro-mid text-center" style="margin-top: 2rem;">
-                        <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                        <div class="col-md-4 col-lg-4 mb-4 mb-lg-0">
+                            <div class="subsection-intro">
+                                <h3>Application scores</h3>
+                            </div>
+                            {% if not statistics.score %}
+                                <p>No data is available yet.</p>
+                            {% else %}
+                                <div id="chart-score"></div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 col-lg-4 mb-4 mb-lg-0">
                             <div class="subsection-intro">
                                 <h3>T-shirt sizes</h3>
                             </div>
@@ -223,7 +270,7 @@
                                 <div id="chart-tshirt"></div>
                             {% endif %}
                         </div>
-                        <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                        <div class="col-md-4 col-lg-4 mb-4 mb-lg-0">
                             <div class="subsection-intro">
                                 <h3>Dietary restrictions</h3>
                             </div>
@@ -317,9 +364,40 @@
                             }
                         }
                     };
+                    var optionsScore = {
+                        chart: {
+                            height: 250,
+                            type: 'bar',
+                            id: 'scores',
+                        },
+                        dataLabels: {
+                            enabled: false
+                        },
+                        stroke: {
+                            curve: 'straight'
+                        },
+                        grid: {
+                            padding: {
+                                right: 30,
+                                left: 20
+                            }
+                        },
+                        series: [{
+                            name: "Score",
+                            data: [{% for data_0, data_1 in statistics.score.items %}{{ data_1 }}, {% endfor %}]
+                        }],
+                        labels: [{% for data_0, data_1 in statistics.score.items %}{{ data_0 }}, {% endfor %}],
+                        yaxis: {
+                            tickAmount: 1,
+                            min: 0,
+                        },
+                        fill: {
+                            opacity: 1
+                        },
+                    };
                     var optionsTshirt = {
                         chart: {
-                            height: 350,
+                            height: 250,
                             type: 'bar',
                             id: 'tshirts',
                         },
@@ -350,7 +428,7 @@
                     };
                     var optionsDiet = {
                         chart: {
-                            height: 380,
+                            height: 280,
                             type: 'bar',
                             id: 'diets',
                         },
@@ -392,6 +470,10 @@
                         document.querySelector("#chart-sex"),
                         optionsSex
                     );
+                    var chartScore = new ApexCharts(
+                        document.querySelector("#chart-score"),
+                        optionsScore
+                    );
                     var chartTshirt = new ApexCharts(
                         document.querySelector("#chart-tshirt"),
                         optionsTshirt
@@ -404,6 +486,7 @@
                     chartApplications.render();
                     chartStatus.render();
                     chartSex.render();
+                    chartScore.render();
                     chartTshirt.render();
                     chartDiet.render();
                 </script>
