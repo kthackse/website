@@ -189,6 +189,8 @@ location /deploy/ {
 - Add the bot to your workspace.
 - Set the client ID, client secret and internal Slack webhook URL in `server.sh`.
 
+![Slack bot deploy](app/static/img/slack_deploy.png)
+
 ## Project update
 
 ### Local server
