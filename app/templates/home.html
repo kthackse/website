@@ -55,8 +55,11 @@
                     </div>
                     <div class="row">
                         <div class="col-md-12 text-center home-titles">
-                            <h1>{{ event.name }}</h1>
-                            <h3>{{ event.city }}, <span style="white-space: nowrap;">{% if event.dates_public %}{{ event.starts_at | date:"F j" }} - {{ event.ends_at | date:"j" }}{% else %}{{ event.starts_at | date:"Y" }}{% endif %}</span></h3>
+                            {% if event.dates_public %}
+                                <h3>
+                                    <span style="white-space: nowrap;">{{ event.starts_at | date:"F j" }} - {{ event.ends_at | date:"j" }}</span>
+                                </h3>
+                            {% endif %}
                             {% if event.application_status == 0 %}
                                 {% if request.user.is_authenticated %}
                                     <p class="home-button">Applications <b style="white-space: nowrap;">will open soon</b></p>

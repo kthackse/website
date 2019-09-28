@@ -76,6 +76,7 @@ class Event(models.Model):
         choices=((t.value, t.name) for t in EventType)
     )
     logo = VersatileImageField("Logo", upload_to=path_and_rename)
+    logo_clean = VersatileImageField("Clean logo", upload_to=path_and_rename, blank=True, null=True)
     background = models.FileField(
         upload_to=path_and_rename_background, blank=True, null=True
     )
@@ -151,6 +152,12 @@ class Event(models.Model):
         if self.coding_ends_at:
             return self.coding_ends_at
         return self.ends_at
+
+    @property
+    def logo_header(self):
+        if self.logo_clean:
+            return self.logo_clean
+        return self.logo
 
     def __str__(self):
         return self.name + " " + str(self.starts_at.year)
