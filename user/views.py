@@ -9,7 +9,7 @@ from django.http import (
     HttpResponseRedirect,
     HttpResponseNotFound,
     StreamingHttpResponse,
-)
+    HttpResponse)
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
@@ -17,6 +17,7 @@ from django.utils import timezone
 from app.settings import SIGNUP_DISABLED
 from app.utils import login_verified_required
 from app.variables import HACKATHON_NAME
+from event.enums import ApplicationStatus, DietType, TshirtSize
 from event.utils.utils import get_applications_by_user
 from user import forms
 from user.enums import SexType, UserType
@@ -358,66 +359,95 @@ def send_verification(request):
     return HttpResponseRedirect(reverse("user_verify"))
 
 
-@login_verified_required
+@login_required
 def download_personal_data(request):
-    with StringIO() as csvfile:
-        csvwriter = csv.writer(
-            csvfile, delimiter=";", quotechar="|", quoting=csv.QUOTE_MINIMAL
-        )
-        csvwriter.writerow(["ID", request.user.id])
-        csvwriter.writerow(["First name", request.user.name])
-        csvwriter.writerow(["Last name", request.user.surname])
-        csvwriter.writerow(["Email", request.user.email])
-        csvwriter.writerow(["Email verified", request.user.email_verified])
-        csvwriter.writerow(["Last login", request.user.last_login])
-        csvwriter.writerow(["Type", UserType(request.user.type).name.upper()])
-        if request.user.is_organiser or request.user.is_volunteer:
-            csvwriter.writerow(
-                [
-                    "Departments",
-                    ", ".join([str(d) for d in request.user.departments.all()]),
-                ]
-            )
-        if request.user.is_sponsor or request.user.is_recruiter:
-            csvwriter.writerow(["Company", request.user.company])
-        csvwriter.writerow(
-            ["Events", ", ".join([str(e) for e in request.user.events.all()])]
-        )
-        csvwriter.writerow(
-            ["Picture public to participants", request.user.picture_public_participants]
-        )
+    csvfile = StringIO()
+    csvwriter = csv.writer(
+        csvfile, delimiter=";", quotechar="|", quoting=csv.QUOTE_MINIMAL
+    )
+    csvwriter.writerow(["ID", request.user.id])
+    csvwriter.writerow(["Created at", request.user.created_at])
+    csvwriter.writerow(["First name", request.user.name])
+    csvwriter.writerow(["Last name", request.user.surname])
+    csvwriter.writerow(["Email", request.user.email])
+    csvwriter.writerow(["Email verified", request.user.email_verified])
+    csvwriter.writerow(["Last login", request.user.last_login])
+    csvwriter.writerow(["Type", UserType(request.user.type).name.upper()])
+    if request.user.is_organiser or request.user.is_volunteer:
         csvwriter.writerow(
             [
-                "Picture public to sponsors and recruiters",
-                request.user.picture_public_sponsors_and_recruiters,
+                "Departments",
+                ", ".join([str(d) for d in request.user.departments.all()]),
             ]
         )
-        csvwriter.writerow(["Sex", SexType(request.user.sex).name.upper()])
-        csvwriter.writerow(["Birthday", request.user.birthday])
-        csvwriter.writerow(["Phone", request.user.phone])
-        csvwriter.writerow(["City", request.user.city])
-        csvwriter.writerow(["Country", request.user.country])
+    if request.user.is_sponsor or request.user.is_recruiter:
+        csvwriter.writerow(["Company", request.user.company])
+    csvwriter.writerow(
+        ["Picture public to participants", request.user.picture_public_participants]
+    )
+    csvwriter.writerow(
+        [
+            "Picture public to sponsors and recruiters",
+            request.user.picture_public_sponsors_and_recruiters,
+        ]
+    )
+    csvwriter.writerow(["Sex", SexType(request.user.sex).name.upper()])
+    csvwriter.writerow(["Birthday", request.user.birthday])
+    csvwriter.writerow(["Phone", request.user.phone])
+    csvwriter.writerow(["City", request.user.city])
+    csvwriter.writerow(["Country", request.user.country])
 
-        mf = BytesIO()
-        zf = zipfile.ZipFile(mf, mode="w", compression=zipfile.ZIP_DEFLATED)
-        zf.writestr("profile.csv", csvfile.getvalue())
-        zf.writestr("profile.png", request.user.picture.read())
-        zf.close()
-
-        # TODO: Fix wrong formatted zip
-        response = StreamingHttpResponse(mf.getvalue(), "rb")
-        response["Content-Type"] = "application/zip"
-        response["Content-Disposition"] = (
-            'attachment; filename="'
-            + HACKATHON_NAME.lower()
-            + "_personaldata_"
-            + str(request.user.id)
-            + "_"
-            + str(int(timezone.now().timestamp()))
-            + '.zip"'
+    applications = []
+    for application in get_applications_by_user(request.user.id):
+        app_str = StringIO()
+        csvwriter = csv.writer(
+            app_str, delimiter=";", quotechar="|", quoting=csv.QUOTE_MINIMAL
         )
+        csvwriter.writerow(["ID", application.id])
+        csvwriter.writerow(["Created at", application.created_at])
+        csvwriter.writerow(["Status", ApplicationStatus(application.status).name.upper()])
+        if application.note:
+            csvwriter.writerow(["Note", application.note])
+        csvwriter.writerow(["Description", application.description])
+        csvwriter.writerow(["Projects", application.projects])
+        if application.money_needed:
+            csvwriter.writerow(["Money needed", str(application.money_needed)])
+        csvwriter.writerow(["Résumé available", application.resume_available])
+        csvwriter.writerow(["University", application.university])
+        csvwriter.writerow(["Degree", application.degree])
+        csvwriter.writerow(["Graduation year", application.graduation_year])
+        csvwriter.writerow(["GitHub", application.github])
+        csvwriter.writerow(["Devpost", application.devpost])
+        csvwriter.writerow(["LinkedIn", application.linkedin])
+        csvwriter.writerow(["Website", application.website])
+        csvwriter.writerow(["Diet", DietType(application.diet).name.upper()])
+        if application.diet_other:
+            csvwriter.writerow(["Diet specification", application.diet_other])
+        csvwriter.writerow(["T-shirt", TshirtSize(application.tshirt).name.upper()])
+        if application.hardware:
+            csvwriter.writerow(["Hardware requests", application.diet_other])
+        if application.team:
+            csvwriter.writerow(["Team ID", application.team.id])
+            csvwriter.writerow(["Team code", application.team.code])
+            csvwriter.writerow(["Team name", application.team.name])
+        resume_extension = application.resume.name.split(".")[-1]
+        applications.append((application.event.code, app_str, resume_extension, application.resume))
 
-        return response
+    mf = BytesIO()
+    zf = zipfile.ZipFile(mf, mode="w", compression=zipfile.ZIP_DEFLATED)
+    zf.writestr("user/profile.csv", csvfile.getvalue())
+    picture_extension = request.user.picture.name.split(".")[-1]
+    zf.writestr(f"user/profile.{picture_extension}", request.user.picture.read())
+    for application in applications:
+        zf.writestr(f"event/{application[0]}/application.csv", application[1].getvalue())
+        zf.writestr(f"event/{application[0]}/resume.{application[2]}", application[3].read())
+    zf.close()
+
+    response = HttpResponse(mf.getvalue(), content_type="application/zip")
+    file_name = f"{HACKATHON_NAME.lower()}_personaldata_{str(request.user.id)}_{str(int(timezone.now().timestamp()))}.zip"
+    response["Content-Disposition"] = f"attachment; filename=\"{file_name}\""
+
+    return response
 
 
 @login_verified_required
