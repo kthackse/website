@@ -30,3 +30,7 @@ def save_message_with_email(event_id, email, title, content, type, attachment=No
 
 def get_message(message_id):
     return Message.objects.filter(id=message_id).first()
+
+
+def get_message_by_attachment(attachment):
+    return Message.objects.filter(attachment=attachment).first()

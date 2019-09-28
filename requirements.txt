@@ -25,3 +25,4 @@ setuptools>=41.0.1
 sendgrid-django~=4.2.0
 sentry-sdk==0.10.2
 sqlparse==0.3.0
+weasyprint==49.0

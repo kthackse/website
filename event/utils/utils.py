@@ -5,7 +5,7 @@ from uuid import UUID
 
 from django.contrib import messages
 from django.core.exceptions import ValidationError
-from django.db.models import Count
+from django.db.models import Count, Case, IntegerField, When
 from django.utils import timezone
 
 from event.enums import (
@@ -294,3 +294,19 @@ def get_messages_for_user(user_id):
             "-created_at"
         )
     return None
+
+
+def get_ranking(event_code):
+    return enumerate(
+        Vote.objects.filter(application__event__code=event_code)
+        .values(
+            "voted_by__id", "voted_by__picture", "voted_by__name", "voted_by__surname"
+        )
+        .annotate(
+            vote=Count(Case(When(skipped=False, then=1), output_field=IntegerField())),
+            skip=Count(Case(When(skipped=True, then=1), output_field=IntegerField())),
+            total=Count("voted_by__id"),
+        )
+        .order_by("total", "vote", "-skip"),
+        1,
+    )

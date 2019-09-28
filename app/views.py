@@ -24,6 +24,7 @@ from app.settings import GH_KEY, GH_BRANCH
 from app.slack import send_deploy_message
 from app.utils import login_verified_required
 from event.enums import CompanyTier
+from event.utils.messages import get_message_by_attachment
 from event.utils.utils import (
     get_next_or_past_event,
     get_application_by_resume,
@@ -92,6 +93,17 @@ def files(request, file_):
             if invoice and (
                 request.user.is_sponsorship
                 or request.user.company == invoice.company_event.company
+            ):
+                if file_[:7] != "/files/":
+                    file_ = "/files/" + file_
+                response = StreamingHttpResponse(open(settings.BASE_DIR + file_, "rb"))
+                response["Content-Type"] = ""
+                return response
+        elif path in ["/files/event/attachment", "event/attachment"]:
+            message = get_message_by_attachment(attachment=file_)
+            if message and (
+                request.user.id == message.recipient_id
+                or request.user.email == message.recipient_email
             ):
                 if file_[:7] != "/files/":
                     file_ = "/files/" + file_

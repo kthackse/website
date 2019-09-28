@@ -187,6 +187,36 @@
                         {% include "include/alerts.html" %}
                     </div>
                 {% endif %}
+            {% elif request.user.is_sponsor %}
+                <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                    <div class="subsection-intro text-center">
+                        <h3>Your company</h3>
+                    </div>
+                    <div class="col-md-12 col-lg-12 mb-12 mb-lg-0 text-center">
+                        <img class="dashboard-logo" alt="Logo of {{ request.user.company }}" src="/files/{{ request.user.company.logo }}" />
+                        <h4>{{ request.user.company }}</h4>
+                        {% if request.user.company.website %}
+                            <p class="dashboard-company"><span>Website: </span>{{ request.user.company.website | urlize }}</p>
+                        {% endif %}
+                        {% if request.user.company.organisation_name %}
+                            <p class="dashboard-company"><span>Organisation name: </span>{{ request.user.company.organisation_name }}</p>
+                        {% endif %}
+                        {% if request.user.company.organisation_number %}
+                            <p class="dashboard-company"><span>Organisation number: </span>{{ request.user.company.organisation_number }}</p>
+                        {% endif %}
+                        {% if request.user.company.address_1 and request.user.company.postcode and request.user.company.city %}
+                            <h6>Address</h6>
+                            <p class="dashboard-company dashboard-address">{{ request.user.company.address_1 }}</p>
+                            {% if request.user.company.address_2 %}
+                                <p class="dashboard-company dashboard-address">{{ request.user.company.address_2 }}</p>
+                            {% endif %}
+                            <p class="dashboard-company">{{ request.user.company.postcode }} {{ request.user.company.city }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-6 mb-6 mb-lg-0">
+                    {% include "include/alerts.html" %}
+                </div>
             {% elif request.user.is_organiser %}
                 <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
                     <div class="row">

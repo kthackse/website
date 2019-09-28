@@ -205,8 +205,12 @@ class User(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return True
 
-    def __str__(self):
+    @property
+    def full_name(self):
         return self.name + " " + self.surname
+
+    def __str__(self):
+        return self.full_name
 
     def get_dict(self):
         return {

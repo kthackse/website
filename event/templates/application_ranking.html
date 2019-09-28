@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+{% load i18n %}
+
+{% block head_title %}Application review ranking{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="section-intro text-center">
+            <h2>Application review ranking</h2>
+        </div>
+        <div class="row application-event header-titles">
+            <div class="col-md-1 col-lg-1 mb-1 mb-lg-0">
+                <h6>Position</h6>
+            </div>
+            <div class="col-md-8 col-lg-8 mb-8 mb-lg-0">
+                <h6>Organiser</h6>
+            </div>
+            <div class="col-md-1 col-lg-1 mb-1 mb-lg-0">
+                <h6>Votes</h6>
+            </div>
+            <div class="col-md-1 col-lg-1 mb-1 mb-lg-0">
+                <h6>Skips</h6>
+            </div>
+            <div class="col-md-1 col-lg-1 mb-1 mb-lg-0">
+                <h6>Total</h6>
+            </div>
+        </div>
+        {% for ranking_i, ranking_element in ranking %}
+            <div class="row application-event">
+                <div class="col-md-1 col-lg-1 mb-1 mb-lg-0">
+                    <p>{{ ranking_i }}</p>
+                </div>
+                <div class="col-md-8 col-lg-8 mb-8 mb-lg-0">
+                    <a href="/user/profile/{{ ranking_element.voted_by__id }}">
+                        <img class="application-profile" src="/files/{{ ranking_element.voted_by__picture }}"/>
+                        <p style="display: inline-block;">{{ ranking_element.voted_by__name }} {{ ranking_element.voted_by__surname }}</p>
+                    </a>
+                </div>
+                <div class="col-md-1 col-lg-1 mb-1 mb-lg-0">
+                    <p>{{ ranking_element.vote }}</p>
+                </div>
+                <div class="col-md-1 col-lg-1 mb-1 mb-lg-0">
+                    <p>{{ ranking_element.skip }}</p>
+                </div>
+                <div class="col-md-1 col-lg-1 mb-1 mb-lg-0">
+                    <p>{{ ranking_element.total }}</p>
+                </div>
+            </div>
+        {% endfor %}
+        {% if not ranking %}
+            <div class="row application-event">
+                <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                    <p>There are no voted applications yet!</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

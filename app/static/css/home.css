@@ -16,6 +16,7 @@ html, body {
     margin-right: auto;
     padding: 0 15px;
     display: block;
+    margin-bottom: 1rem;
 }
 
 .home-picture img {
@@ -79,9 +80,9 @@ html, body {
 }
 
 .home-background {
-    opacity: 0.75 !important;
-    /* filter: blur(5px) !important;
-    -webkit-filter: blur(5px) !important; */
+    opacity: 1 !important;
+    filter: blur(2px) !important;
+    -webkit-filter: blur(2px) !important;
 }
 
 body {
@@ -160,7 +161,7 @@ body {
 
 .home-organisers h2 {
     color: rgba(255, 255, 255, 0.9);
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     text-transform: uppercase;
 }
 
@@ -173,6 +174,18 @@ body {
     color: rgba(235, 235, 235, 0.9);
     line-height: 125%;
     text-transform: uppercase;
+}
+
+.home-organisers-apply p {
+    color: rgba(235, 235, 235, 0.9);
+    line-height: 125%;
+    text-transform: none !important;
+}
+
+.home-organisers-apply a {
+    color: rgba(235, 235, 235, 0.8);
+    line-height: 100%;
+    font-weight: 800;
 }
 
 .home-organisers-item {
@@ -225,6 +238,35 @@ body {
     color: #fff !important;
 }
 
+.home-button4 {
+    display: inline-block;
+    border: none;
+    color: #fff !important;
+    padding: 9px 25px !important;
+    margin-top: -1px;
+    -webkit-transition: all 0.3s ease 0s;
+    -moz-transition: all 0.3s ease 0s;
+    -o-transition: all 0.3s ease 0s;
+    transition: all 0.3s ease 0s;
+    background-color: #3F7ED1;
+    text-transform: uppercase;
+    font-size: 13px;
+    width: 100%;
+    font-weight: 400 !important;
+}
+
+@media (min-width: 600px) {
+    .home-button4 {
+        padding: 9px 24px !important;
+        margin-top: -1px;
+    }
+}
+
+.home-button4:hover {
+    background-color: rgba(0, 57, 132, 1) !important;
+    color: #fff !important;
+}
+
 @media (max-width: 768px) {
   .home-mobile-center {
     max-width: 35%;
@@ -245,14 +287,14 @@ body {
     text-transform: uppercase;
 }
 
-.home-companies h3 {
+.home-companies h3, .home-organisers h3 {
     color: rgba(255, 255, 255, 0.9);
     text-transform: uppercase;
     font-size: 20px;
     margin-bottom: 1.5rem;
 }
 
-.home-companies h6 {
+.home-companies h6, .home-organisers h6 {
     color: rgba(240, 240, 240, 0.9);
     font-size: 20px;
 }
@@ -308,7 +350,7 @@ body {
     height: 60px;
 }
 
-.sponsorship-button {
+.sponsorship-button, .organisers-button {
     width: unset !important;
     padding: 15px 25px !important;
     margin-top: 1rem;

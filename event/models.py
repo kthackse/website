@@ -76,6 +76,9 @@ class Event(models.Model):
         choices=((t.value, t.name) for t in EventType)
     )
     logo = VersatileImageField("Logo", upload_to=path_and_rename)
+    logo_clean = VersatileImageField(
+        "Clean logo", upload_to=path_and_rename, blank=True, null=True
+    )
     background = models.FileField(
         upload_to=path_and_rename_background, blank=True, null=True
     )
@@ -95,6 +98,9 @@ class Event(models.Model):
     companies_public = models.BooleanField(default=True)
     application_available = models.DateTimeField()
     application_deadline = models.DateTimeField()
+    organisers_open = models.BooleanField(default=False)
+    volunteers_open = models.BooleanField(default=False)
+    mentors_open = models.BooleanField(default=False)
     companies_open = models.BooleanField(default=True)
     custom_home = models.BooleanField(default=False)
     schedule_markdown_url = models.CharField(max_length=255, blank=True, null=True)
@@ -149,6 +155,12 @@ class Event(models.Model):
             return self.coding_ends_at
         return self.ends_at
 
+    @property
+    def logo_header(self):
+        if self.logo_clean:
+            return self.logo_clean
+        return self.logo
+
     def __str__(self):
         return self.name + " " + str(self.starts_at.year)
 
@@ -190,10 +202,30 @@ class Event(models.Model):
             raise ValidationError(messages)
 
 
+def path_and_rename_company(instance, filename):
+    """
+    Stack Overflow
+    Django ImageField change file name on upload
+    https://stackoverflow.com/questions/15140942/django-imagefield-change-file-name-on-upload
+    """
+    ext = filename.split(".")[-1]
+    # get filename
+    if instance.pk:
+        filename = "{}.{}".format(instance.pk, ext)
+    else:
+        # set filename as random string
+        filename = "{}.{}".format(uuid.uuid4().hex, ext)
+    # return the whole path to the file
+    return os.path.join("event/company/", filename)
+
+
 class CompanyEvent(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     event = models.ForeignKey("Event", on_delete=models.PROTECT)
     company = models.ForeignKey("user.Company", on_delete=models.PROTECT)
+    current_logo = VersatileImageField(
+        "Image", upload_to=path_and_rename_company, blank=True, null=True
+    )
     tier = models.PositiveSmallIntegerField(
         choices=((t.value, t.name) for t in CompanyTier)
     )
@@ -203,6 +235,12 @@ class CompanyEvent(models.Model):
         verbose_name = "Company in event"
         verbose_name_plural = "Companies in events"
         # unique_together = ("event", "company",)
+
+    @property
+    def logo(self):
+        if self.current_logo:
+            return self.current_logo
+        return self.company.logo
 
     def __str__(self):
         return self.company.name + " (" + self.event.name + ")"
@@ -373,9 +411,14 @@ class Vote(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     # Vote result
-    vote_tech = models.SmallIntegerField(validators=[valid_vote])
-    vote_personal = models.SmallIntegerField(validators=[valid_vote])
-    vote_total = models.FloatField()
+    vote_tech = models.SmallIntegerField(validators=[valid_vote], null=True, blank=True)
+    vote_personal = models.SmallIntegerField(
+        validators=[valid_vote], null=True, blank=True
+    )
+    vote_total = models.FloatField(null=True, blank=True)
+
+    # Skipped?
+    skipped = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ("application", "voted_by")
@@ -384,35 +427,41 @@ class Vote(models.Model):
         messages = dict()
         if not self.voted_by.is_organiser:
             messages["user"] = "A user must be an organiser in order to vote"
+        if not self.skipped and (
+            not self.vote_tech or not self.vote_personal or not self.vote_total
+        ):
+            messages["skipped"] = "A non skip vote must have a score"
         if messages:
             raise ValidationError(messages)
 
     def delete(self, *args, **kwargs):
-        with transaction.atomic():
-            votes = (
-                Vote.objects.filter(application_id=self.application_id)
-                .exclude(id=self.id)
-                .values_list("vote_total", flat=True)
-            )
-            if not votes:
-                votes = [0]
-            self.application.set_score((sum(votes) / len(votes)))
+        if not self.skipped:
+            with transaction.atomic():
+                votes = (
+                    Vote.objects.filter(application_id=self.application_id)
+                    .exclude(id=self.id)
+                    .values_list("vote_total", flat=True)
+                )
+                if not votes:
+                    votes = [0]
+                self.application.set_score((sum(votes) / len(votes)))
         return super().delete(*args, **kwargs)
 
     def save(self, *args, **kwargs):
         self.clean()
-        self.vote_total = (
-            HACKATHON_VOTE_PERSONAL * self.vote_personal
-            + HACKATHON_VOTE_TECHNICAL * self.vote_tech
-        ) / (HACKATHON_VOTE_PERSONAL + HACKATHON_VOTE_TECHNICAL)
-        with transaction.atomic():
-            votes = (
-                Vote.objects.filter(application_id=self.application_id)
-                .exclude(id=self.id)
-                .count()
-            )
-            score = (self.application.score * votes + self.vote_total) / (votes + 1)
-            self.application.set_score(score)
+        if not self.skipped:
+            self.vote_total = (
+                HACKATHON_VOTE_PERSONAL * self.vote_personal
+                + HACKATHON_VOTE_TECHNICAL * self.vote_tech
+            ) / (HACKATHON_VOTE_PERSONAL + HACKATHON_VOTE_TECHNICAL)
+            with transaction.atomic():
+                votes = (
+                    Vote.objects.filter(application_id=self.application_id)
+                    .exclude(id=self.id)
+                    .count()
+                )
+                score = (self.application.score * votes + self.vote_total) / (votes + 1)
+                self.application.set_score(score)
         return super().save(*args, **kwargs)
 
 
