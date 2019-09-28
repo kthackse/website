@@ -9,12 +9,13 @@ class PageAdmin(admin.ModelAdmin):
         "id",
         "title",
         "code",
+        "category",
         "content_plain",
         "content_html",
         "content_markdown",
         "content_url_markdown",
     )
-    list_display = ("title", "code")
+    list_display = ("title", "category", "code")
     ordering = ("title",)
 
 

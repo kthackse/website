@@ -16,6 +16,7 @@ html, body {
     margin-right: auto;
     padding: 0 15px;
     display: block;
+    margin-bottom: 1rem;
 }
 
 .home-picture img {
