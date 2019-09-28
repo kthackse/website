@@ -89,6 +89,13 @@ def get_application_to_review(event_id, user_id):
     )
 
 
+def is_application_to_review(user_id):
+    event = get_next_or_past_event()
+    if event:
+        return get_application_to_review(event.id, user_id) is not None
+    return False
+
+
 def get_application_by_resume(resume):
     return Application.objects.filter(resume=resume).first()
 
