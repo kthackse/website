@@ -271,6 +271,8 @@ def profile(request):
                 messages.success(request, "Profile updated successfully!")
             except IntegrityError:
                 messages.error(request, "The email you entered is already in use!")
+        else:
+            messages.error(request, "The data you introduced is invalid, please fill in all the fields!")
 
     user_data = request.user.get_dict()
     form = forms.ProfileForm(user_data)
