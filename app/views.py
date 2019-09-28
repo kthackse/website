@@ -175,11 +175,14 @@ def home(request):
 def dashboard(request, context={}):
     if request.method == "POST":
         if request.POST["submit"] == "team-create":
-            team = create_team(
-                request.POST["event"], request.user.id, request.POST["name"]
-            )
-            assign_team(request.POST["event"], request.user.id, team.code)
-            messages.success(request, "Your team has been created!")
+            if "name" in request.POST and request.POST["name"]:
+                team = create_team(
+                    request.POST["event"], request.user.id, request.POST["name"]
+                )
+                assign_team(request.POST["event"], request.user.id, team.code)
+                messages.success(request, "Your team has been created!")
+            else:
+                messages.error(request, "You must give a name to the team!")
         elif request.POST["submit"] == "team-join":
             if assign_team(
                 request.POST["event"], request.user.id, request.POST["code"]
