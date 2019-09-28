@@ -428,7 +428,7 @@ class Vote(models.Model):
         if not self.voted_by.is_organiser:
             messages["user"] = "A user must be an organiser in order to vote"
         if not self.skipped and (
-            not self.vote_tech or not self.vote_personal or not self.vote_total
+            not self.vote_tech or not self.vote_personal
         ):
             messages["skipped"] = "A non skip vote must have a score"
         if messages:
