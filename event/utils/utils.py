@@ -64,7 +64,9 @@ def get_next_events(published=True):
 
 def get_event(code, published=True, application_status=EventApplicationStatus.OPEN):
     event = Event.objects.filter(code=code, published=published).first()
-    if event and (not application_status or event.application_status == application_status):
+    if event and (
+        not application_status or event.application_status == application_status
+    ):
         return event
     return None
 
