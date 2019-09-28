@@ -76,7 +76,9 @@ class Event(models.Model):
         choices=((t.value, t.name) for t in EventType)
     )
     logo = VersatileImageField("Logo", upload_to=path_and_rename)
-    logo_clean = VersatileImageField("Clean logo", upload_to=path_and_rename, blank=True, null=True)
+    logo_clean = VersatileImageField(
+        "Clean logo", upload_to=path_and_rename, blank=True, null=True
+    )
     background = models.FileField(
         upload_to=path_and_rename_background, blank=True, null=True
     )

@@ -9,7 +9,8 @@ from django.http import (
     HttpResponseRedirect,
     HttpResponseNotFound,
     StreamingHttpResponse,
-    HttpResponse)
+    HttpResponse,
+)
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
@@ -273,7 +274,10 @@ def profile(request):
             except IntegrityError:
                 messages.error(request, "The email you entered is already in use!")
         else:
-            messages.error(request, "The data you introduced is invalid, please fill in all the fields!")
+            messages.error(
+                request,
+                "The data you introduced is invalid, please fill in all the fields!",
+            )
 
     user_data = request.user.get_dict()
     form = forms.ProfileForm(user_data)
@@ -375,10 +379,7 @@ def download_personal_data(request):
     csvwriter.writerow(["Type", UserType(request.user.type).name.upper()])
     if request.user.is_organiser or request.user.is_volunteer:
         csvwriter.writerow(
-            [
-                "Departments",
-                ", ".join([str(d) for d in request.user.departments.all()]),
-            ]
+            ["Departments", ", ".join([str(d) for d in request.user.departments.all()])]
         )
     if request.user.is_sponsor or request.user.is_recruiter:
         csvwriter.writerow(["Company", request.user.company])
@@ -405,7 +406,9 @@ def download_personal_data(request):
         )
         csvwriter.writerow(["ID", application.id])
         csvwriter.writerow(["Created at", application.created_at])
-        csvwriter.writerow(["Status", ApplicationStatus(application.status).name.upper()])
+        csvwriter.writerow(
+            ["Status", ApplicationStatus(application.status).name.upper()]
+        )
         if application.note:
             csvwriter.writerow(["Note", application.note])
         csvwriter.writerow(["Description", application.description])
@@ -431,7 +434,9 @@ def download_personal_data(request):
             csvwriter.writerow(["Team code", application.team.code])
             csvwriter.writerow(["Team name", application.team.name])
         resume_extension = application.resume.name.split(".")[-1]
-        applications.append((application.event.code, app_str, resume_extension, application.resume))
+        applications.append(
+            (application.event.code, app_str, resume_extension, application.resume)
+        )
 
     mf = BytesIO()
     zf = zipfile.ZipFile(mf, mode="w", compression=zipfile.ZIP_DEFLATED)
@@ -439,13 +444,17 @@ def download_personal_data(request):
     picture_extension = request.user.picture.name.split(".")[-1]
     zf.writestr(f"user/profile.{picture_extension}", request.user.picture.read())
     for application in applications:
-        zf.writestr(f"event/{application[0]}/application.csv", application[1].getvalue())
-        zf.writestr(f"event/{application[0]}/resume.{application[2]}", application[3].read())
+        zf.writestr(
+            f"event/{application[0]}/application.csv", application[1].getvalue()
+        )
+        zf.writestr(
+            f"event/{application[0]}/resume.{application[2]}", application[3].read()
+        )
     zf.close()
 
     response = HttpResponse(mf.getvalue(), content_type="application/zip")
     file_name = f"{HACKATHON_NAME.lower()}_personaldata_{str(request.user.id)}_{str(int(timezone.now().timestamp()))}.zip"
-    response["Content-Disposition"] = f"attachment; filename=\"{file_name}\""
+    response["Content-Disposition"] = f'attachment; filename="{file_name}"'
 
     return response
 
