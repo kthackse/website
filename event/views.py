@@ -11,7 +11,7 @@ from django.utils import timezone
 from app.utils import login_verified_required
 from app.views import response
 from event.enums import DietType, TshirtSize, ApplicationStatus, SubscriberStatus
-from event.models import Application, Subscriber
+from event.models import Application, Subscriber, Invoice
 from event.utils.messages import get_message
 from event.utils.utils import (
     get_event,
@@ -174,6 +174,8 @@ def apply(request, code, context={}):
 @login_verified_required
 @user_passes_test(is_organiser)
 def applications(request, code, context={}):
+    context["invoice"] = Invoice.objects.all().first()
+    return render(request, "file/invoice.html", context)
     current_event = get_event(code=code, application_status=None)
     if current_event:
         context["event"] = current_event
