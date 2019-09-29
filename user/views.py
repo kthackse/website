@@ -19,7 +19,11 @@ from app.settings import SIGNUP_DISABLED
 from app.utils import login_verified_required
 from app.variables import HACKATHON_NAME
 from event.enums import ApplicationStatus, DietType, TshirtSize
-from event.utils.utils import get_applications_by_user
+from event.utils.utils import (
+    get_applications_by_user,
+    is_application_to_review,
+    get_next_or_past_event,
+)
 from user import forms
 from user.enums import SexType, UserType
 from user.models import User, UserChange
@@ -40,6 +44,13 @@ def login(request):
             if user:
                 auth.login(request, user)
                 if next_page == "/":
+                    if user.is_organiser and is_application_to_review(user.id):
+                        event = get_next_or_past_event()
+                        return HttpResponseRedirect(
+                            reverse(
+                                "event_applicationsreview", kwargs=dict(code=event.code)
+                            )
+                        )
                     return HttpResponseRedirect(reverse("app_dashboard"))
                 return HttpResponseRedirect(next_page)
             else:

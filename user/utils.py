@@ -25,6 +25,10 @@ def get_user_by_picture(picture):
         return None
 
 
+def get_user_by_id(user_id):
+    return User.objects.get(id=user_id, is_active=True)
+
+
 def get_organisers(event_id):
     return User.objects.filter(
         events__in=[event_id], is_active=True, type=UserType.ORGANISER.value

@@ -64,7 +64,9 @@ def get_next_events(published=True):
 
 def get_event(code, published=True, application_status=EventApplicationStatus.OPEN):
     event = Event.objects.filter(code=code, published=published).first()
-    if not application_status or event.application_status == application_status:
+    if event and (
+        not application_status or event.application_status == application_status
+    ):
         return event
     return None
 
@@ -87,6 +89,13 @@ def get_application_to_review(event_id, user_id):
         .order_by("score", "created_at")
         .first()
     )
+
+
+def is_application_to_review(user_id):
+    event = get_next_or_past_event()
+    if event:
+        return get_application_to_review(event.id, user_id) is not None
+    return False
 
 
 def get_application_by_resume(resume):

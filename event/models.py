@@ -1,19 +1,19 @@
 import os
 import uuid
 from decimal import Decimal
-from io import BytesIO
 import urllib.request
 from urllib.error import URLError
 
-import cairosvg
 import html2text
+import weasyprint
 from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
 from django.db import models, transaction
+from django.template.loader import get_template
 from django.utils import timezone
 from versatileimagefield.fields import VersatileImageField
 
-from app.utils import markdown_to_text
+from app.utils import markdown_to_text, get_substitutions_templates
 from app.variables import HACKATHON_VOTE_PERSONAL, HACKATHON_VOTE_TECHNICAL
 from event.enums import (
     EventType,
@@ -76,8 +76,14 @@ class Event(models.Model):
         choices=((t.value, t.name) for t in EventType)
     )
     logo = VersatileImageField("Logo", upload_to=path_and_rename)
+    logo_white = VersatileImageField(
+        "White logo", upload_to=path_and_rename, blank=True, null=True
+    )
     logo_clean = VersatileImageField(
         "Clean logo", upload_to=path_and_rename, blank=True, null=True
+    )
+    logo_white_clean = VersatileImageField(
+        "Clean white logo", upload_to=path_and_rename, blank=True, null=True
     )
     background = models.FileField(
         upload_to=path_and_rename_background, blank=True, null=True
@@ -156,10 +162,26 @@ class Event(models.Model):
         return self.ends_at
 
     @property
+    def logo_home(self):
+        return self.logo
+
+    @property
+    def logo_white_home(self):
+        if self.logo_white:
+            return self.logo_white
+        return self.logo
+
+    @property
     def logo_header(self):
         if self.logo_clean:
             return self.logo_clean
-        return self.logo
+        return self.logo_home
+
+    @property
+    def logo_white_header(self):
+        if self.logo_white_clean:
+            return self.logo_white_clean
+        return self.logo_white_home
 
     def __str__(self):
         return self.name + " " + str(self.starts_at.year)
@@ -427,9 +449,7 @@ class Vote(models.Model):
         messages = dict()
         if not self.voted_by.is_organiser:
             messages["user"] = "A user must be an organiser in order to vote"
-        if not self.skipped and (
-            not self.vote_tech or not self.vote_personal or not self.vote_total
-        ):
+        if not self.skipped and (not self.vote_tech or not self.vote_personal):
             messages["skipped"] = "A non skip vote must have a score"
         if messages:
             raise ValidationError(messages)
@@ -547,141 +567,12 @@ class Invoice(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def create_invoice(self, item: str = None):
-        if self.vat > 0:
-            invoice_svg = open("app/templates/file/invoice/base_with_vat.svg").read()
-        else:
-            invoice_svg = open("app/templates/file/invoice/base.svg").read()
-        invoice_svg = invoice_svg.replace(
-            "{{event_name}}",
-            self.company_event.event.name.upper()
-            + " "
-            + str(self.company_event.event.starts_at.year),
+    def get_invoice_file(self):
+        template = get_template("file/invoice.html")
+        html = template.render(
+            context=dict(invoice=self, **get_substitutions_templates())
         )
-        invoice_svg = invoice_svg.replace(
-            "{{event_location}}",
-            self.company_event.event.city.upper()
-            + ", "
-            + self.company_event.event.country.upper(),
-        )
-        invoice_svg = invoice_svg.replace(
-            "{{company_name}}", self.company_event.company.name.upper()
-        )
-        invoice_svg = invoice_svg.replace(
-            "{{date_today}}", str(timezone.now().strftime("%B %d, %Y")).upper()
-        )
-        invoice_svg = invoice_svg.replace(
-            "{{company_organisation_name}}", self.company_event.company.org_name.upper()
-        )
-        invoice_svg = invoice_svg.replace(
-            "{{company_address_1}}",
-            (
-                self.company_event.company.address_1
-                if self.company_event.company.address_1
-                else "Address: UNKNOWN"
-            ),
-        )
-        invoice_svg = invoice_svg.replace(
-            "{{company_address_2}}",
-            (
-                self.company_event.company.address_2
-                if self.company_event.company.address_2
-                else self.company_event.event.city
-            ),
-        )
-        invoice_svg = invoice_svg.replace(
-            "{{company_organisation_number}}",
-            (
-                self.company_event.company.organisation_number
-                if self.company_event.company.organisation_number
-                else "UNKNOWN"
-            ),
-        )
-        invoice_svg = invoice_svg.replace("{{invoice_reference}}", self.code)
-        invoice_svg = invoice_svg.replace(
-            "{{invoice_created}}", timezone.now().strftime("%Y-%m-%d %H:%M")
-        )
-        invoice_svg = invoice_svg.replace(
-            "{{invoice_due}}", self.date_due.strftime("%Y-%m-%d")
-        )
-        if self.code_invoice_company:
-            invoice_svg = invoice_svg.replace(
-                "{{company_invoice_reference}}",
-                "Company reference: " + self.code_invoice_company,
-            )
-        else:
-            invoice_svg = invoice_svg.replace("{{company_invoice_reference}}", "")
-        if self.description:
-            invoice_svg = invoice_svg.replace("{{invoice_item}}", self.description)
-        else:
-            invoice_svg = invoice_svg.replace(
-                "{{invoice_item}}",
-                (
-                    item
-                    if item
-                    else self.company_event.event.name
-                    + " "
-                    + str(self.company_event.event.starts_at.year)
-                    + " "
-                    + CompanyTier(self.company_event.tier).name.capitalize()
-                    + " Sponsorship"
-                ),
-            )
-        invoice_svg = invoice_svg.replace(
-            "{{invoice_amount}}",
-            "{:,.2f}".format(self.amount.amount)
-            .replace(",", ";")
-            .replace(".", ",")
-            .replace(";", ".")
-            + " "
-            + str(self.amount.currency),
-        )
-        if self.vat > 0:
-            invoice_svg = invoice_svg.replace(
-                "{{invoice_vat}}", str(self.vat) + "% VAT"
-            )
-            vat_amount = (float(self.amount.amount) * float(self.vat)) / 100.0
-            invoice_svg = invoice_svg.replace(
-                "{{invoice_vat_amount}}",
-                "{:,.2f}".format(vat_amount)
-                .replace(",", ";")
-                .replace(".", ",")
-                .replace(";", ".")
-                + " "
-                + str(self.amount.currency),
-            )
-            invoice_svg = invoice_svg.replace(
-                "{{invoice_total}}",
-                "{:,.2f}".format(self.amount.amount + Decimal(vat_amount))
-                .replace(",", ";")
-                .replace(".", ",")
-                .replace(";", ".")
-                + " "
-                + str(self.amount.currency),
-            )
-        else:
-            invoice_svg = invoice_svg.replace(
-                "{{invoice_total}}",
-                "{:,.2f}".format(self.amount.amount)
-                .replace(",", ";")
-                .replace(".", ",")
-                .replace(";", ".")
-                + " "
-                + str(self.amount.currency),
-            )
-        invoice_svg = invoice_svg.replace(
-            "{{event_responsible_name}}", str(self.responsible_event)
-        )
-        invoice_svg = invoice_svg.replace(
-            "{{event_responsible_phone}}", str(self.responsible_event.phone)
-        )
-        invoice_svg = invoice_svg.replace(
-            "{{event_responsible_email}}", str(self.responsible_event.email)
-        )
-        return ContentFile(
-            BytesIO((cairosvg.svg2pdf(bytestring=invoice_svg))).getvalue(),
-            name=self.company_event.event.code + "_" + self.code + ".pdf",
-        )
+        return weasyprint.HTML(string=html).write_pdf()
 
     def mark_as_sent(self, request=None):
         self.status = InvoiceStatus.SENT.value
@@ -721,7 +612,10 @@ class Invoice(models.Model):
                 month=time_month,
                 year=(time_now.year if time_month <= 12 else time_now.year + 1),
             ).date()
-        self.invoice = self.create_invoice()
+        self.invoice = ContentFile(
+            self.get_invoice_file(),
+            name=self.company_event.event.code + "_" + self.code + ".pdf",
+        )
         return super().save(*args, **kwargs)
 
 

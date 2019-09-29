@@ -41,28 +41,21 @@ def get_substitutions_templates():
         "hk_sn_linkedin": getattr(settings, "HACKATHON_SN_LINKEDIN", None),
         "hk_sn_medium": getattr(settings, "HACKATHON_SN_MEDIUM", None),
         "hk_sn_github": getattr(settings, "HACKATHON_SN_GITHUB", None),
+        "hk_legal_name": getattr(settings, "HACKATHON_LEGAL_NAME", None),
+        "hk_legal_organisation_name": getattr(
+            settings, "HACKATHON_LEGAL_ORGANISATION_NAME", None
+        ),
+        "hk_legal_organisation_number": getattr(
+            settings, "HACKATHON_LEGAL_ORGANISATION_NUMBER", None
+        ),
+        "hk_legal_organisation_bankgiro": getattr(
+            settings, "HACKATHON_LEGAL_ORGANISATION_BANKGIRO", None
+        ),
+        "hk_legal_address_1": getattr(settings, "HACKATHON_LEGAL_ADDRESS_1", None),
+        "hk_legal_address_2": getattr(settings, "HACKATHON_LEGAL_ADDRESS_2", None),
+        "hk_legal_postcode": getattr(settings, "HACKATHON_LEGAL_POSTCODE", None),
+        "hk_legal_city": getattr(settings, "HACKATHON_LEGAL_CITY", None),
     }
-
-
-def variables_processor(request):
-    c = get_substitutions_templates()
-    from event.utils.utils import get_next_or_past_event, get_application
-
-    event = get_next_or_past_event()
-    if event:
-        c["event"] = event
-        c["background_video"] = event.background.name[-4:] == ".mp4"
-        c["background_image"] = event.background.name[-4:] in [
-            ".png",
-            ".jpg",
-            ".jpeg",
-            ".gif",
-            ".svg",
-        ]
-        application = get_application(event.id, request.user.id)
-        if application:
-            c["application"] = application
-    return c
 
 
 def is_email_organizer(email):
@@ -199,3 +192,7 @@ def markdown_to_text(markdown_string):
     text = "".join(soup.findAll(text=True))
 
     return text
+
+
+def get_site_url():
+    return "http://" + settings.HACKATHON_DOMAIN

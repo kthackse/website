@@ -82,6 +82,35 @@
     font-style: oblique;
 }
 
+.dropdown-menu {
+    border-radius: 0;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background-color: #1e5cb1;
+    min-width: 100%;
+}
+
+.dropdown-menu .nav-link {
+    color: #f4f4f4 !important;
+    padding: 11px 14px !important;
+}
+
+.dropdown-menu .nav-link:hover {
+    background-color: #3F7ED1 !important;
+}
+
+.new {
+    font-size: 10px;
+    background-color: #fff;
+    color: #003984;
+    margin: 0 0 0 5px;
+    padding: 2px 5px;
+    display: inline-block;
+    top: -2px;
+    position: relative;
+}
+
 .navbar-brand {
     color: #f4f4f4 !important;
     text-transform: uppercase;
