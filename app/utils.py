@@ -42,9 +42,15 @@ def get_substitutions_templates():
         "hk_sn_medium": getattr(settings, "HACKATHON_SN_MEDIUM", None),
         "hk_sn_github": getattr(settings, "HACKATHON_SN_GITHUB", None),
         "hk_legal_name": getattr(settings, "HACKATHON_LEGAL_NAME", None),
-        "hk_legal_organisation_name": getattr(settings, "HACKATHON_LEGAL_ORGANISATION_NAME", None),
-        "hk_legal_organisation_number": getattr(settings, "HACKATHON_LEGAL_ORGANISATION_NUMBER", None),
-        "hk_legal_organisation_bankgiro": getattr(settings, "HACKATHON_LEGAL_ORGANISATION_BANKGIRO", None),
+        "hk_legal_organisation_name": getattr(
+            settings, "HACKATHON_LEGAL_ORGANISATION_NAME", None
+        ),
+        "hk_legal_organisation_number": getattr(
+            settings, "HACKATHON_LEGAL_ORGANISATION_NUMBER", None
+        ),
+        "hk_legal_organisation_bankgiro": getattr(
+            settings, "HACKATHON_LEGAL_ORGANISATION_BANKGIRO", None
+        ),
         "hk_legal_address_1": getattr(settings, "HACKATHON_LEGAL_ADDRESS_1", None),
         "hk_legal_address_2": getattr(settings, "HACKATHON_LEGAL_ADDRESS_2", None),
         "hk_legal_postcode": getattr(settings, "HACKATHON_LEGAL_POSTCODE", None),

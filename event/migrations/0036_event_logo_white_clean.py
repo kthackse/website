@@ -7,14 +7,17 @@ import versatileimagefield.fields
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('event', '0035_event_logo_clean'),
-    ]
+    dependencies = [("event", "0035_event_logo_clean")]
 
     operations = [
         migrations.AddField(
-            model_name='event',
-            name='logo_white_clean',
-            field=versatileimagefield.fields.VersatileImageField(blank=True, null=True, upload_to=event.models.path_and_rename, verbose_name='Clean white logo'),
-        ),
+            model_name="event",
+            name="logo_white_clean",
+            field=versatileimagefield.fields.VersatileImageField(
+                blank=True,
+                null=True,
+                upload_to=event.models.path_and_rename,
+                verbose_name="Clean white logo",
+            ),
+        )
     ]
