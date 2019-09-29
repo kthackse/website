@@ -95,7 +95,7 @@ def money(value):
 def money_vat(value, vat):
     if isinstance(value, Money):
         value = value.amount
-    value = (value * vat)/Decimal("100.0")
+    value = (value * vat) / Decimal("100.0")
     return "{:,.2f}".format(value).replace(",", " ").replace(".", ",")
 
 
@@ -103,5 +103,5 @@ def money_vat(value, vat):
 def money_total(value, vat):
     if isinstance(value, Money):
         value = value.amount
-    value += (value * vat)/Decimal("100.0")
+    value += (value * vat) / Decimal("100.0")
     return "{:,.2f}".format(value).replace(",", " ").replace(".", ",")

@@ -570,10 +570,7 @@ class Invoice(models.Model):
     def get_invoice_file(self):
         template = get_template("file/invoice.html")
         html = template.render(
-            context=dict(
-                invoice=self,
-                **get_substitutions_templates()
-            )
+            context=dict(invoice=self, **get_substitutions_templates())
         )
         return weasyprint.HTML(string=html).write_pdf()
 
