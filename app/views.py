@@ -117,6 +117,7 @@ def files(request, file_):
         "__sized__/event/picture",
         "event/background",
         "user/company",
+        "event/company",
     ]:
         if file_[:7] != "/files/":
             file_ = "/files/" + file_

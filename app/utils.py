@@ -41,6 +41,14 @@ def get_substitutions_templates():
         "hk_sn_linkedin": getattr(settings, "HACKATHON_SN_LINKEDIN", None),
         "hk_sn_medium": getattr(settings, "HACKATHON_SN_MEDIUM", None),
         "hk_sn_github": getattr(settings, "HACKATHON_SN_GITHUB", None),
+        "hk_legal_name": getattr(settings, "HACKATHON_LEGAL_NAME", None),
+        "hk_legal_organisation_name": getattr(settings, "HACKATHON_LEGAL_ORGANISATION_NAME", None),
+        "hk_legal_organisation_number": getattr(settings, "HACKATHON_LEGAL_ORGANISATION_NUMBER", None),
+        "hk_legal_organisation_bankgiro": getattr(settings, "HACKATHON_LEGAL_ORGANISATION_BANKGIRO", None),
+        "hk_legal_address_1": getattr(settings, "HACKATHON_LEGAL_ADDRESS_1", None),
+        "hk_legal_address_2": getattr(settings, "HACKATHON_LEGAL_ADDRESS_2", None),
+        "hk_legal_postcode": getattr(settings, "HACKATHON_LEGAL_POSTCODE", None),
+        "hk_legal_city": getattr(settings, "HACKATHON_LEGAL_CITY", None),
     }
 
 
@@ -178,3 +186,7 @@ def markdown_to_text(markdown_string):
     text = "".join(soup.findAll(text=True))
 
     return text
+
+
+def get_site_url():
+    return "http://" + settings.HACKATHON_DOMAIN
