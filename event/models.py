@@ -27,7 +27,7 @@ from event.enums import (
     CompanyTier,
     InvoiceStatus,
     MessageType,
-)
+    LetterStatus)
 from user.enums import UserType
 
 from djmoney.models.fields import MoneyField
@@ -535,6 +535,75 @@ class Subscriber(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+class Letter(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    code = models.CharField(max_length=31)
+    application = models.ForeignKey("Application", on_delete=models.CASCADE)
+    responsible = models.ForeignKey(
+        "user.User", on_delete=models.PROTECT
+    )
+    letter = models.FileField(null=True, blank=True, upload_to="letter")
+    status = models.PositiveSmallIntegerField(
+        choices=((s.value, s.name) for s in LetterStatus),
+        default=LetterStatus.DRAFT.value,
+    )
+    sent_by = models.ForeignKey(
+        "user.User",
+        on_delete=models.PROTECT,
+        related_name="sent_by",
+        blank=True,
+        null=True,
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    # TODO: Create letter file
+    def get_letter_file(self):
+        template = get_template("file/letter.html")
+        html = template.render(
+            context=dict(letter=self, **get_substitutions_templates())
+        )
+        return weasyprint.HTML(string=html).write_pdf()
+
+    def mark_as_signed(self, request=None):
+        self.status = LetterStatus.SIGNED.value
+        self.save()
+
+    def mark_as_sent(self, request=None):
+        self.status = LetterStatus.SENT.value
+        if request:
+            self.sent_by = request.user
+        self.save()
+
+    def clean(self):
+        messages = dict()
+        if not self.responsible.can_sign:
+            messages["responsible"] = "The letter responsible must be able to sign"
+        if messages:
+            raise ValidationError(messages)
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        if not self.code:
+            if (
+                not Letter.objects.filter(created_at__year=timezone.now().year)
+                .exclude(id=self.id)
+                .exists()
+            ):
+                self.code = str(timezone.now().year) + "-" + f"{10:04d}"
+            else:
+                self.code = (
+                    str(timezone.now().year)
+                    + "-"
+                    + f"{int(Letter.objects.filter(created_at__year=timezone.now().year).order_by('-created_at').first().code[-4:])+1:04d}"
+                )
+        self.letter = ContentFile(
+            self.get_letter_file(),
+            name=self.code + ".pdf",
+        )
+        return super().save(*args, **kwargs)
 
 
 class Invoice(models.Model):

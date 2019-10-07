@@ -96,3 +96,10 @@ class MessageType(enum.IntEnum):
     VOLUNTEERS = 70
     MENTORS = 80
     SPONSORS = 90
+
+
+class LetterStatus(enum.IntEnum):
+    DRAFT = 0
+    SIGNED = 1
+    SENT = 2
+    CANCELLED = 3

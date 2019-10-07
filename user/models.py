@@ -9,7 +9,7 @@ from phonenumber_field.formfields import PhoneNumberField
 from versatileimagefield.fields import VersatileImageField
 
 from app.utils import is_email_organizer
-from user.enums import UserType, DepartmentType, SexType
+from user.enums import UserType, DepartmentType, SexType, DocumentType
 
 
 class UserManager(BaseUserManager):
@@ -87,6 +87,23 @@ def path_and_rename(instance, filename):
     return os.path.join("user/picture/", filename)
 
 
+def path_and_rename_signature(instance, filename):
+    """
+    Stack Overflow
+    Django ImageField change file name on upload
+    https://stackoverflow.com/questions/15140942/django-imagefield-change-file-name-on-upload
+    """
+    ext = filename.split(".")[-1]
+    # get filename
+    if instance.pk:
+        filename = "{}.{}".format(instance.pk, ext)
+    else:
+        # set filename as random string
+        filename = "{}.{}".format(uuid.uuid4().hex, ext)
+    # return the whole path to the file
+    return os.path.join("user/signature/", filename)
+
+
 class User(AbstractBaseUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(max_length=255, unique=True)
@@ -127,6 +144,15 @@ class User(AbstractBaseUser):
     city = models.CharField(max_length=255, blank=True, null=True)
     country = models.CharField(max_length=255, blank=True, null=True)
 
+    # Legal information
+    document_type = models.PositiveSmallIntegerField(
+        choices=((t.value, t.name) for t in DocumentType), blank=True, null=True
+    )
+    document_number = models.CharField(max_length=255, blank=True, null=True)
+    signature = VersatileImageField(
+        "Image", upload_to=path_and_rename_signature, null=True, blank=True
+    )
+
     objects = UserManager()
 
     USERNAME_FIELD = "email"
@@ -144,6 +170,10 @@ class User(AbstractBaseUser):
             and DepartmentType.DIRECTOR.value
             in self.departments.all().values_list("type", flat=True)
         )
+
+    @@property
+    def can_sign(self):
+        return self.is_director and self.signature
 
     @property
     def is_sponsorship(self):
@@ -264,6 +294,8 @@ class User(AbstractBaseUser):
             timezone.now().date() - self.birthday
         ) < timezone.timedelta(days=14 * 365):
             messages["age"] = "The minimum age is 14"
+        if self.document_type and not self.document_number or self.document_number and not self.document_type:
+            messages["document_number"] = "Both document type and number of any must be set"
         if messages:
             raise ValidationError(messages)
 

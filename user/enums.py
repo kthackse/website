@@ -29,3 +29,8 @@ class SexType(enum.IntEnum):
     NONE = 0
     FEMALE = 1
     MALE = 2
+
+
+class DocumentType(enum.IntEnum):
+    ID = 0
+    PASSPORT = 1
