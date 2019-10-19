@@ -6,6 +6,12 @@ from django.utils import timezone
 from app.enums import FileType, FileStatus, FileVerificationStatus
 
 
+def get_new_verification(id):
+    return "".join(
+        8 * [str(int(id) % int(timezone.now().strftime("%Y%m%d%H%M%S")))]
+    )[:8], str(uuid.uuid4()).replace("-", "").upper(), timezone.now() + timezone.timedelta(days=90)
+
+
 class File(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     file = models.FileField(upload_to="file")
@@ -28,11 +34,8 @@ class File(models.Model):
 
     def save(self, *args, **kwargs):
         self.clean()
-        self.verification_control = "".join(
-            8 * [str(int(self.id) % int(timezone.now().strftime("%Y%m%d%H%M%S")))]
-        )[:8]
-        self.verification_code = str(uuid.uuid4()).replace("-", "").upper()
-        self.verification_until = timezone.now() + timezone.timedelta(days=90)
+        if not self.verification_control or not self.verification_code or not self.verification_until:
+            self.verification_control, self.verification_code, self.verification_until = get_new_verification(self.id)
         return super().save(*args, **kwargs)
 
 

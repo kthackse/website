@@ -7,6 +7,7 @@ from django.utils import timezone
 from djmoney.money import Money
 
 from app import settings
+from app.enums import FileStatus
 from app.utils import get_site_url
 from event.enums import ApplicationStatus, DietType, TshirtSize, CompanyTier
 from user.enums import SexType
@@ -105,3 +106,8 @@ def money_total(value, vat):
         value = value.amount
     value += (value * vat) / Decimal("100.0")
     return "{:,.2f}".format(value).replace(",", " ").replace(".", ",")
+
+
+@register.filter
+def code(value):
+    return " ".join(value[i:i+4] for i in range(0, len(value), 4))

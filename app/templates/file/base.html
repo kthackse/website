@@ -82,6 +82,12 @@
                 font-weight: 900;
                 font-style: oblique;
             }
+            @font-face {
+                font-family: "Courier New";
+                src: url({% site_url %}{% static "fonts/CourierNewV2.woff" %}) format('woff');
+                font-weight: normal;
+                font-style: normal;
+            }
             body, .body-wrap {
                 width: 100% !important;
                 height: 100%;
@@ -144,6 +150,10 @@
                 width: 30%;
                 float: left;
             }
+            .container .content-row .content-40 {
+                width: 40%;
+                float: left;
+            }
             .container .content-row .content-60 {
                 width: 60%;
                 float: right;
@@ -151,6 +161,10 @@
             .container .content-row .content-50 {
                 width: 50%;
                 float: left;
+            }
+            .container .content-row .content-55 {
+                width: 55%;
+                float: right;
             }
             .text-right {
                 text-align: right;
@@ -232,7 +246,7 @@
                 padding: 50px 5%;
                 width: 90%;
                 position: absolute;
-                bottom: 0;
+                bottom: 42px;
                 background-color: #1e5cb1;
                 color: rgba(255, 255, 255, 0.9);
             }
@@ -254,8 +268,42 @@
             }
             .container .organisation .details-organisation {
                 position: fixed;
-                bottom: 50px;
+                bottom: 92px;
                 right: 10%;
+            }
+            .container .mastfooter {
+                width: 100%;
+                padding: 20px 0;
+                background-color: #003984;
+                color: #ffffff;
+                position: absolute;
+                bottom: 0;
+                font-size: 8px;
+            }
+            .container .mastfooter p {
+                margin: 0;
+                padding: 0;
+            }
+            .container .mastfooter a {
+                color: #ffffff;
+                text-decoration: none;
+                font-weight: 200;
+                margin: 0;
+                padding: 0;
+            }
+            .container .mastfooter .verification {
+                display: inline-block;
+                float: right;
+                text-transform: uppercase;
+                font-size: 6px;
+                margin: 0;
+                padding: 0;
+            }
+            .code {
+                font-family: "Courier New", serif;
+                font-size: 8px;
+                margin: 0;
+                padding: 0;
             }
         </style>
     </head>
@@ -360,6 +408,19 @@
                         </div>
                     </div>
                 </td>
+                {% if verification_control and verification_code %}
+                    <td class="mastfooter">
+                        <div class="content-row">
+                            <div class="content-40">
+                                <p>Document electronically verifiable at <a href="{% site_url %}/verify">{% site_url %}/verify</a>.</p>
+                            </div>
+                            <div class="content-55 text-right">
+                                <p class="verification">Verification code: <span class="code">&nbsp;{{ verification_code | code }}</span></p>
+                                <p class="verification" style="margin-right: 20px;">Control code: <span class="code">&nbsp;{{ verification_control | code }}</span></p>
+                            </div>
+                        </div>
+                    </td>
+                {% endif %}
             </tr>
         </table>
     </body>

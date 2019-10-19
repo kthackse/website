@@ -14,7 +14,7 @@ from django.utils import timezone
 from versatileimagefield.fields import VersatileImageField
 
 from app.enums import FileType, FileStatus
-from app.models import File
+from app.models import File, get_new_verification
 from app.utils import markdown_to_text, get_substitutions_templates
 from app.variables import HACKATHON_VOTE_PERSONAL, HACKATHON_VOTE_TECHNICAL
 from event.enums import (
@@ -638,10 +638,10 @@ class Invoice(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def get_invoice_file(self):
+    def get_invoice_file(self, verification_control=None, verification_code=None):
         template = get_template("file/invoice.html")
         html = template.render(
-            context=dict(invoice=self, **get_substitutions_templates())
+            context=dict(invoice=self, **get_substitutions_templates(), verification_control=verification_control, verification_code=verification_code)
         )
         return weasyprint.HTML(string=html).write_pdf()
 
@@ -683,13 +683,20 @@ class Invoice(models.Model):
                 month=time_month,
                 year=(time_now.year if time_month <= 12 else time_now.year + 1),
             ).date()
+        if self.invoice:
+            self.invoice.status = FileStatus.DEPRECATED
+            self.invoice.save()
+        verification_control, verification_code, verification_until = get_new_verification(self.id)
         invoice = File(
             file=ContentFile(
-                self.get_invoice_file(),
+                self.get_invoice_file(verification_control=verification_control, verification_code=verification_code),
                 name=self.company_event.event.code + "_" + self.code + ".pdf",
             ),
             type=FileType.INVOICE,
             status=FileStatus.VALID,
+            verification_control=verification_control,
+            verification_code=verification_code,
+            verification_until=verification_until
         )
         invoice.save()
         self.invoice = invoice
