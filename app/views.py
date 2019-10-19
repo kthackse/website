@@ -90,28 +90,6 @@ def files(request, file_):
                 response = StreamingHttpResponse(open(settings.BASE_DIR + file_, "rb"))
                 response["Content-Type"] = ""
                 return response
-        elif path in ["/files/invoice", "invoice"]:
-            invoice = get_invoice_by_invoice(invoice=file_)
-            if invoice and (
-                request.user.is_sponsorship
-                or request.user.company == invoice.company_event.company
-            ):
-                if file_[:7] != "/files/":
-                    file_ = "/files/" + file_
-                response = StreamingHttpResponse(open(settings.BASE_DIR + file_, "rb"))
-                response["Content-Type"] = ""
-                return response
-        elif path in ["/files/event/attachment", "event/attachment"]:
-            message = get_message_by_attachment(attachment=file_)
-            if message and (
-                request.user.id == message.recipient_id
-                or request.user.email == message.recipient_email
-            ):
-                if file_[:7] != "/files/":
-                    file_ = "/files/" + file_
-                response = StreamingHttpResponse(open(settings.BASE_DIR + file_, "rb"))
-                response["Content-Type"] = ""
-                return response
         else:
             HttpResponseNotFound()
     if path in [

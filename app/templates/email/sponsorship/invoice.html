@@ -1,12 +1,10 @@
 {% extends "email/base.html" %}
 
 {% block email_message_pre %}
-    <p>An invoice with reference {{ invoice.code }} has been created for {{ invoice.company_event.company.name }}.</p>
+    <p>An invoice with reference {{ invoice.code }} has been created for {{ invoice.company_event.company.name }}, you will find the document enclosed to this email.</p>
 {% endblock %}
 
-{% block email_button_url %}
-    http://{{ hk_domain }}/files/{{ invoice.invoice }}
-{% endblock %}
+{% block email_button %}{% endblock %}
 
 {% block email_button_text %}
     Download invoice
