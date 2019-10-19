@@ -688,7 +688,7 @@ class Invoice(models.Model):
                 month=time_month,
                 year=(time_now.year if time_month <= 12 else time_now.year + 1),
             ).date()
-        if self.invoice:
+        if Invoice.objects.filter(id=self.id).exists() and self.invoice:
             self.invoice.status = FileStatus.DEPRECATED
             self.invoice.save()
         verification_control, verification_code, verification_until = get_new_verification(
