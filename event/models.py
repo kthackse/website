@@ -641,7 +641,12 @@ class Invoice(models.Model):
     def get_invoice_file(self, verification_control=None, verification_code=None):
         template = get_template("file/invoice.html")
         html = template.render(
-            context=dict(invoice=self, **get_substitutions_templates(), verification_control=verification_control, verification_code=verification_code)
+            context=dict(
+                invoice=self,
+                **get_substitutions_templates(),
+                verification_control=verification_control,
+                verification_code=verification_code,
+            )
         )
         return weasyprint.HTML(string=html).write_pdf()
 
@@ -686,17 +691,22 @@ class Invoice(models.Model):
         if self.invoice:
             self.invoice.status = FileStatus.DEPRECATED
             self.invoice.save()
-        verification_control, verification_code, verification_until = get_new_verification(self.id)
+        verification_control, verification_code, verification_until = get_new_verification(
+            self.id
+        )
         invoice = File(
             file=ContentFile(
-                self.get_invoice_file(verification_control=verification_control, verification_code=verification_code),
+                self.get_invoice_file(
+                    verification_control=verification_control,
+                    verification_code=verification_code,
+                ),
                 name=self.company_event.event.code + "_" + self.code + ".pdf",
             ),
             type=FileType.INVOICE,
             status=FileStatus.VALID,
             verification_control=verification_control,
             verification_code=verification_code,
-            verification_until=verification_until
+            verification_until=verification_until,
         )
         invoice.save()
         self.invoice = invoice
@@ -735,7 +745,9 @@ class Message(models.Model):
     )
     title = models.CharField(max_length=255)
     content = models.TextField()
-    attachment = models.ForeignKey("app.File", on_delete=models.PROTECT, blank=True, null=True)
+    attachment = models.ForeignKey(
+        "app.File", on_delete=models.PROTECT, blank=True, null=True
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     @property

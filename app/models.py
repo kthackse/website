@@ -7,9 +7,11 @@ from app.enums import FileType, FileStatus, FileVerificationStatus
 
 
 def get_new_verification(id):
-    return "".join(
-        8 * [str(int(id) % int(timezone.now().strftime("%Y%m%d%H%M%S")))]
-    )[:8], str(uuid.uuid4()).replace("-", "").upper(), timezone.now() + timezone.timedelta(days=90)
+    return (
+        "".join(8 * [str(int(id) % int(timezone.now().strftime("%Y%m%d%H%M%S")))])[:8],
+        str(uuid.uuid4()).replace("-", "").upper(),
+        timezone.now() + timezone.timedelta(days=90),
+    )
 
 
 class File(models.Model):
@@ -34,8 +36,14 @@ class File(models.Model):
 
     def save(self, *args, **kwargs):
         self.clean()
-        if not self.verification_control or not self.verification_code or not self.verification_until:
-            self.verification_control, self.verification_code, self.verification_until = get_new_verification(self.id)
+        if (
+            not self.verification_control
+            or not self.verification_code
+            or not self.verification_until
+        ):
+            self.verification_control, self.verification_code, self.verification_until = get_new_verification(
+                self.id
+            )
         return super().save(*args, **kwargs)
 
 

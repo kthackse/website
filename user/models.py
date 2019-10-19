@@ -294,8 +294,15 @@ class User(AbstractBaseUser):
             timezone.now().date() - self.birthday
         ) < timezone.timedelta(days=14 * 365):
             messages["age"] = "The minimum age is 14"
-        if self.document_type and not self.document_number or self.document_number and not self.document_type:
-            messages["document_number"] = "Both document type and number of any must be set"
+        if (
+            self.document_type
+            and not self.document_number
+            or self.document_number
+            and not self.document_type
+        ):
+            messages[
+                "document_number"
+            ] = "Both document type and number of any must be set"
         if messages:
             raise ValidationError(messages)
 

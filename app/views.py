@@ -106,7 +106,14 @@ def files(request, file_):
     elif path in ["files/file", "file"]:
         file = get_file_by_file(file=file_)
         ip = get_client_ip(request)
-        if file and FileVerified.objects.filter(ip=ip, status=FileVerificationStatus.SUCCESS, verified_at__gte=timezone.now()-timezone.timedelta(minutes=5)).exists():
+        if (
+            file
+            and FileVerified.objects.filter(
+                ip=ip,
+                status=FileVerificationStatus.SUCCESS,
+                verified_at__gte=timezone.now() - timezone.timedelta(minutes=5),
+            ).exists()
+        ):
             if file_[:7] != "/files/":
                 file_ = "/files/" + file_
             response = StreamingHttpResponse(open(settings.BASE_DIR + file_, "rb"))
@@ -196,24 +203,45 @@ def verify(request, context={}):
     context["file"] = None
     if request.method == "POST":
         ip = get_client_ip(request)
-        if FileVerified.objects.filter(ip=ip, verified_at__gte=(timezone.now()-timezone.timedelta(hours=1))).count() >= 100:
-            messages.error(request, "You have verified or attempted to verify 10 documents in the last hour, please wait some time before trying again.")
+        if (
+            FileVerified.objects.filter(
+                ip=ip, verified_at__gte=(timezone.now() - timezone.timedelta(hours=1))
+            ).count()
+            >= 100
+        ):
+            messages.error(
+                request,
+                "You have verified or attempted to verify 10 documents in the last hour, please wait some time before trying again.",
+            )
         else:
             if "control" in request.POST and "verification" in request.POST:
                 verication_control = request.POST["control"].replace(" ", "")
                 verification_code = request.POST["verification"].replace(" ", "")
                 if len(verication_control) == 8 and len(verification_code) == 32:
-                    file_verified = FileVerified(ip=ip, verification_control=verication_control, verification_code=verification_code)
+                    file_verified = FileVerified(
+                        ip=ip,
+                        verification_control=verication_control,
+                        verification_code=verification_code,
+                    )
                     file_verified.save()
                     if file_verified.file:
                         context["file"] = file_verified.file
                         return render(request, "verify.html", context)
                     else:
-                        messages.error(request, "The data control and verification numbers do not correspond to any valid document.")
+                        messages.error(
+                            request,
+                            "The data control and verification numbers do not correspond to any valid document.",
+                        )
                 else:
-                    messages.error(request, "The data control and verification numbers are not valid.")
+                    messages.error(
+                        request,
+                        "The data control and verification numbers are not valid.",
+                    )
             else:
-                messages.error(request, "The data control and verification numbers do not correspond to any valid document.")
+                messages.error(
+                    request,
+                    "The data control and verification numbers do not correspond to any valid document.",
+                )
     return render(request, "verify.html", context)
 
 
@@ -223,11 +251,11 @@ def get_client_ip(request):
     How do I get user IP address in django?
     https://stackoverflow.com/questions/4581789/how-do-i-get-user-ip-address-in-django
     """
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
     if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
+        ip = x_forwarded_for.split(",")[0]
     else:
-        ip = request.META.get('REMOTE_ADDR')
+        ip = request.META.get("REMOTE_ADDR")
     return ip
 
 

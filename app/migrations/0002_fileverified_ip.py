@@ -5,14 +5,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('app', '0001_initial'),
-    ]
+    dependencies = [("app", "0001_initial")]
 
     operations = [
         migrations.AddField(
-            model_name='fileverified',
-            name='ip',
+            model_name="fileverified",
+            name="ip",
             field=models.CharField(blank=True, max_length=255, null=True),
-        ),
+        )
     ]

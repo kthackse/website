@@ -16,8 +16,22 @@ class ReadOnlyAdmin(admin.ModelAdmin):
 
 @admin.register(File)
 class FileAdmin(ReadOnlyAdmin):
-    search_fields = ("id", "type", "status", "verification_control", "verification_code")
-    list_display = ("id", "type", "status", "verification_control", "verification_code", "created_at", "updated_at")
+    search_fields = (
+        "id",
+        "type",
+        "status",
+        "verification_control",
+        "verification_code",
+    )
+    list_display = (
+        "id",
+        "type",
+        "status",
+        "verification_control",
+        "verification_code",
+        "created_at",
+        "updated_at",
+    )
     list_filter = ("type", "status", "created_at", "updated_at")
     ordering = ("-created_at",)
 
@@ -25,6 +39,12 @@ class FileAdmin(ReadOnlyAdmin):
 @admin.register(FileVerified)
 class FileVerifiedAdmin(ReadOnlyAdmin):
     search_fields = ("id", "ip", "status", "verification_control", "verification_code")
-    list_display = ("id", "status", "verification_control", "verification_code", "verified_at")
+    list_display = (
+        "id",
+        "status",
+        "verification_control",
+        "verification_code",
+        "verified_at",
+    )
     list_filter = ("status", "verified_at")
     ordering = ("-verified_at",)

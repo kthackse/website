@@ -7,24 +7,29 @@ import versatileimagefield.fields
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('user', '0008_user_is_active'),
-    ]
+    dependencies = [("user", "0008_user_is_active")]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='document_number',
+            model_name="user",
+            name="document_number",
             field=models.CharField(blank=True, max_length=255, null=True),
         ),
         migrations.AddField(
-            model_name='user',
-            name='document_type',
-            field=models.PositiveSmallIntegerField(blank=True, choices=[(0, 'ID'), (1, 'PASSPORT')], null=True),
+            model_name="user",
+            name="document_type",
+            field=models.PositiveSmallIntegerField(
+                blank=True, choices=[(0, "ID"), (1, "PASSPORT")], null=True
+            ),
         ),
         migrations.AddField(
-            model_name='user',
-            name='signature',
-            field=versatileimagefield.fields.VersatileImageField(blank=True, null=True, upload_to=user.models.path_and_rename_signature, verbose_name='Image'),
+            model_name="user",
+            name="signature",
+            field=versatileimagefield.fields.VersatileImageField(
+                blank=True,
+                null=True,
+                upload_to=user.models.path_and_rename_signature,
+                verbose_name="Image",
+            ),
         ),
     ]
