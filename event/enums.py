@@ -108,14 +108,3 @@ class LetterStatus(enum.IntEnum):
     SIGNED = 1
     SENT = 2
     CANCELLED = 3
-
-
-class FileType(enum.IntEnum):
-    INVOICE = 0
-    LETTER = 1
-
-
-class FileStatus(enum.IntEnum):
-    VALID = 0
-    DEPRECATED = 1
-    INVALID = 2

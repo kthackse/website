@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+{% load i18n %}
+{% load app_tags %}
+
+{% block head_title %}{% trans "Verify a document" %}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="section-intro text-center">
+            <h2>Verify a document</h2>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                <p>In order to verify the validity of a document you can enter the control number as well as the verification number found at the bottom of the file. You will then be able to retrieve the file again from our system.</p>
+                <div class="row row-middle">
+                    <form action="" method="post" class="form">
+                        {% csrf_token %}
+                        <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                            <div class="service-card">
+                                <div class="row">
+                                    <div class="col-md-3 col-lg-3 mb-3 mb-lg-0">
+                                        <div class="form-group">
+                                            <label for="id_control">Control number</label>
+                                            <input type="text" name="control" maxlength="9" class="form-control form-monospaced"
+                                                   placeholder="0000 0000" id="id_control">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-9 col-lg-9 mb-9 mb-lg-0">
+                                        <div class="form-group">
+                                            <label for="id_verification">Verification number</label>
+                                            <input type="text" name="verification" maxlength="39" class="form-control form-monospaced"
+                                                   placeholder="0000 0000 0000 0000 0000 0000 0000 0000" id="id_verification">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group-button-1">
+                                    <button class="btn btn-primary btn-block text-center" type="submit"
+                                            name="submit" value="verify">Verify
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $('#id_control').on('keypress change', function () {
+          $(this).val(function (index, value) {
+            return value.replace(/\D/g, "").replace(/\W/gi, '').replace(/(.{4})/g, '$1 ').trim();
+          });
+        });
+        $('#id_verification').on('keypress change', function () {
+          $(this).val(function (index, value) {
+            return value.replace(/[\W_]+/g, "").replace(/\W/gi, '').replace(/(.{4})/g, '$1 ').trim().toUpperCase();
+          });
+        });
+    </script>
+{% endblock %}

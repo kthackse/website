@@ -82,6 +82,13 @@
     font-style: oblique;
 }
 
+@font-face {
+    font-family: "Courier New";
+    src: url("/static/fonts/CourierNewV2.woff") format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
 .dropdown-menu {
     border-radius: 0;
     margin: 0;
@@ -2330,6 +2337,10 @@ h5, .h5 {
 .search-form .form-control:focus {
   outline: 0;
   box-shadow: none;
+}
+
+.form-monospaced {
+    font-family: "Courier New", "Courier", serif;
 }
 
 .search-form .input-group-append .input-group-text {

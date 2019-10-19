@@ -13,6 +13,8 @@ from django.template.loader import get_template
 from django.utils import timezone
 from versatileimagefield.fields import VersatileImageField
 
+from app.enums import FileType, FileStatus
+from app.models import File
 from app.utils import markdown_to_text, get_substitutions_templates
 from app.variables import HACKATHON_VOTE_PERSONAL, HACKATHON_VOTE_TECHNICAL
 from event.enums import (
@@ -29,8 +31,6 @@ from event.enums import (
     MessageType,
     LetterStatus,
     LetterType,
-    FileType,
-    FileStatus,
 )
 from user.enums import UserType
 
@@ -623,7 +623,7 @@ class Invoice(models.Model):
     amount = MoneyField(max_digits=7, decimal_places=2, default_currency="SEK")
     vat = models.PositiveIntegerField(default=0)
     date_due = models.DateField(blank=True)
-    invoice = models.FileField(null=True, blank=True, upload_to="invoice")
+    invoice = models.ForeignKey("app.File", on_delete=models.PROTECT)
     status = models.PositiveSmallIntegerField(
         choices=((s.value, s.name) for s in InvoiceStatus),
         default=InvoiceStatus.DRAFT.value,
@@ -683,10 +683,16 @@ class Invoice(models.Model):
                 month=time_month,
                 year=(time_now.year if time_month <= 12 else time_now.year + 1),
             ).date()
-        self.invoice = ContentFile(
-            self.get_invoice_file(),
-            name=self.company_event.event.code + "_" + self.code + ".pdf",
+        invoice = File(
+            file=ContentFile(
+                self.get_invoice_file(),
+                name=self.company_event.event.code + "_" + self.code + ".pdf",
+            ),
+            type=FileType.INVOICE,
+            status=FileStatus.VALID,
         )
+        invoice.save()
+        self.invoice = invoice
         return super().save(*args, **kwargs)
 
 
@@ -722,9 +728,7 @@ class Message(models.Model):
     )
     title = models.CharField(max_length=255)
     content = models.TextField()
-    attachment = models.FileField(
-        upload_to=path_and_rename_attachment, blank=True, null=True
-    )
+    attachment = models.ForeignKey("app.File", on_delete=models.PROTECT, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     @property
@@ -747,34 +751,3 @@ class Message(models.Model):
             messages["recipient"] = "A recipient or email's recipient must be provided"
         if messages:
             raise ValidationError(messages)
-
-
-class File(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    file = models.FileField(upload_to="file")
-    type = models.PositiveSmallIntegerField(
-        choices=((t.value, t.name) for t in FileType), default=FileType.INVOICE.value
-    )
-    status = models.PositiveSmallIntegerField(
-        choices=((t.value, t.name) for t in FileStatus), default=FileStatus.VALID.value
-    )
-    # 8 digit non-random control code based on ID and time of creation
-    verification_control = models.CharField(max_length=255)
-    # 32 digit random verification code
-    verification_code = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def save(self, *args, **kwargs):
-        self.clean()
-        self.verification_control = "".join(
-            8 * [str(int(self.id) % int(self.created_at.strftime("%Y%m%d%H%M%S")))]
-        )[:8]
-        self.verification_code = str(uuid.uuid4()).replace("-", "").upper()
-        return super().save(*args, **kwargs)
-
-
-class FileVerified(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    file = models.ForeignKey("File", on_delete=models.CASCADE)
-    verified_at = models.DateTimeField(auto_now_add=True)
