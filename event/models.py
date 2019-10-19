@@ -27,7 +27,11 @@ from event.enums import (
     CompanyTier,
     InvoiceStatus,
     MessageType,
-    LetterStatus)
+    LetterStatus,
+    LetterType,
+    FileType,
+    FileStatus,
+)
 from user.enums import UserType
 
 from djmoney.models.fields import MoneyField
@@ -541,8 +545,9 @@ class Letter(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     code = models.CharField(max_length=31)
     application = models.ForeignKey("Application", on_delete=models.CASCADE)
-    responsible = models.ForeignKey(
-        "user.User", on_delete=models.PROTECT
+    responsible = models.ForeignKey("user.User", on_delete=models.PROTECT)
+    type = models.PositiveSmallIntegerField(
+        choices=((s.value, s.name) for s in LetterType), default=LetterType.VISA.value
     )
     letter = models.FileField(null=True, blank=True, upload_to="letter")
     status = models.PositiveSmallIntegerField(
@@ -599,10 +604,7 @@ class Letter(models.Model):
                     + "-"
                     + f"{int(Letter.objects.filter(created_at__year=timezone.now().year).order_by('-created_at').first().code[-4:])+1:04d}"
                 )
-        self.letter = ContentFile(
-            self.get_letter_file(),
-            name=self.code + ".pdf",
-        )
+        self.letter = ContentFile(self.get_letter_file(), name=self.code + ".pdf")
         return super().save(*args, **kwargs)
 
 
@@ -745,3 +747,34 @@ class Message(models.Model):
             messages["recipient"] = "A recipient or email's recipient must be provided"
         if messages:
             raise ValidationError(messages)
+
+
+class File(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    file = models.FileField(upload_to="file")
+    type = models.PositiveSmallIntegerField(
+        choices=((t.value, t.name) for t in FileType), default=FileType.INVOICE.value
+    )
+    status = models.PositiveSmallIntegerField(
+        choices=((t.value, t.name) for t in FileStatus), default=FileStatus.VALID.value
+    )
+    # 8 digit non-random control code based on ID and time of creation
+    verification_control = models.CharField(max_length=255)
+    # 32 digit random verification code
+    verification_code = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        self.verification_control = "".join(
+            8 * [str(int(self.id) % int(self.created_at.strftime("%Y%m%d%H%M%S")))]
+        )[:8]
+        self.verification_code = str(uuid.uuid4()).replace("-", "").upper()
+        return super().save(*args, **kwargs)
+
+
+class FileVerified(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    file = models.ForeignKey("File", on_delete=models.CASCADE)
+    verified_at = models.DateTimeField(auto_now_add=True)

@@ -98,8 +98,24 @@ class MessageType(enum.IntEnum):
     SPONSORS = 90
 
 
+class LetterType(enum.IntEnum):
+    VISA = 0
+    UNDERAGE = 1
+
+
 class LetterStatus(enum.IntEnum):
     DRAFT = 0
     SIGNED = 1
     SENT = 2
     CANCELLED = 3
+
+
+class FileType(enum.IntEnum):
+    INVOICE = 0
+    LETTER = 1
+
+
+class FileStatus(enum.IntEnum):
+    VALID = 0
+    DEPRECATED = 1
+    INVALID = 2
