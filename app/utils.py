@@ -11,6 +11,7 @@ from django.shortcuts import redirect
 from django.template.defaultfilters import first
 from django.urls import reverse
 
+from app.models import File
 from app.variables import (
     HACKATHON_ORGANIZER_EMAIL_REGEX,
     HACKATHON_EMAIL_NOREPLY,
@@ -196,3 +197,7 @@ def markdown_to_text(markdown_string):
 
 def get_site_url():
     return "http://" + settings.HACKATHON_DOMAIN
+
+
+def get_file_by_file(file):
+    return File.objects.filter(file=file).first()

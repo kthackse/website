@@ -96,3 +96,15 @@ class MessageType(enum.IntEnum):
     VOLUNTEERS = 70
     MENTORS = 80
     SPONSORS = 90
+
+
+class LetterType(enum.IntEnum):
+    VISA = 0
+    UNDERAGE = 1
+
+
+class LetterStatus(enum.IntEnum):
+    DRAFT = 0
+    SIGNED = 1
+    SENT = 2
+    CANCELLED = 3

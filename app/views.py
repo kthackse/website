@@ -15,14 +15,17 @@ from django.http import (
 from django.shortcuts import render
 from django.template import TemplateDoesNotExist
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.encoding import force_bytes
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
 from app import settings
+from app.enums import FileVerificationStatus
+from app.models import FileVerified
 from app.settings import GH_KEY, GH_BRANCH
 from app.slack import send_deploy_message
-from app.utils import login_verified_required
+from app.utils import login_verified_required, get_file_by_file
 from event.enums import CompanyTier
 from event.utils.messages import get_message_by_attachment
 from event.utils.utils import (
@@ -88,30 +91,6 @@ def files(request, file_):
                 response = StreamingHttpResponse(open(settings.BASE_DIR + file_, "rb"))
                 response["Content-Type"] = ""
                 return response
-        elif path in ["/files/invoice", "invoice"]:
-            invoice = get_invoice_by_invoice(invoice=file_)
-            if invoice and (
-                request.user.is_sponsorship
-                or request.user.company == invoice.company_event.company
-            ):
-                if file_[:7] != "/files/":
-                    file_ = "/files/" + file_
-                response = StreamingHttpResponse(open(settings.BASE_DIR + file_, "rb"))
-                response["Content-Type"] = ""
-                return response
-        elif path in ["/files/event/attachment", "event/attachment"]:
-            message = get_message_by_attachment(attachment=file_)
-            if message and (
-                request.user.id == message.recipient_id
-                or request.user.email == message.recipient_email
-            ):
-                if file_[:7] != "/files/":
-                    file_ = "/files/" + file_
-                response = StreamingHttpResponse(open(settings.BASE_DIR + file_, "rb"))
-                response["Content-Type"] = ""
-                return response
-        else:
-            HttpResponseNotFound()
     if path in [
         "event/picture",
         "__sized__/event/picture",
@@ -124,6 +103,22 @@ def files(request, file_):
         response = StreamingHttpResponse(open(settings.BASE_DIR + file_, "rb"))
         response["Content-Type"] = ""
         return response
+    elif path in ["files/file", "file"]:
+        file = get_file_by_file(file=file_)
+        ip = get_client_ip(request)
+        if (
+            file
+            and FileVerified.objects.filter(
+                ip=ip,
+                status=FileVerificationStatus.SUCCESS,
+                verified_at__gte=timezone.now() - timezone.timedelta(minutes=5),
+            ).exists()
+        ):
+            if file_[:7] != "/files/":
+                file_ = "/files/" + file_
+            response = StreamingHttpResponse(open(settings.BASE_DIR + file_, "rb"))
+            response["Content-Type"] = ""
+            return response
     else:
         HttpResponseNotFound()
     return HttpResponseRedirect("%s?next=%s" % (reverse("user_login"), request.path))
@@ -202,6 +197,66 @@ def dashboard(request, context={}):
     context["statistics"] = get_statistics()
     context["alerts"] = get_messages_for_user(request.user.id)
     return render(request, "dashboard.html", context)
+
+
+def verify(request, context={}):
+    context["file"] = None
+    if request.method == "POST":
+        ip = get_client_ip(request)
+        if (
+            FileVerified.objects.filter(
+                ip=ip, verified_at__gte=(timezone.now() - timezone.timedelta(hours=1))
+            ).count()
+            >= 100
+        ):
+            messages.error(
+                request,
+                "You have verified or attempted to verify 10 documents in the last hour, please wait some time before trying again.",
+            )
+        else:
+            if "control" in request.POST and "verification" in request.POST:
+                verication_control = request.POST["control"].replace(" ", "")
+                verification_code = request.POST["verification"].replace(" ", "")
+                if len(verication_control) == 8 and len(verification_code) == 32:
+                    file_verified = FileVerified(
+                        ip=ip,
+                        verification_control=verication_control,
+                        verification_code=verification_code,
+                    )
+                    file_verified.save()
+                    if file_verified.file:
+                        context["file"] = file_verified.file
+                        return render(request, "verify.html", context)
+                    else:
+                        messages.error(
+                            request,
+                            "The data control and verification numbers do not correspond to any valid document.",
+                        )
+                else:
+                    messages.error(
+                        request,
+                        "The data control and verification numbers are not valid.",
+                    )
+            else:
+                messages.error(
+                    request,
+                    "The data control and verification numbers do not correspond to any valid document.",
+                )
+    return render(request, "verify.html", context)
+
+
+def get_client_ip(request):
+    """
+    Stack Overflow
+    How do I get user IP address in django?
+    https://stackoverflow.com/questions/4581789/how-do-i-get-user-ip-address-in-django
+    """
+    x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(",")[0]
+    else:
+        ip = request.META.get("REMOTE_ADDR")
+    return ip
 
 
 def redirect_to(request):

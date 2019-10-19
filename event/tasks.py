@@ -82,8 +82,8 @@ def send_invoice(invoice: Invoice, request=None):
     body = render_to_string(template, context)
     attachments = [
         (
-            invoice.invoice.name[invoice.invoice.name.rfind("/") + 1 :],
-            invoice.invoice.read(),
+            invoice.invoice.file.name[invoice.invoice.file.name.rfind("/") + 1 :],
+            invoice.invoice.file.read(),
             "application/pdf",
         )
     ]

@@ -22,17 +22,6 @@ from event.tasks import send_invoice
 from user.enums import DepartmentType
 
 
-class ReadOnlyAdmin(admin.ModelAdmin):
-    def has_add_permission(self, request):
-        return False
-
-    def has_delete_permission(self, request, obj=None):
-        return False
-
-    def has_change_permission(self, request, obj=None):
-        return False
-
-
 @admin.register(Event)
 class EventAdmin(admin.ModelAdmin):
     search_fields = ("id", "name", "code", "type")
@@ -125,7 +114,7 @@ class CompanyEventAdmin(admin.ModelAdmin):
 
 @admin.register(Invoice)
 class InvoiceAdmin(admin.ModelAdmin):
-    search_fields = ("id", "company_event", "responisble_event", "responisble_company")
+    search_fields = ("id", "company_event", "responsible_event", "responsible_company")
     list_display = (
         "code",
         "company_event",
@@ -133,7 +122,6 @@ class InvoiceAdmin(admin.ModelAdmin):
         "responsible_event",
         "created_at",
         "status",
-        "invoice",
         "send",
     )
     ordering = ("-code", "created_at", "updated_at", "company_event")

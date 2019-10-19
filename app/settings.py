@@ -41,10 +41,10 @@ INSTALLED_APPS = [
     "corsheaders",
     "django_markup",
     "versatileimagefield",
+    "app",
     "user",
     "event",
     "job",
-    "app",
     "page",
     "cookielaw",
 ]
