@@ -654,7 +654,7 @@ class Invoice(models.Model):
         self.status = InvoiceStatus.SENT.value
         if request:
             self.sent_by = request.user
-        self.save()
+        return super().save()
 
     def clean(self):
         messages = dict()
