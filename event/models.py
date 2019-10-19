@@ -552,7 +552,7 @@ class Letter(models.Model):
     sent_by = models.ForeignKey(
         "user.User",
         on_delete=models.PROTECT,
-        related_name="sent_by",
+        related_name="letter_sent_by",
         blank=True,
         null=True,
     )
@@ -629,7 +629,7 @@ class Invoice(models.Model):
     sent_by = models.ForeignKey(
         "user.User",
         on_delete=models.PROTECT,
-        related_name="sent_by",
+        related_name="invoice_seny_by",
         blank=True,
         null=True,
     )

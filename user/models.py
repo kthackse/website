@@ -171,7 +171,7 @@ class User(AbstractBaseUser):
             in self.departments.all().values_list("type", flat=True)
         )
 
-    @@property
+    @property
     def can_sign(self):
         return self.is_director and self.signature
 
