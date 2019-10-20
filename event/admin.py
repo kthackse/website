@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from django.urls import path, reverse
 from django.utils.html import format_html
 
+from app.admin import ReadOnlyAdmin
 from app.utils import require_department
 from event.enums import InvoiceStatus
 from event.models import (
@@ -159,7 +160,7 @@ class InvoiceAdmin(admin.ModelAdmin):
 
 
 @admin.register(Message)
-class MessageAdmin(admin.ModelAdmin):
+class MessageAdmin(ReadOnlyAdmin):
     search_fields = ("id", "type", "title", "content")
     list_display = ("title", "event", "type", "recipient", "created_at")
     list_filter = ("created_at",)
