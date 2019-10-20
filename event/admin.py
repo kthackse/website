@@ -5,7 +5,7 @@ from django.utils.html import format_html
 
 from app.admin import ReadOnlyAdmin
 from app.utils import require_department
-from event.enums import InvoiceStatus
+from event.enums import InvoiceStatus, LetterStatus
 from event.models import (
     Event,
     Application,
@@ -18,7 +18,7 @@ from event.models import (
     CompanyEvent,
     Invoice,
     Message,
-)
+    Letter)
 from event.tasks import send_invoice
 from user.enums import DepartmentType
 
@@ -165,3 +165,49 @@ class MessageAdmin(ReadOnlyAdmin):
     list_display = ("title", "event", "type", "recipient", "created_at")
     list_filter = ("created_at",)
     ordering = ("-created_at",)
+
+
+@admin.register(Letter)
+class LetterAdmin(admin.ModelAdmin):
+    search_fields = ("id", "code", "responsible", "type", "status")
+    list_display = (
+        "code",
+        "application",
+        "responsible",
+        "type",
+        "created_at",
+        "status",
+        "send",
+    )
+    ordering = ("-code", "created_at", "updated_at")
+    readonly_fields = ("letter", "code", "status", "sent_by")
+
+    def get_urls(self):
+        urls = super().get_urls()
+
+        return [
+            path(r"<path:id>/send_letter/", self.send_letter, name="send_letter")
+        ] + urls
+
+    @require_department([DepartmentType.DIRECTOR])
+    def send_letter(self, request, id):
+        # send_invoice(Invoice.objects.filter(id=id).first(), request=request)
+        messages.success(request, "Letter was successfully sent!")
+        return redirect(reverse("admin:event_letter_changelist"))
+
+    def send(self, letter):
+        if letter.status == LetterStatus.SENT.value:
+            return format_html(
+                '<span class="readonly">Already sent</span> (<a href="'
+                + str(letter.id)
+                + '/send_letter">resend</a>)'
+            )
+        return format_html(
+            '<a href="'
+            + str(letter.id)
+            + '/send_letter">Send to '
+            + letter.application.user.email
+            + "</a>"
+        )
+
+    send.short_description = "Send letter"

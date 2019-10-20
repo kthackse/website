@@ -13,7 +13,7 @@ from app.processor import variables_processor
 from app.utils import login_verified_required, get_substitutions_templates
 from app.views import response
 from event.enums import DietType, TshirtSize, ApplicationStatus, SubscriberStatus
-from event.models import Application, Subscriber, Invoice
+from event.models import Application, Subscriber, Invoice, Letter
 from event.utils.messages import get_message
 from event.utils.utils import (
     get_event,
@@ -176,9 +176,9 @@ def apply(request, code, context={}):
 @login_verified_required
 @user_passes_test(is_organiser)
 def applications(request, code, context={}):
-    template = get_template("file/invoice.html")
+    template = get_template("file/letter/underage.html")
     html = template.render(
-        context=dict(invoice=Invoice.objects.first(), **variables_processor(request), verification_control="11468239", verification_code="B74709D2DAE84CB380B005390615A454")
+        context=dict(letter=Letter.objects.first(), **variables_processor(request), verification_control="11468239", verification_code="B74709D2DAE84CB380B005390615A454")
     )
     return HttpResponse(html)
     current_event = get_event(code=code, application_status=None)

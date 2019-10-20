@@ -372,6 +372,13 @@ class Application(models.Model):
     def status_str(self):
         return ApplicationStatus(self.status).name.upper()
 
+    @property
+    def will_be_underage(self):
+        try:
+            return timezone.datetime(day=self.user.birthday.day, month=self.user.birthday.month, year=self.user.birthday.year+18).date() >= self.event.starts_at.date()
+        except TypeError:
+            return False
+
     def is_invited(self):
         return self.invited_by is not None
 
@@ -409,6 +416,13 @@ class Application(models.Model):
             messages["team"] = "The team needs to be from the same edition"
         if messages:
             raise ValidationError(messages)
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        if self.will_be_underage and not Letter.objects.filter(application=self).exists():
+            letter = Letter(application=self, type=LetterType.UNDERAGE)
+            letter.save()
+        return super().save(*args, **kwargs)
 
 
 class Team(models.Model):
@@ -546,11 +560,11 @@ class Letter(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     code = models.CharField(max_length=31)
     application = models.ForeignKey("Application", on_delete=models.CASCADE)
-    responsible = models.ForeignKey("user.User", on_delete=models.PROTECT)
+    responsible = models.ForeignKey("user.User", on_delete=models.PROTECT, blank=True, null=True)
     type = models.PositiveSmallIntegerField(
         choices=((s.value, s.name) for s in LetterType), default=LetterType.VISA.value
     )
-    letter = models.FileField(null=True, blank=True, upload_to="letter")
+    letter = models.ForeignKey("app.File", on_delete=models.PROTECT)
     status = models.PositiveSmallIntegerField(
         choices=((s.value, s.name) for s in LetterStatus),
         default=LetterStatus.DRAFT.value,
@@ -565,11 +579,12 @@ class Letter(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    # TODO: Create letter file
-    def get_letter_file(self):
-        template = get_template("file/letter.html")
+    def get_letter_file(self, verification_control=None, verification_code=None):
+        template = get_template(f"file/letter/{LetterType(self.type).name.lower()}.html")
         html = template.render(
-            context=dict(letter=self, **variables_processor())
+            context=dict(letter=self, **variables_processor(),
+                verification_control=verification_control,
+                verification_code=verification_code,)
         )
         return weasyprint.HTML(string=html).write_pdf()
 
@@ -585,8 +600,10 @@ class Letter(models.Model):
 
     def clean(self):
         messages = dict()
-        if not self.responsible.can_sign:
+        if self.type == LetterType.VISA and not self.responsible.can_sign:
             messages["responsible"] = "The letter responsible must be able to sign"
+        elif not self.responsible.is_organiser:
+            messages["responsible"] = "The letter responsible must be an organiser"
         if messages:
             raise ValidationError(messages)
 
@@ -605,7 +622,28 @@ class Letter(models.Model):
                     + "-"
                     + f"{int(Letter.objects.filter(created_at__year=timezone.now().year).order_by('-created_at').first().code[-4:])+1:04d}"
                 )
-        self.letter = ContentFile(self.get_letter_file(), name=self.code + ".pdf")
+        if Letter.objects.filter(id=self.id).exists() and self.letter:
+            self.letter.status = FileStatus.DEPRECATED
+            self.letter.save()
+        verification_control, verification_code, verification_until = get_new_verification(
+            self.id
+        )
+        letter = File(
+            file=ContentFile(
+                self.get_letter_file(
+                    verification_control=verification_control,
+                    verification_code=verification_code,
+                ),
+                name=self.application.event.code + "_letter_" + LetterType(self.type).name.lower() + "_" + self.code + ".pdf",
+            ),
+            type=FileType.LETTER,
+            status=FileStatus.VALID,
+            verification_control=verification_control,
+            verification_code=verification_code,
+            verification_until=verification_until,
+        )
+        letter.save()
+        self.letter = letter
         return super().save(*args, **kwargs)
 
 

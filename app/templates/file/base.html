@@ -268,7 +268,7 @@
             }
             .container .organisation .details-organisation {
                 position: fixed;
-                bottom: 92px;
+                bottom: 97px;
                 right: 10%;
             }
             .container .mastfooter {
@@ -304,6 +304,12 @@
                 font-size: 8px;
                 margin: 0;
                 padding: 0;
+            }
+            .signature {
+                height: 100px;
+                width: 100%;
+                border: 1px dashed #003984;
+                margin-bottom: 10px;
             }
         </style>
     </head>
@@ -357,11 +363,31 @@
                     </td>
                 {% endblock %}
                 {% block footer_pre %}
-                    <td class="organisation">
+                    <td class="organisation" style="background-color: #f5f5f5 !important; color: #003984 !important;">
                         <div class="content-row">
                             {% block footer %}
                                 <div class="content-50 details-invoice">
                                     {% block footer_left %}
+                                        <div class="signature"></div>
+                                        <p><strong>Signature</strong></p>
+                                    {% endblock %}
+                                </div>
+                                <div class="content-5 text-right details-organisation">
+                                    {% block footer_right %}
+                                        <p style="margin-bottom: 10px;">{% now "Y" %}-____-____, ____________________</p>
+                                        <p><strong>Date (yyyy-mm-dd) and place</strong></p>
+                                    {% endblock %}
+                                </div>
+                            {% endblock %}
+                        </div>
+                    </td>
+                {% endblock %}
+                {% block footer2_pre %}
+                    <td class="organisation">
+                        <div class="content-row">
+                            {% block footer2 %}
+                                <div class="content-50 details-invoice">
+                                    {% block footer2_left %}
                                         <h3>{{ hk_legal_name }}</h3>
                                         <p>{{ hk_legal_organisation_name }}</p>
                                         <p>{{ hk_legal_address_1 }}</p>
@@ -374,7 +400,7 @@
                                     {% endblock %}
                                 </div>
                                 <div class="content-5 text-right details-organisation">
-                                    {% block footer_right %}
+                                    {% block footer2_right %}
                                         <p>FOOTER RIGHT</p>
                                     {% endblock %}
                                 </div>

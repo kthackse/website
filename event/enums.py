@@ -84,6 +84,8 @@ class CompanyTier(enum.IntEnum):
 class InvoiceStatus(enum.IntEnum):
     DRAFT = 0
     SENT = 1
+    SIGNED = 2
+    CANCELLED = 3
 
 
 class MessageType(enum.IntEnum):
@@ -105,6 +107,6 @@ class LetterType(enum.IntEnum):
 
 class LetterStatus(enum.IntEnum):
     DRAFT = 0
-    SIGNED = 1
-    SENT = 2
+    SENT = 1
+    SIGNED = 2
     CANCELLED = 3
