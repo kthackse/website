@@ -178,7 +178,12 @@ def apply(request, code, context={}):
 def applications(request, code, context={}):
     template = get_template("file/letter/underage.html")
     html = template.render(
-        context=dict(letter=Letter.objects.first(), **variables_processor(request), verification_control="11468239", verification_code="B74709D2DAE84CB380B005390615A454")
+        context=dict(
+            letter=Letter.objects.first(),
+            **variables_processor(request),
+            verification_control="11468239",
+            verification_code="B74709D2DAE84CB380B005390615A454"
+        )
     )
     return HttpResponse(html)
     current_event = get_event(code=code, application_status=None)

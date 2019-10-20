@@ -18,7 +18,8 @@ from event.models import (
     CompanyEvent,
     Invoice,
     Message,
-    Letter)
+    Letter,
+)
 from event.tasks import send_invoice, send_letter_underage
 from user.enums import DepartmentType
 

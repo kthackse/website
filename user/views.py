@@ -119,7 +119,7 @@ def signup(request):
                     request,
                     "Thank-you for registering, remember to confirm your email!",
                 )
-                return HttpResponseRedirect(reverse("app_home"))
+                return HttpResponseRedirect(reverse("app_dashboard"))
         else:
             messages.add_message(
                 request,

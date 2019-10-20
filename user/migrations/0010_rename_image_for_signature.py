@@ -7,14 +7,17 @@ import versatileimagefield.fields
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('user', '0009_add_id_information'),
-    ]
+    dependencies = [("user", "0009_add_id_information")]
 
     operations = [
         migrations.AlterField(
-            model_name='user',
-            name='signature',
-            field=versatileimagefield.fields.VersatileImageField(blank=True, null=True, upload_to=user.models.path_and_rename_signature, verbose_name='Signature'),
-        ),
+            model_name="user",
+            name="signature",
+            field=versatileimagefield.fields.VersatileImageField(
+                blank=True,
+                null=True,
+                upload_to=user.models.path_and_rename_signature,
+                verbose_name="Signature",
+            ),
+        )
     ]

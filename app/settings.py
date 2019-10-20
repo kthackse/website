@@ -222,10 +222,10 @@ NOTIFY_TEMPLATES = dict(
         ),
         hackerxperience=dict(
             letter_underage=dict(
-                subject="Permission and consent for participation for {event_name}",
+                subject="Permission and consent for participation at {event_name}",
                 html="email/hackerxperience/letter_underage.html",
             )
-        )
+        ),
     )
 )
 

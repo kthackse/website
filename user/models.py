@@ -218,7 +218,14 @@ class User(AbstractBaseUser):
     @property
     def is_underage(self):
         try:
-            return timezone.datetime(day=self.birthday.day, month=self.birthday.month, year=self.birthday.year+18).date() >= timezone.now().date()
+            return (
+                timezone.datetime(
+                    day=self.birthday.day,
+                    month=self.birthday.month,
+                    year=self.birthday.year + 18,
+                ).date()
+                >= timezone.now().date()
+            )
         except TypeError:
             return False
 

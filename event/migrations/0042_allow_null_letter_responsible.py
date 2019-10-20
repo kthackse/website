@@ -7,19 +7,24 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('event', '0041_change_letter_for_file'),
-    ]
+    dependencies = [("event", "0041_change_letter_for_file")]
 
     operations = [
         migrations.AlterField(
-            model_name='letter',
-            name='letter',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='app.File'),
+            model_name="letter",
+            name="letter",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT, to="app.File"
+            ),
         ),
         migrations.AlterField(
-            model_name='letter',
-            name='responsible',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to=settings.AUTH_USER_MODEL),
+            model_name="letter",
+            name="responsible",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]
