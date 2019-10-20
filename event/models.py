@@ -13,6 +13,8 @@ from django.template.loader import get_template
 from django.utils import timezone
 from versatileimagefield.fields import VersatileImageField
 
+from app.enums import FileType, FileStatus
+from app.models import File, get_new_verification
 from app.utils import markdown_to_text, get_substitutions_templates
 from app.variables import HACKATHON_VOTE_PERSONAL, HACKATHON_VOTE_TECHNICAL
 from event.enums import (
@@ -27,6 +29,8 @@ from event.enums import (
     CompanyTier,
     InvoiceStatus,
     MessageType,
+    LetterStatus,
+    LetterType,
 )
 from user.enums import UserType
 
@@ -537,6 +541,73 @@ class Subscriber(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
+class Letter(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    code = models.CharField(max_length=31)
+    application = models.ForeignKey("Application", on_delete=models.CASCADE)
+    responsible = models.ForeignKey("user.User", on_delete=models.PROTECT)
+    type = models.PositiveSmallIntegerField(
+        choices=((s.value, s.name) for s in LetterType), default=LetterType.VISA.value
+    )
+    letter = models.FileField(null=True, blank=True, upload_to="letter")
+    status = models.PositiveSmallIntegerField(
+        choices=((s.value, s.name) for s in LetterStatus),
+        default=LetterStatus.DRAFT.value,
+    )
+    sent_by = models.ForeignKey(
+        "user.User",
+        on_delete=models.PROTECT,
+        related_name="letter_sent_by",
+        blank=True,
+        null=True,
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    # TODO: Create letter file
+    def get_letter_file(self):
+        template = get_template("file/letter.html")
+        html = template.render(
+            context=dict(letter=self, **get_substitutions_templates())
+        )
+        return weasyprint.HTML(string=html).write_pdf()
+
+    def mark_as_signed(self, request=None):
+        self.status = LetterStatus.SIGNED.value
+        self.save()
+
+    def mark_as_sent(self, request=None):
+        self.status = LetterStatus.SENT.value
+        if request:
+            self.sent_by = request.user
+        self.save()
+
+    def clean(self):
+        messages = dict()
+        if not self.responsible.can_sign:
+            messages["responsible"] = "The letter responsible must be able to sign"
+        if messages:
+            raise ValidationError(messages)
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        if not self.code:
+            if (
+                not Letter.objects.filter(created_at__year=timezone.now().year)
+                .exclude(id=self.id)
+                .exists()
+            ):
+                self.code = str(timezone.now().year) + "-" + f"{10:04d}"
+            else:
+                self.code = (
+                    str(timezone.now().year)
+                    + "-"
+                    + f"{int(Letter.objects.filter(created_at__year=timezone.now().year).order_by('-created_at').first().code[-4:])+1:04d}"
+                )
+        self.letter = ContentFile(self.get_letter_file(), name=self.code + ".pdf")
+        return super().save(*args, **kwargs)
+
+
 class Invoice(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     code = models.CharField(max_length=31)
@@ -552,7 +623,7 @@ class Invoice(models.Model):
     amount = MoneyField(max_digits=7, decimal_places=2, default_currency="SEK")
     vat = models.PositiveIntegerField(default=0)
     date_due = models.DateField(blank=True)
-    invoice = models.FileField(null=True, blank=True, upload_to="invoice")
+    invoice = models.ForeignKey("app.File", on_delete=models.PROTECT)
     status = models.PositiveSmallIntegerField(
         choices=((s.value, s.name) for s in InvoiceStatus),
         default=InvoiceStatus.DRAFT.value,
@@ -560,17 +631,22 @@ class Invoice(models.Model):
     sent_by = models.ForeignKey(
         "user.User",
         on_delete=models.PROTECT,
-        related_name="sent_by",
+        related_name="invoice_seny_by",
         blank=True,
         null=True,
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def get_invoice_file(self):
+    def get_invoice_file(self, verification_control=None, verification_code=None):
         template = get_template("file/invoice.html")
         html = template.render(
-            context=dict(invoice=self, **get_substitutions_templates())
+            context=dict(
+                invoice=self,
+                **get_substitutions_templates(),
+                verification_control=verification_control,
+                verification_code=verification_code,
+            )
         )
         return weasyprint.HTML(string=html).write_pdf()
 
@@ -578,7 +654,7 @@ class Invoice(models.Model):
         self.status = InvoiceStatus.SENT.value
         if request:
             self.sent_by = request.user
-        self.save()
+        return super().save()
 
     def clean(self):
         messages = dict()
@@ -612,10 +688,28 @@ class Invoice(models.Model):
                 month=time_month,
                 year=(time_now.year if time_month <= 12 else time_now.year + 1),
             ).date()
-        self.invoice = ContentFile(
-            self.get_invoice_file(),
-            name=self.company_event.event.code + "_" + self.code + ".pdf",
+        if Invoice.objects.filter(id=self.id).exists() and self.invoice:
+            self.invoice.status = FileStatus.DEPRECATED
+            self.invoice.save()
+        verification_control, verification_code, verification_until = get_new_verification(
+            self.id
         )
+        invoice = File(
+            file=ContentFile(
+                self.get_invoice_file(
+                    verification_control=verification_control,
+                    verification_code=verification_code,
+                ),
+                name=self.company_event.event.code + "_" + self.code + ".pdf",
+            ),
+            type=FileType.INVOICE,
+            status=FileStatus.VALID,
+            verification_control=verification_control,
+            verification_code=verification_code,
+            verification_until=verification_until,
+        )
+        invoice.save()
+        self.invoice = invoice
         return super().save(*args, **kwargs)
 
 
@@ -651,8 +745,8 @@ class Message(models.Model):
     )
     title = models.CharField(max_length=255)
     content = models.TextField()
-    attachment = models.FileField(
-        upload_to=path_and_rename_attachment, blank=True, null=True
+    attachment = models.ForeignKey(
+        "app.File", on_delete=models.PROTECT, blank=True, null=True
     )
     created_at = models.DateTimeField(auto_now_add=True)
 

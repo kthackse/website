@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from django.urls import path, reverse
 from django.utils.html import format_html
 
+from app.admin import ReadOnlyAdmin
 from app.utils import require_department
 from event.enums import InvoiceStatus
 from event.models import (
@@ -20,17 +21,6 @@ from event.models import (
 )
 from event.tasks import send_invoice
 from user.enums import DepartmentType
-
-
-class ReadOnlyAdmin(admin.ModelAdmin):
-    def has_add_permission(self, request):
-        return False
-
-    def has_delete_permission(self, request, obj=None):
-        return False
-
-    def has_change_permission(self, request, obj=None):
-        return False
 
 
 @admin.register(Event)
@@ -125,7 +115,7 @@ class CompanyEventAdmin(admin.ModelAdmin):
 
 @admin.register(Invoice)
 class InvoiceAdmin(admin.ModelAdmin):
-    search_fields = ("id", "company_event", "responisble_event", "responisble_company")
+    search_fields = ("id", "company_event", "responsible_event", "responsible_company")
     list_display = (
         "code",
         "company_event",
@@ -133,7 +123,6 @@ class InvoiceAdmin(admin.ModelAdmin):
         "responsible_event",
         "created_at",
         "status",
-        "invoice",
         "send",
     )
     ordering = ("-code", "created_at", "updated_at", "company_event")
@@ -171,7 +160,7 @@ class InvoiceAdmin(admin.ModelAdmin):
 
 
 @admin.register(Message)
-class MessageAdmin(admin.ModelAdmin):
+class MessageAdmin(ReadOnlyAdmin):
     search_fields = ("id", "type", "title", "content")
     list_display = ("title", "event", "type", "recipient", "created_at")
     list_filter = ("created_at",)

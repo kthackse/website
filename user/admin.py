@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
 
+from app.admin import ReadOnlyAdmin
 from user.models import User, Department, Company, UserChange
 
 
@@ -28,7 +29,7 @@ class GroupAdmin(admin.ModelAdmin):
 
 
 @admin.register(UserChange)
-class UserChangeAdmin(admin.ModelAdmin):
+class UserChangeAdmin(ReadOnlyAdmin):
     search_fields = (
         "id",
         "user",
