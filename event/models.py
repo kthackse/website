@@ -15,7 +15,8 @@ from versatileimagefield.fields import VersatileImageField
 
 from app.enums import FileType, FileStatus
 from app.models import File, get_new_verification
-from app.utils import markdown_to_text, get_substitutions_templates
+from app.processor import variables_processor
+from app.utils import markdown_to_text
 from app.variables import HACKATHON_VOTE_PERSONAL, HACKATHON_VOTE_TECHNICAL
 from event.enums import (
     EventType,
@@ -568,7 +569,7 @@ class Letter(models.Model):
     def get_letter_file(self):
         template = get_template("file/letter.html")
         html = template.render(
-            context=dict(letter=self, **get_substitutions_templates())
+            context=dict(letter=self, **variables_processor())
         )
         return weasyprint.HTML(string=html).write_pdf()
 
@@ -643,7 +644,7 @@ class Invoice(models.Model):
         html = template.render(
             context=dict(
                 invoice=self,
-                **get_substitutions_templates(),
+                **variables_processor(),
                 verification_control=verification_control,
                 verification_code=verification_code,
             )

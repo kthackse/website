@@ -313,105 +313,75 @@
                 <td class="masthead">
                     <div class="content-row">
                         <div class="content-30">
-                            <img src="{% site_url %}/files/{{ invoice.company_event.event.logo_white_header }}">
+                            <img src="{% site_url %}/files/{{ event.logo_white_header }}">
                             <div style="display: inline-block; line-height: 110%; margin-top: 5px; position: absolute; text-transform: uppercase; font-size: 16px;">
                                 <div>
-                                    <b>{{ invoice.company_event.event.name }}</b> {{ invoice.company_event.event.starts_at | date:"Y" }}
+                                    <b>{{ event.name }}</b> {{ event.starts_at | date:"Y" }}
                                 </div>
                                 <div style="font-size: 12px; line-height: 125%;">
-                                    {{ invoice.company_event.event.city }}, {{ invoice.company_event.event.country }}
+                                    {{ event.city }}, {{ event.country }}
                                 </div>
                             </div>
                         </div>
                         <div class="content-60 text-right">
-                            <h1>Invoice #{{ invoice.code }}</h1>
+                            <h1>{% block title %}<h1>FILE TITLE</h1>{% endblock %}</h1>
                             <h3>Retrieved on {% now "Y-m-d H:i:s" %}</h3>
                         </div>
                     </div>
                 </td>
-                <td class="details">
-                    <div class="content-row">
-                        <div class="content-50 details-invoice">
-                            <p>Responsible</p>
-                            <h2>{{ invoice.responsible_company }}</h2>
-                            <p>Reference: {% if invoice.code_invoice_company %}{{ invoice.code_invoice_company }}{% else %}{{ invoice.code }}{% endif %}</p>
-                            {% if invoice.created_at %}
-                                <p>Created: {{ invoice.created_at | date:"Y-m-d H:i:s" }}</p>
-                            {% else %}
-                                <p>Created: {% now "Y-m-d H:i:s" %}</p>
-                            {% endif %}
-                            {% if invoice.updated_at.date != invoice.created_at.date %}
-                                <p>Updated: {{ invoice.updated_at | date:"Y-m-d H:i:s" }}</p>
-                            {% endif %}
-                            {% if invoice.date_due %}
-                                <p><b>Due date: {{ invoice.date_due | date:"Y-m-d" }}</b></p>
-                            {% endif %}
+                {% block header_pre %}
+                    <td class="details">
+                        <div class="content-row">
+                            {% block header %}
+                                <div class="content-50 details-invoice">
+                                    {% block header_left %}
+                                        <p>HEADER LEFT</p>
+                                    {% endblock %}
+                                </div>
+                                <div class="content-5 text-right details-company">
+                                    {% block header_right %}
+                                        <p>HEADER RIGHT</p>
+                                    {% endblock %}
+                                </div>
+                            {% endblock %}
                         </div>
-                        <div class="content-5 text-right details-company">
-                            <img src="{% site_url %}/files/{{ invoice.company_event.logo }}">
-                            <h1>{{ invoice.company_event.company.org_name }}</h1>
-                            {% if invoice.company_event.company.organisation_number %}
-                                <h3>{{ invoice.company_event.company.organisation_number }}</h3>
-                            {% endif %}
-                            {% if invoice.company_event.company.address_1 %}
-                                <p>{{ invoice.company_event.company.address_1 }}</p>
-                            {% endif %}
-                            {% if invoice.company_event.company.address_2 %}
-                                <p>{{ invoice.company_event.company.address_2 }}</p>
-                            {% endif %}
-                            {% if invoice.company_event.company.postcode and invoice.company_event.company.city %}
-                                <p>{{ invoice.company_event.company.postcode }} {{ invoice.company_event.company.city }}</p>
-                            {% endif %}
+                    </td>
+                {% endblock %}
+                {% block body_pre %}
+                    <td class="items">
+                        <div class="content-row">
+                            {% block body %}
+                                <p>BODY</p>
+                            {% endblock %}
                         </div>
-                    </div>
-                </td>
-                <td class="items">
-                    <div class="content-row">
-                        <table class="body-wrap container">
-                            <tr class="titles">
-                                <td class="description text-upper"><p>Description</p></td>
-                                <td class="price text-upper"><p>Price</p></td>
-                            </tr>
-                            <tr>
-                                <td class="description"><p>{% if invoice.description %}{{ invoice.description }}{% else %}{{ invoice.company_event.event }} {{ invoice.company_event.tier | company_tier }} Sponsorship{% endif %}</p></td>
-                                <td class="price"><p>{{ invoice.amount | money }} {{ invoice.amount.currency }}</p></td>
-                            </tr>
-                            {% if invoice.vat > 0 %}
-                                <tr>
-                                    <td class="description"><p>{{ invoice.vat }}% VAT</p></td>
-                                    <td class="price"><p>{% money_vat invoice.amount invoice.vat %} {{ invoice.amount.currency }}</p></td>
-                                </tr>
-                            {% endif %}
-                            <tr class="totals">
-                                <td class="description text-upper"><p>Total</p></td>
-                                <td class="price"><p>{% money_total invoice.amount invoice.vat %} {{ invoice.amount.currency }}</p></td>
-                            </tr>
-                        </table>
-                    </div>
-                </td>
-                <td class="organisation">
-                    <div class="content-row">
-                        <div class="content-50 details-invoice">
-                            <h3>{{ hk_legal_name }}</h3>
-                            <p>{{ hk_legal_organisation_name }}</p>
-                            <p>{{ hk_legal_address_1 }}</p>
-                            {% if hk_legal_address_2 %}
-                                <p>{{ hk_legal_address_2 }}</p>
-                            {% endif %}
-                            <p>{{ hk_legal_postcode }} {{ hk_legal_city }}</p>
-                            <p>Org-nr: {{ hk_legal_organisation_number }}</p>
-                            <p>Bankgiro: {{ hk_legal_organisation_bankgiro }}</p>
+                    </td>
+                {% endblock %}
+                {% block footer_pre %}
+                    <td class="organisation">
+                        <div class="content-row">
+                            {% block footer %}
+                                <div class="content-50 details-invoice">
+                                    {% block footer_left %}
+                                        <h3>{{ hk_legal_name }}</h3>
+                                        <p>{{ hk_legal_organisation_name }}</p>
+                                        <p>{{ hk_legal_address_1 }}</p>
+                                        {% if hk_legal_address_2 %}
+                                            <p>{{ hk_legal_address_2 }}</p>
+                                        {% endif %}
+                                        <p>{{ hk_legal_postcode }} {{ hk_legal_city }}</p>
+                                        <p>Org-nr: {{ hk_legal_organisation_number }}</p>
+                                        <p>Bankgiro: {{ hk_legal_organisation_bankgiro }}</p>
+                                    {% endblock %}
+                                </div>
+                                <div class="content-5 text-right details-organisation">
+                                    {% block footer_right %}
+                                        <p>FOOTER RIGHT</p>
+                                    {% endblock %}
+                                </div>
+                            {% endblock %}
                         </div>
-                        <div class="content-5 text-right details-organisation">
-                            <h4><b>{{ invoice.responsible_event }}</b></h4>
-                            {% if invoice.responsible_event.phone %}
-                                <p>{{ invoice.responsible_event.phone }}</p>
-                            {% endif %}
-                            <p>{{ invoice.responsible_event.email }}</p>
-                            <p>{% site_url %}</p>
-                        </div>
-                    </div>
-                </td>
+                    </td>
+                {% endblock %}
                 {% if verification_control and verification_code %}
                     <td class="mastfooter">
                         <div class="content-row">

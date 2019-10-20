@@ -30,7 +30,7 @@
 - Application voting and comment for organisers.
 - Dubious event application management.
 - Reimbursement management.
-- Invoice generation and automatic sending from SVG template.
+- Invoice, contract, visa and underage permission generation and automatic sending from HTML template.
 
 ### Jobs
 
@@ -177,11 +177,6 @@ location /deploy/ {
 - Enter `2` if requested to redirect all HTTP traffic to HTTPS (rediction of all traffic to port `80` to `443`), this will also modify the previous nginx server configuration.
 - `sudo nginx -s reload`.
 
-#### File template fonts
-
-- Upload the fonts used in the SVGs to `~/.local/share/fonts/`.
-- `fc-cache -f -v`.
-
 #### Slack bot
 
 - Create a Slack bot on `https://api.slack.com/apps/new`.
@@ -198,6 +193,8 @@ location /deploy/ {
 The local server updates automatically once a change has been spotted, there's no need to do anything else.
 
 ### Production server
+
+In case autodeploy has been setted up, there's no need to do anything else, commits to master will automatically trigger a deploy to production. However, you can still update the production server following this commands.
 
 - `git pull`.
 - `./restart.sh`.

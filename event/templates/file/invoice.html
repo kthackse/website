@@ -1,1 +1,61 @@
 {% extends "file/base.html" %}
+{% load static app_tags %}
+
+{% block title %}Invoice #{{ invoice.code }}{% endblock %}
+
+{% block header_left %}
+    <p>Responsible</p>
+    <h2>{{ invoice.responsible_company }}</h2>
+    <p>Reference: {% if invoice.code_invoice_company %}{{ invoice.code_invoice_company }}{% else %}{{ invoice.code }}{% endif %}</p>
+    {% if invoice.created_at %}
+        <p>Created: {{ invoice.created_at | date:"Y-m-d H:i:s" }}</p>
+    {% else %}
+        <p>Created: {% now "Y-m-d H:i:s" %}</p>
+    {% endif %}
+    {% if invoice.updated_at.date != invoice.created_at.date %}
+        <p>Updated: {{ invoice.updated_at | date:"Y-m-d H:i:s" }}</p>
+    {% endif %}
+    {% if invoice.date_due %}
+        <p><b>Due date: {{ invoice.date_due | date:"Y-m-d" }}</b></p>
+    {% endif %}
+{% endblock %}
+
+{% block header_right %}
+    <img src="{% site_url %}/files/{{ invoice.company_event.logo }}">
+    <h1>{{ invoice.company_event.company.org_name }}</h1>
+    {% if invoice.company_event.company.organisation_number %}
+        <h3>{{ invoice.company_event.company.organisation_number }}</h3>
+    {% endif %}
+    {% if invoice.company_event.company.address_1 %}
+        <p>{{ invoice.company_event.company.address_1 }}</p>
+    {% endif %}
+    {% if invoice.company_event.company.address_2 %}
+        <p>{{ invoice.company_event.company.address_2 }}</p>
+    {% endif %}
+    {% if invoice.company_event.company.postcode and invoice.company_event.company.city %}
+        <p>{{ invoice.company_event.company.postcode }} {{ invoice.company_event.company.city }}</p>
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    <table class="body-wrap container">
+        <tr class="titles">
+            <td class="description text-upper"><p>Description</p></td>
+            <td class="price text-upper"><p>Price</p></td>
+        </tr>
+        <tr>
+            <td class="description"><p>{% if invoice.description %}{{ invoice.description }}{% else %}{{ invoice.company_event.event }} {{ invoice.company_event.tier | company_tier }} Sponsorship{% endif %}</p></td>
+            <td class="price"><p>{{ invoice.amount | money }} {{ invoice.amount.currency }}</p></td>
+        </tr>
+        {% if invoice.vat > 0 %}
+            <tr>
+                <td class="description"><p>{{ invoice.vat }}% VAT</p></td>
+                <td class="price"><p>{% money_vat invoice.amount invoice.vat %} {{ invoice.amount.currency }}</p></td>
+            </tr>
+        {% endif %}
+        <tr class="totals">
+            <td class="description text-upper"><p>Total</p></td>
+            <td class="price"><p>{% money_total invoice.amount invoice.vat %} {{ invoice.amount.currency }}</p></td>
+        </tr>
+    </table>
+{% endblock %}
