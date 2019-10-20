@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="file",
             name="verification_until",
-            field=models.DateTimeField(default="2019-10-01 00:00"),
+            field=models.DateTimeField(default="2019-10-01 00:00Z"),
             preserve_default=False,
         ),
         migrations.AlterUniqueTogether(

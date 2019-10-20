@@ -1,6 +1,7 @@
 import factory
 from django.utils import timezone
 
+from app.models import File, FileVerified
 from app.variables import HACKATHON_NAME
 from event.enums import EventType
 from event.models import Event
@@ -62,3 +63,13 @@ class EventFactory(factory.DjangoModelFactory):
 
     class Meta:
         model = Event
+
+
+class FileFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = File
+
+
+class FileVerifiedFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = FileVerified
