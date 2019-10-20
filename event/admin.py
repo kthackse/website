@@ -19,7 +19,7 @@ from event.models import (
     Invoice,
     Message,
     Letter)
-from event.tasks import send_invoice
+from event.tasks import send_invoice, send_letter_underage
 from user.enums import DepartmentType
 
 
@@ -191,7 +191,7 @@ class LetterAdmin(admin.ModelAdmin):
 
     @require_department([DepartmentType.DIRECTOR])
     def send_letter(self, request, id):
-        # send_invoice(Invoice.objects.filter(id=id).first(), request=request)
+        send_letter_underage(Letter.objects.filter(id=id).first(), request=request)
         messages.success(request, "Letter was successfully sent!")
         return redirect(reverse("admin:event_letter_changelist"))
 

@@ -217,9 +217,15 @@ NOTIFY_TEMPLATES = dict(
         sponsorship=dict(
             invoice=dict(
                 subject="Your invoice for {event_name}",
-                html="email/sponsorship/invoice.html",
+                html="email/sponsorship/letter_underage.html",
             )
         ),
+        hackerxperience=dict(
+            letter_underage=dict(
+                subject="Permission and consent for participation for {event_name}",
+                html="email/hackerxperience/letter_underage.html",
+            )
+        )
     )
 )
 

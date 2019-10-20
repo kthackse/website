@@ -420,9 +420,12 @@ class Application(models.Model):
     def save(self, *args, **kwargs):
         self.clean()
         super().save(*args, **kwargs)
-        if self.will_be_underage and not Letter.objects.filter(application=self).exists():
+        if self.status == ApplicationStatus.CONFIRMED and self.will_be_underage and not Letter.objects.filter(application=self).exists():
             letter = Letter(application=self, type=LetterType.UNDERAGE)
             letter.save()
+
+            import event.tasks
+            event.tasks.send_letter_underage(letter)
 
 
 class Team(models.Model):
@@ -596,7 +599,7 @@ class Letter(models.Model):
         self.status = LetterStatus.SENT.value
         if request:
             self.sent_by = request.user
-        self.save()
+        return super().save()
 
     def clean(self):
         messages = dict()
