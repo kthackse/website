@@ -150,7 +150,7 @@ class User(AbstractBaseUser):
     )
     document_number = models.CharField(max_length=255, blank=True, null=True)
     signature = VersatileImageField(
-        "Image", upload_to=path_and_rename_signature, null=True, blank=True
+        "Signature", upload_to=path_and_rename_signature, null=True, blank=True
     )
 
     objects = UserManager()
@@ -217,11 +217,8 @@ class User(AbstractBaseUser):
 
     @property
     def is_underage(self):
-        # TODO: Check if underage correctly
         try:
-            return (timezone.now().date() - self.birthday) < timezone.timedelta(
-                days=365 * 18
-            )
+            return timezone.datetime(day=self.birthday.day, month=self.birthday.month, year=self.birthday.year+18).date() >= timezone.now().date()
         except TypeError:
             return False
 

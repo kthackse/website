@@ -30,7 +30,7 @@
 - Application voting and comment for organisers.
 - Dubious event application management.
 - Reimbursement management.
-- Invoice generation and automatic sending from SVG template.
+- Invoice, contract, visa and underage permission generation and automatic sending from HTML template.
 
 ### Jobs
 
@@ -177,11 +177,6 @@ location /deploy/ {
 - Enter `2` if requested to redirect all HTTP traffic to HTTPS (rediction of all traffic to port `80` to `443`), this will also modify the previous nginx server configuration.
 - `sudo nginx -s reload`.
 
-#### File template fonts
-
-- Upload the fonts used in the SVGs to `~/.local/share/fonts/`.
-- `fc-cache -f -v`.
-
 #### Slack bot
 
 - Create a Slack bot on `https://api.slack.com/apps/new`.
@@ -198,6 +193,8 @@ location /deploy/ {
 The local server updates automatically once a change has been spotted, there's no need to do anything else.
 
 ### Production server
+
+In case autodeploy has been setted up, there's no need to do anything else, commits to master will automatically trigger a deploy to production. However, you can still update the production server following this commands.
 
 - `git pull`.
 - `./restart.sh`.
@@ -238,6 +235,14 @@ A live page with all the schedule will also be automatically created with the da
 ### Pages
 
 You can also add pages to the site, by default, `Terms & Conditions`, `Privacy and Cookies Policy` and `Legal Notice` pages are created with their own content. However, you can add as many as you want. The content can either be plain text, HTML code, markdown or a markdown URL. This last one will retrieve the content of the link and render it as if you had written the text in markdown on the admin page itself. You can use this to display on the website a HTML rendered page of a public markdown file hosted on GitHub for exemple, such as a readme.
+
+### Documents
+
+All generated documents including invoices, contracts, visa applications or authorisations will be stored in the system as file models. They will be generated along with a control and verification code from which the document can be digitally verified. The control code consists into a non random 8 numerical code generated from the ID of the instance along with the current date separated in two groups. The verification code is a simple UUID4 consisting of alphanumeric characters stylised without hyphens and separated in groups of four as well.
+
+Documents can be verified using the following form located at `/verify` where if entered a correct code will retrieve the document and make it available for the next 5 minutes for the given IP. This feature doesn't require login as it's intended for external document verifications. Moreover, a maximum of 10 requests can be made from the same IP to verify documents, either successful or failed ones.
+
+![Document verification form](app/static/img/readme/verify.png)
 
 ## Contribution
 

@@ -17,6 +17,7 @@ def get_new_verification(id):
 class File(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     file = models.FileField(upload_to="file")
+    file_signed = models.FileField(upload_to="file", blank=True, null=True)
     type = models.PositiveSmallIntegerField(
         choices=((t.value, t.name) for t in FileType), default=FileType.INVOICE.value
     )
@@ -30,6 +31,10 @@ class File(models.Model):
     verification_until = models.DateTimeField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    @property
+    def is_signed(self):
+        return self.file_signed is not None
 
     class Meta:
         unique_together = ("verification_control", "verification_code")

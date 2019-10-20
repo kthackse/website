@@ -112,7 +112,7 @@ def files(request, file_):
                 ip=ip,
                 status=FileVerificationStatus.SUCCESS,
                 verified_at__gte=timezone.now() - timezone.timedelta(minutes=5),
-            ).exists()
+            ).exists() or request.user.is_authenticated and request.user.is_admin
         ):
             if file_[:7] != "/files/":
                 file_ = "/files/" + file_
@@ -207,7 +207,7 @@ def verify(request, context={}):
             FileVerified.objects.filter(
                 ip=ip, verified_at__gte=(timezone.now() - timezone.timedelta(hours=1))
             ).count()
-            >= 100
+            >= 10
         ):
             messages.error(
                 request,
@@ -226,7 +226,7 @@ def verify(request, context={}):
                     file_verified.save()
                     if file_verified.file:
                         context["file"] = file_verified.file
-                        return render(request, "verify.html", context)
+                        return render(request, "document_verify.html", context)
                     else:
                         messages.error(
                             request,
@@ -242,7 +242,7 @@ def verify(request, context={}):
                     request,
                     "The data control and verification numbers do not correspond to any valid document.",
                 )
-    return render(request, "verify.html", context)
+    return render(request, "document_verify.html", context)
 
 
 def get_client_ip(request):

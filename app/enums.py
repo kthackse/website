@@ -5,6 +5,7 @@ class MailTag(enum.Enum):
     SUBSCRIBE = "subscribe"
     VERIFY = "verify"
     INVOICE = "invoice"
+    LETTER = "letter"
 
 
 class FileType(enum.IntEnum):
