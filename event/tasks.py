@@ -110,6 +110,8 @@ def send_invoice(invoice: Invoice, request=None):
 def send_letter_underage(letter: Letter, request=None):
     context = variables_processor()
     context["letter"] = letter
+    context["event"] = letter.application.event
+    context["user"] = letter.application.user
     template = get_notification_template(
         method="email", type="hackerxperience", task="letter_underage", format="html"
     )
