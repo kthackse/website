@@ -112,7 +112,9 @@ def files(request, file_):
                 ip=ip,
                 status=FileVerificationStatus.SUCCESS,
                 verified_at__gte=timezone.now() - timezone.timedelta(minutes=5),
-            ).exists() or request.user.is_authenticated and request.user.is_admin
+            ).exists()
+            or request.user.is_authenticated
+            and request.user.is_admin
         ):
             if file_[:7] != "/files/":
                 file_ = "/files/" + file_

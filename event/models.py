@@ -375,7 +375,14 @@ class Application(models.Model):
     @property
     def will_be_underage(self):
         try:
-            return timezone.datetime(day=self.user.birthday.day, month=self.user.birthday.month, year=self.user.birthday.year+18).date() >= self.event.starts_at.date()
+            return (
+                timezone.datetime(
+                    day=self.user.birthday.day,
+                    month=self.user.birthday.month,
+                    year=self.user.birthday.year + 18,
+                ).date()
+                >= self.event.starts_at.date()
+            )
         except TypeError:
             return False
 
@@ -420,11 +427,16 @@ class Application(models.Model):
     def save(self, *args, **kwargs):
         self.clean()
         super().save(*args, **kwargs)
-        if self.status == ApplicationStatus.CONFIRMED and self.will_be_underage and not Letter.objects.filter(application=self).exists():
+        if (
+            self.status == ApplicationStatus.CONFIRMED
+            and self.will_be_underage
+            and not Letter.objects.filter(application=self).exists()
+        ):
             letter = Letter(application=self, type=LetterType.UNDERAGE)
             letter.save()
 
             import event.tasks
+
             event.tasks.send_letter_underage(letter)
 
 
@@ -563,7 +575,9 @@ class Letter(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     code = models.CharField(max_length=31)
     application = models.ForeignKey("Application", on_delete=models.CASCADE)
-    responsible = models.ForeignKey("user.User", on_delete=models.PROTECT, blank=True, null=True)
+    responsible = models.ForeignKey(
+        "user.User", on_delete=models.PROTECT, blank=True, null=True
+    )
     type = models.PositiveSmallIntegerField(
         choices=((s.value, s.name) for s in LetterType), default=LetterType.VISA.value
     )
@@ -583,11 +597,16 @@ class Letter(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def get_letter_file(self, verification_control=None, verification_code=None):
-        template = get_template(f"file/letter/{LetterType(self.type).name.lower()}.html")
+        template = get_template(
+            f"file/letter/{LetterType(self.type).name.lower()}.html"
+        )
         html = template.render(
-            context=dict(letter=self, **variables_processor(),
+            context=dict(
+                letter=self,
+                **variables_processor(),
                 verification_control=verification_control,
-                verification_code=verification_code,)
+                verification_code=verification_code,
+            )
         )
         return weasyprint.HTML(string=html).write_pdf()
 
@@ -638,7 +657,12 @@ class Letter(models.Model):
                     verification_control=verification_control,
                     verification_code=verification_code,
                 ),
-                name=self.application.event.code + "_letter_" + LetterType(self.type).name.lower() + "_" + self.code + ".pdf",
+                name=self.application.event.code
+                + "_letter_"
+                + LetterType(self.type).name.lower()
+                + "_"
+                + self.code
+                + ".pdf",
             ),
             type=FileType.LETTER,
             status=FileStatus.VALID,

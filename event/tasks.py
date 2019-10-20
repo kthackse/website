@@ -80,7 +80,7 @@ def send_invoice(invoice: Invoice, request=None):
     body = render_to_string(template, context)
     attachments = [
         (
-            invoice.invoice.file.name[invoice.invoice.file.name.rfind("/") + 1:],
+            invoice.invoice.file.name[invoice.invoice.file.name.rfind("/") + 1 :],
             invoice.invoice.file.read(),
             "application/pdf",
         )
@@ -119,7 +119,7 @@ def send_letter_underage(letter: Letter, request=None):
     body = render_to_string(template, context)
     attachments = [
         (
-            letter.letter.file.name[letter.letter.file.name.rfind("/") + 1:],
+            letter.letter.file.name[letter.letter.file.name.rfind("/") + 1 :],
             letter.letter.file.read(),
             "application/pdf",
         )

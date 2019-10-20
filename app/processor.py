@@ -3,7 +3,11 @@ from app.utils import get_substitutions_templates
 
 def variables_processor(request=None):
     c = get_substitutions_templates()
-    from event.utils.utils import get_next_or_past_event, get_application, is_application_to_review
+    from event.utils.utils import (
+        get_next_or_past_event,
+        get_application,
+        is_application_to_review,
+    )
 
     event = get_next_or_past_event()
     if event:

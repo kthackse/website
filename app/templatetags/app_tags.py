@@ -116,4 +116,6 @@ def code(value):
 
 @register.filter
 def phone(value):
-    return phonenumbers.format_number(phonenumbers.parse(value), phonenumbers.PhoneNumberFormat.INTERNATIONAL)
+    return phonenumbers.format_number(
+        phonenumbers.parse(value), phonenumbers.PhoneNumberFormat.INTERNATIONAL
+    )

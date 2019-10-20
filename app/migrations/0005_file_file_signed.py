@@ -5,14 +5,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('app', '0004_add_verification_until'),
-    ]
+    dependencies = [("app", "0004_add_verification_until")]
 
     operations = [
         migrations.AddField(
-            model_name='file',
-            name='file_signed',
-            field=models.FileField(blank=True, null=True, upload_to='file'),
-        ),
+            model_name="file",
+            name="file_signed",
+            field=models.FileField(blank=True, null=True, upload_to="file"),
+        )
     ]
