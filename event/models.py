@@ -419,10 +419,10 @@ class Application(models.Model):
 
     def save(self, *args, **kwargs):
         self.clean()
+        super().save(*args, **kwargs)
         if self.will_be_underage and not Letter.objects.filter(application=self).exists():
             letter = Letter(application=self, type=LetterType.UNDERAGE)
             letter.save()
-        return super().save(*args, **kwargs)
 
 
 class Team(models.Model):
@@ -600,10 +600,11 @@ class Letter(models.Model):
 
     def clean(self):
         messages = dict()
-        if self.type == LetterType.VISA and not self.responsible.can_sign:
-            messages["responsible"] = "The letter responsible must be able to sign"
-        elif not self.responsible.is_organiser:
-            messages["responsible"] = "The letter responsible must be an organiser"
+        if self.responsible:
+            if self.type == LetterType.VISA and not self.responsible.can_sign:
+                messages["responsible"] = "The letter responsible must be able to sign"
+            elif not self.responsible.is_organiser:
+                messages["responsible"] = "The letter responsible must be an organiser"
         if messages:
             raise ValidationError(messages)
 
