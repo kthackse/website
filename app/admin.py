@@ -37,7 +37,7 @@ class FileAdmin(ReadOnlyAdmin):
 
 
 @admin.register(FileSubmission)
-class FileSubmissionAdmin(admin.ModelAdmin):
+class FileSubmissionAdmin(ReadOnlyAdmin):
     search_fields = ("id", "status")
     list_display = ("id", "status", "created_at", "updated_at")
     list_filter = ("status", "created_at", "updated_at")
