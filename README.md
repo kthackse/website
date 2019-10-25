@@ -244,6 +244,12 @@ Documents can be verified using the following form located at `/verify` where if
 
 ![Document verification form](app/static/img/readme/verify.png)
 
+Some documents will require information to be manually introduced or signatures in case of invoces or underage letters for example. Once they have been scanned by the recipient, documents can be uploaded into the system following the link provided on the same file or on the email received.
+
+Once a file has been uploaded into the system, an automatic verification will be carried out denying immediatelly the file if it's too different from the original, this helps to automatically cancel wrong uploaded documents. Moreover, the system will check if all fields have been correctly filled in and will digitalise their contents. In case of the invoices for example, if more than one page requires signature, signature similarities for all pages will also be performed.
+
+![Document upload form](app/static/img/readme/upload.png)
+
 ## Contribution
 
 Please, report any incidents or questions to webdev@kthack.com.
