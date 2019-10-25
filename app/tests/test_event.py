@@ -60,7 +60,7 @@ def test_home():
     assert isinstance(request, HttpResponse)
     assert request.status_code == 200
     content = request.content.decode("utf-8")
-    assert str(event.starts_at.month) in content
+    assert str(event.starts_at.strftime("%B")) in content
 
     # Hide the subscribe form
     event.subscribe_public = False

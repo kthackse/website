@@ -3,7 +3,18 @@
 
 {% block title %}Permission and consent for participation{% endblock %}
 
-{% block header_left %}
+{% block header %}
+    <h3>Instructions</h3>
+    <ol style="text-align: justify; line-height: 1.5;">
+        <li>Fill all the fields clearly in capital letters without making any mark outside of the designated boxes.</li>
+        <li>Sign at the bottom of the page inside the corresponding box and write the date and location as well.</li>
+        {% if id %}
+            <li>Scan the document and upload it to <a href="{% site_url %}/upload/{{ id }}">{% site_url %}/upload/{{ id }}</a>.</li>
+        {% endif %}
+    </ol>
+{% endblock %}
+
+{% comment %}{% block header_left %}
     <p>Parent information</p>
     <h2 style="margin-top: 0;">Full name:</h2>
     <p>Email:</p>
@@ -17,10 +28,160 @@
     <p>Phone: {{ letter.application.user.phone | phone }}</p>
     <p>Date of birth: {{ letter.application.user.birthday | date:"Y-m-d" }}</p>
     <p>Location: {{ letter.application.user.city }}, {{ letter.application.user.country }}</p>
-{% endblock %}
+{% endblock %}{% endcomment %}
 
 {% block body %}
-    <p style="text-align: justify; line-height: 1.5;">I, the undersigned, certify that I am the parent or legal guardian of the above mentioned participant. I hereby authorise my underage child named above to attend and participate in the event named {{ event.name }}, organized by {{ hk_legal_name }} with org-nr {{ hk_legal_organisation_number }}, which will take place in {{ event.city }} ({{ event.country }}) between {{ event.starts_at | date:"Y-m-d" }} and {{ event.ends_at | date:"Y-m-d" }} (yyyy-mm-dd).</p>
+    <div style="display: inline-block; width: 100%; position: relative;">
+        <div style="display: block; width: 25%; float: left;">
+            <h3 style="margin-top: 0;">Participant information</h3>
+            <p>Full name: {{ letter.application.user }}</p>
+            <p>Email: {{ letter.application.user.email }}</p>
+            <p>Phone: {{ letter.application.user.phone | phone }}</p>
+            <p>Date of birth: {{ letter.application.user.birthday | date:"Y-m-d" }}</p>
+            <p>Location: {{ letter.application.user.city }}, {{ letter.application.user.country }}</p>
+        </div>
+        <div style="display: block; width: 70%; float: right;">
+            <h3 style="margin-top: 0;">Parent information</h3>
+            <p style="margin-bottom: 3px;">First name</p>
+            <table class="boxes">
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+           <p style="margin-top: 6.5px; margin-bottom: 3px;">Last name</p>
+            <table class="boxes">
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+           <p style="margin-top: 6.5px; margin-bottom: 3px;">Email</p>
+            <table class="boxes">
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+           <p style="margin-top: 6.5px; margin-bottom: 3px;">Phone</p>
+            <table class="boxes">
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <hr>
+    <p style="text-align: justify; line-height: 1.5;">I, the undersigned, certify that I am the parent or legal guardian of the above mentioned participant, {{ letter.application.user }}. I hereby authorise my underage child named above to attend and participate in the event named {{ event.name }}, organized by {{ hk_legal_name }} with org-nr {{ hk_legal_organisation_number }}, which will take place in {{ event.city }} ({{ event.country }}) between {{ event.starts_at | date:"Y-m-d" }} and {{ event.ends_at | date:"Y-m-d" }} (yyyy-mm-dd).</p>
     <p style="text-align: justify; line-height: 1.5;">I hereby give {{ hk_legal_name }} the right and permission to photograph, digitally record, videotape, or audio tape, my above named child while s/he is attending participating in any event related to {{ event.name }}. I further agree that any or all of the material recorded may be used in any form, publications, including electronic publications, or in audio-visual presentations, promotional literature, advertising, or in other similar ways, and that such use shall be without payment of fees, royalties, special credit, or other compensation. I understand that all such recordings, in whatever medium, shall remain the property of {{ hk_legal_name }}.</p>
     <p style="text-align: justify; line-height: 1.5;">Finally, I agree not to hold {{ hk_legal_name }} responsible for any damages that the underage participant may provoke or suffer from participating in the event {{ event.name }}.</p>
     <p style="text-align: justify; line-height: 1.5;"><b>I have read, understood and agreed to the information above. All releases, authorisations and permission granted above shall remain in effect unless revoked in writing by the undersigned which must be made prior to the event starts.</b></p>

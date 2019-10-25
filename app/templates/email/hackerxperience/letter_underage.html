@@ -1,9 +1,14 @@
 {% extends "email/base.html" %}
+{% load app_tags %}
 
 {% block email_message_pre %}
     <p>As you will be underaged at the start of the event, we need your parent or legal tutor permission in order to be able to attend. Please, find enclosed the authorisation form which must be filled out, scanned and uploaded to our system prior to the checkin.</p>
 {% endblock %}
 
-<!-- TODO: Add upload instructions and button -->
+{% block email_button_url %}
+    {% site_url %}/upload/{{ letter.file.id }}
+{% endblock %}
 
-{% block email_button %}{% endblock %}
+{% block email_button_text %}
+    Upload scanned document
+{% endblock %}

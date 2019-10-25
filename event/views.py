@@ -3,12 +3,14 @@ import datetime
 
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test
-from django.http import HttpResponseNotFound, HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import render
 from django.template.loader import get_template
 from django.urls import reverse
 from django.utils import timezone
+from pdf2image import convert_from_bytes
 
+from app.models import FileSubmission
 from app.processor import variables_processor
 from app.utils import login_verified_required, get_substitutions_templates
 from app.views import response
@@ -176,6 +178,10 @@ def apply(request, code, context={}):
 @login_verified_required
 @user_passes_test(is_organiser)
 def applications(request, code, context={}):
+    # letter = Letter.objects.all().first()
+    # response = HttpResponse(content_type='application/pdf')
+    # response.write(letter.get_letter_file())
+    # return response
     # template = get_template("file/letter/underage.html")
     # html = template.render(
     #     context=dict(

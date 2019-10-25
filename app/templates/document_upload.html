@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+{% load i18n %}
+{% load app_tags %}
+
+{% block head_title %}{% trans "Upload a document" %}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="section-intro text-center">
+            <h2>Upload a document</h2>
+        </div>
+        <div class="row">
+            <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                <p>You can upload here the signed version of the document. Please make sure all designated fields have been filled up and all pages are included. An automatic verification will be performed after which the file will be manually double-checked, in case of a validation error, a notification will be sent to you with further instructions.</p>
+                <div class="row row-middle">
+                    <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                        <div class="row subsection-intro">
+                            <form action="" method="post" class="form" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <div class="col-md-12 col-lg-12 mb-12 mb-lg-0">
+                                    <div class="service-card">
+                                        <div class="form-group">
+                                            <label for="id_file">File</label>
+                                             <div class="bootstrap4-multi-input">
+                                                <input type="file" name="file" {% if file.is_signed or file.is_checking %}disabled{% endif %} id="id_file" accept=".pdf">
+                                             </div>
+                                            {% if file.file_submissions %}
+                                                <p style="margin-top: 20px; margin-bottom: 5px;">Uploaded files</p>
+                                                <ol>
+                                                    {% for submission in file.file_submissions %}
+                                                        <li>Uploaded on {{ submission.created_at | date:"Y-m-d H:i:s" }} with status {{ submission.status | file_submission_status }}.</li>
+                                                    {% endfor %}
+                                                </ol>
+                                            {% endif %}
+                                        </div>
+                                        {% if file.is_signed or file.is_checking %}
+                                            <div class="form-group-button-1 btn-secondary">
+                                                <h3 style="text-align: center; color: #fff; padding: 25px;">{{ file.file_submission_status | file_submission_status }}</h3>
+                                            </div>
+                                        {% else %}
+                                            <div class="form-group-button-1">
+                                                <button class="btn btn-primary btn-block text-center" type="submit"
+                                                        name="submit" value="upload">Upload
+                                                </button>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $('#id_control').on('keypress change', function () {
+          $(this).val(function (index, value) {
+            return value.replace(/\D/g, "").replace(/\W/gi, '').replace(/(.{4})/g, '$1 ').trim();
+          });
+        });
+        $('#id_verification').on('keypress change', function () {
+          $(this).val(function (index, value) {
+            return value.replace(/[\W_]+/g, "").replace(/\W/gi, '').replace(/(.{4})/g, '$1 ').trim().toUpperCase();
+          });
+        });
+    </script>
+{% endblock %}

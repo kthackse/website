@@ -1,9 +1,10 @@
+import json
 import uuid
 
 from django.db import models
 from django.utils import timezone
 
-from app.enums import FileType, FileStatus, FileVerificationStatus
+from app.enums import FileType, FileStatus, FileVerificationStatus, FileSubmissionStatus
 
 
 def get_new_verification(id):
@@ -17,7 +18,6 @@ def get_new_verification(id):
 class File(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     file = models.FileField(upload_to="file")
-    file_signed = models.FileField(upload_to="file", blank=True, null=True)
     type = models.PositiveSmallIntegerField(
         choices=((t.value, t.name) for t in FileType), default=FileType.INVOICE.value
     )
@@ -34,7 +34,30 @@ class File(models.Model):
 
     @property
     def is_signed(self):
-        return self.file_signed is not None
+        return FileSubmission.objects.filter(
+            file=self, status=FileSubmissionStatus.VALID
+        ).exists()
+
+    @property
+    def is_checking(self):
+        return FileSubmission.objects.filter(
+            file=self, status=FileSubmissionStatus.CHECKING
+        ).exists()
+
+    @property
+    def file_submission_status(self):
+        if self.file_submissions:
+            return (
+                FileSubmission.objects.filter(file=self)
+                .order_by("-created_at")
+                .first()
+                .status
+            )
+        return None
+
+    @property
+    def file_submissions(self):
+        return FileSubmission.objects.filter(file=self)
 
     class Meta:
         unique_together = ("verification_control", "verification_code")
@@ -50,6 +73,24 @@ class File(models.Model):
                 self.id
             )
         return super().save(*args, **kwargs)
+
+
+class FileSubmission(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    file = models.ForeignKey("File", on_delete=models.PROTECT)
+    file_submitted = models.FileField(upload_to="file")
+    ip = models.CharField(max_length=255, blank=True, null=True)
+    status = models.PositiveSmallIntegerField(
+        choices=((t.value, t.name) for t in FileSubmissionStatus),
+        default=FileSubmissionStatus.CHECKING.value,
+    )
+    data = models.TextField(max_length=5000, default="{}")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    @property
+    def data_dict(self):
+        return json.loads(self.data)
 
 
 class FileVerified(models.Model):
