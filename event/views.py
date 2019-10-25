@@ -176,16 +176,20 @@ def apply(request, code, context={}):
 @login_verified_required
 @user_passes_test(is_organiser)
 def applications(request, code, context={}):
-    # template = get_template("file/letter/underage.html")
-    # html = template.render(
-    #     context=dict(
-    #         letter=Letter.objects.first(),
-    #         **variables_processor(request),
-    #         verification_control="11468239",
-    #         verification_code="B74709D2DAE84CB380B005390615A454"
-    #     )
-    # )
-    # return HttpResponse(html)
+    letter = Letter.objects.all().first()
+    response = HttpResponse(content_type='application/pdf')
+    response.write(letter.get_letter_file())
+    return response
+    template = get_template("file/letter/underage.html")
+    html = template.render(
+        context=dict(
+            letter=Letter.objects.first(),
+            **variables_processor(request),
+            verification_control="11468239",
+            verification_code="B74709D2DAE84CB380B005390615A454"
+        )
+    )
+    return HttpResponse(html)
     current_event = get_event(code=code, application_status=None)
     if current_event:
         context["event"] = current_event

@@ -19,6 +19,12 @@ class FileStatus(enum.IntEnum):
     INVALID = 2
 
 
+class FileSubmissionStatus(enum.IntEnum):
+    VALID = 0
+    SUSPECTED = 1
+    INVALID = 2
+
+
 class FileVerificationStatus(enum.IntEnum):
     SUCCESS = 0
     FAILED = 1
