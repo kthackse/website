@@ -7,6 +7,7 @@ from django.utils import timezone
 from djmoney.money import Money
 
 from app import settings
+from app.enums import FileSubmissionStatus
 from app.utils import get_site_url
 from event.enums import ApplicationStatus, DietType, TshirtSize, CompanyTier
 from user.enums import SexType
@@ -119,3 +120,8 @@ def phone(value):
     return phonenumbers.format_number(
         phonenumbers.parse(value), phonenumbers.PhoneNumberFormat.INTERNATIONAL
     )
+
+
+@register.filter
+def file_submission_status(status):
+    return FileSubmissionStatus(status).name.upper()

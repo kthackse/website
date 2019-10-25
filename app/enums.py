@@ -20,9 +20,10 @@ class FileStatus(enum.IntEnum):
 
 
 class FileSubmissionStatus(enum.IntEnum):
-    VALID = 0
-    SUSPECTED = 1
-    INVALID = 2
+    CHECKING = 0
+    VALID = 1
+    SUSPECTED = 2
+    INVALID = 3
 
 
 class FileVerificationStatus(enum.IntEnum):

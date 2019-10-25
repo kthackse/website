@@ -23,7 +23,7 @@ from django.views.decorators.http import require_POST
 
 from app import settings
 from app.enums import FileVerificationStatus
-from app.models import FileVerified, File
+from app.models import FileVerified, File, FileSubmission
 from app.settings import GH_KEY, GH_BRANCH
 from app.slack import send_deploy_message
 from app.utils import login_verified_required, get_file_by_file
@@ -253,6 +253,13 @@ def upload(request, id, context={}):
         file = File.objects.get(id=id)
         if file:
             context["file"] = file
+            if request.method == "POST" and not file.is_signed and not file.is_checking and "file" in request.FILES:
+                ip = get_client_ip(request)
+                submission = FileSubmission(
+                    file=file, file_submitted=request.FILES["file"], ip=ip
+                )
+                submission.save()
+                messages.success(request, "File uploaded correctly, you can refresh this page to check the current status.")
             return render(request, "document_upload.html", context)
     except ValidationError:
         pass

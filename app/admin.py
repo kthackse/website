@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from app.models import File, FileVerified
+from app.models import File, FileVerified, FileSubmission
 
 
 class ReadOnlyAdmin(admin.ModelAdmin):
@@ -33,6 +33,22 @@ class FileAdmin(ReadOnlyAdmin):
         "updated_at",
     )
     list_filter = ("type", "status", "created_at", "updated_at")
+    ordering = ("-created_at",)
+
+
+@admin.register(FileSubmission)
+class FileSubmissionAdmin(admin.ModelAdmin):
+    search_fields = (
+        "id",
+        "status",
+    )
+    list_display = (
+        "id",
+        "status",
+        "created_at",
+        "updated_at",
+    )
+    list_filter = ("status", "created_at", "updated_at")
     ordering = ("-created_at",)
 
 

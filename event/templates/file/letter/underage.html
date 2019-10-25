@@ -8,7 +8,9 @@
     <ol style="text-align: justify; line-height: 1.5;">
         <li>Fill all the fields clearly in capital letters without making any mark outside of the designated boxes.</li>
         <li>Sign at the bottom of the page inside the corresponding box and write the date and location as well.</li>
-        <li>Scan the document and upload it to <a href="{% site_url %}/verify">{% site_url %}/verify</a>.</li>
+        {% if id %}
+            <li>Scan the document and upload it to <a href="{% site_url %}/upload/{{ id }}">{% site_url %}/upload/{{ id }}</a>.</li>
+        {% endif %}
     </ol>
 {% endblock %}
 

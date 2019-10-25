@@ -16,6 +16,8 @@ html2text~=2018.1.9
 ipaddress~=1.0.22
 django-markup~=1.4.1
 markdown~=3.1.1
+opencv-python~=4.1.1.26
+pdf2image~=1.9.0
 phonenumbers==8.10.14
 pyyaml~=5.1.1
 psycopg2-binary~=2.8.3

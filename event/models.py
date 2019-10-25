@@ -596,7 +596,9 @@ class Letter(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def get_letter_file(self, verification_control=None, verification_code=None):
+    def get_letter_file(
+        self, id=None, verification_control=None, verification_code=None
+    ):
         template = get_template(
             f"file/letter/{LetterType(self.type).name.lower()}.html"
         )
@@ -604,6 +606,7 @@ class Letter(models.Model):
             context=dict(
                 letter=self,
                 **variables_processor(),
+                id=id,
                 verification_control=verification_control,
                 verification_code=verification_code,
             )
@@ -651,9 +654,12 @@ class Letter(models.Model):
         verification_control, verification_code, verification_until = get_new_verification(
             self.id
         )
+        letter_id = uuid.uuid4()
         letter = File(
+            id=letter_id,
             file=ContentFile(
                 self.get_letter_file(
+                    id=letter_id,
                     verification_control=verification_control,
                     verification_code=verification_code,
                 ),
