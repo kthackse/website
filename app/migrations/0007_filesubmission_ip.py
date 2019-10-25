@@ -5,14 +5,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
 
-    dependencies = [
-        ('app', '0006_filesubmission'),
-    ]
+    dependencies = [("app", "0006_filesubmission")]
 
     operations = [
         migrations.AddField(
-            model_name='filesubmission',
-            name='ip',
+            model_name="filesubmission",
+            name="ip",
             field=models.CharField(blank=True, max_length=255, null=True),
-        ),
+        )
     ]

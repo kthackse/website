@@ -34,16 +34,25 @@ class File(models.Model):
 
     @property
     def is_signed(self):
-        return FileSubmission.objects.filter(file=self, status=FileSubmissionStatus.VALID).exists()
+        return FileSubmission.objects.filter(
+            file=self, status=FileSubmissionStatus.VALID
+        ).exists()
 
     @property
     def is_checking(self):
-        return FileSubmission.objects.filter(file=self, status=FileSubmissionStatus.CHECKING).exists()
+        return FileSubmission.objects.filter(
+            file=self, status=FileSubmissionStatus.CHECKING
+        ).exists()
 
     @property
     def file_submission_status(self):
         if self.file_submissions:
-            return FileSubmission.objects.filter(file=self).order_by("-created_at").first().status
+            return (
+                FileSubmission.objects.filter(file=self)
+                .order_by("-created_at")
+                .first()
+                .status
+            )
         return None
 
     @property
