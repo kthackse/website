@@ -177,11 +177,6 @@ location /deploy/ {
 - Enter `2` if requested to redirect all HTTP traffic to HTTPS (rediction of all traffic to port `80` to `443`), this will also modify the previous nginx server configuration.
 - `sudo nginx -s reload`.
 
-#### File template fonts
-
-- Upload the fonts used in the SVGs to `~/.local/share/fonts/`.
-- `fc-cache -f -v`.
-
 #### Slack bot
 
 - Create a Slack bot on `https://api.slack.com/apps/new`.
